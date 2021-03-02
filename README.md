@@ -33,17 +33,17 @@ This repository is WD RISC-V Firmware package, holds:
     See [./code convention.htm]
 
 # WD Firmware     
-The “WD Firmware package” constitutes an SDK FW. It contains Firmware applications and Processor Support Package (PSP) for various cores, alongside demos which support all features.
+The “WD Firmware package” constitutes an SDK FW. It contains Firmware applications and Processor Support Package (PSP) for various cores, alongside demos that support all features.
 The following README file describes how to setup a build environment for the WD RISC-V firmware. It guides how to build the program, downloading it, and debugging it on the supported platforms and cores.
 The FW-Infra was verified with VMWare player v. 15 hosting Debian 9.6. 
 
 
 #### Current FW support:
 - **RTOS-AL** 
-    Abstraction Layer (AL) on embedded small footprint real time operation systems (RTOS). The target is to provide homogenies API for the developer usage, so the kernel can be replaced for several different RTOS’s, without any need from the developer to change its application code. 
-    Currently this AL supports FreeRTOS and ThreadX (only API's, without core) with a real running demo for FreeRTOS. 
-    The structure of WD Firmware package allows quick and easy integration for more RTOS’s, Platforms, boards and new firmware features. 
-    Demos is based on HiFive FW example, by SiFIve. Currently the reference is part of FreeRTOS maintenance 
+   Abstraction Layer (AL) for small-footprint embedded real-time- operation-systems (RTOS). The target is to provide a homogeneous API for the developer usage, so the kernel can be replaced for several different RTOS’s, without any need from the developer to change its application code. 
+    Currently, this AL supports FreeRTOS and ThreadX (only API's, without core) with a real running demo for FreeRTOS. 
+    WD Firmware package structure allows quick and easy integration for more RTOS’s, Platforms, boards, and new firmware features. 
+    Demos is based on HiFive FW example by SiFIve. Currently, the reference is part of FreeRTOS maintenance.
 
 - **Coming soon**: more FW features and more Platform supports 
 
@@ -79,18 +79,22 @@ WD-Firmware
 ```
 
 ### Additional downloads
-	NOTE: The COMRV demo will work only with the LLVM toolchain, GCC is not supported
+To get the built toolchains please use the following links:
+
 - #### Toolchain binary download links:
 	- GNU  ( [GNU release folders](https://wdc.box.com/s/lfam8pwhghwshkmjf1yc542ghzfbyn7y) )
 	- LLVM ( [LLVM release folders](https://wdc.box.com/s/v562eei6d01bhzqcc4si76z1vq0w4ibu) )
+
+	**NOTE-1:** The COMRV demo will work only with the LLVM toolchain, GCC is not supported
+	**NOTE-2:** Toolchains are build for **Debian** and **CentOS**
 	
 - #### Using GCC Toolchain
-	- From the repo root folder unzip riscv-gnu-toolchain-debian.tar.gz to the ***WD-Firmware/demo/build/toolchain*** directory
+	- From the repo root folder, unzip riscv-gnu-toolchain-debian.tar.gz to the ***WD-Firmware/demo/build/toolchain*** directory
 
       	  $ tar -xvf riscv-gnu-toolchain-debian.tar.gz -C ./WD-Firmware/demo/build/toolchain/
 
 - #### Using LLVM Toolchain
-	- From the repo root folder unzip riscv-llvm-toolchain-debian.tar.gz to the ***WD-Firmware/demo/build/toolchain*** directory
+	- From the repo root folder, unzip riscv-llvm-toolchain-debian.tar.gz to the ***WD-Firmware/demo/build/toolchain*** directory
 	
           $ tar -xvf riscv-llvm-toolchain-debian.tar.gz -C ./WD-Firmware/demo/build/toolchain/
 
@@ -99,7 +103,7 @@ WD-Firmware
 
           $ tar -xvf eclipse_mcu_2019_12.tar.gz -C [Eclipse-MCU-root]
 
-    - Standard packages that are required can be installed by the following command:
+    - Standard packages are required; the following command can install those:
 
           $ sudo apt-get install scons libftdi1-2 libmpfr4
     
@@ -129,9 +133,9 @@ WD-Firmware
             $ ./config.sh
             
             Then you will be asked to choose a demo.
-            For more explanation on adding new demos please read the readme file on ***'/demos'***
+            For more explanation on adding new demos; please read the readme file on ***'/demos'***
            
-      **Note**: to run the script you will need `Python`, we support **`Python 2.7`** only      
+      **Note**: to run the script, you will need `Python`; we support **`Python 2.7`** only      
       
     - From 'Eclipse MCU' menu bar select '*Project'* -> *'Build All'*. Note that you can select which platform to build for.
     - Since the building process use SCons build system, you can build via console/terminal. Please read the readme on ***’/build’*** 
@@ -150,7 +154,7 @@ We provide several platforms to work with, please follow the instructions for th
 
             $ sudo cp [WD-firmware-root]/WD-Firmware/board/hifive1/99-openocd.rules  /etc/udev/rules.d/
             
-	- Add and verify current user to ___plugdev___ group
+	- Add and verify the current user to ___plugdev___ group
 
             $ sudo usermod -a -G plugdev $USER
             $ groups
@@ -160,7 +164,7 @@ We provide several platforms to work with, please follow the instructions for th
 - #### Setting up Nexys-A7 for SweRV - SweRVolf 
 
     ***EH1 and EL2*** SweRVolf are fpga files create by Olof Kindgren under CHIPS-Alliance
-    If you wish to know more please use this link: [Cores-SweRVolf](https://github.com/chipsalliance/Cores-SweRVolf)
+    If you wish to know more, please use this link: [Cores-SweRVolf](https://github.com/chipsalliance/Cores-SweRVolf)
 
     ***For the FPGA bit file loading, do the following steps:***
     - ***FPGA image file loading***: using uSD device
@@ -175,8 +179,8 @@ We provide several platforms to work with, please follow the instructions for th
         ![](prog_mode.png)
         
         ![](nexys-a7.png)
-		- At power-on the FPGA bit file is loaded to the FPGA. LED 'Busy' should be ORANGE while flushing is done
-		- Wait for ORANGE led to be off, once off the board is ready to be used
+		- At power-on, the FPGA bit file is loaded to the FPGA. LED 'Busy' should be ORANGE while flushing is done
+		- Wait for ORANGE led to be off, once off, the board is ready to be used
 
     - ***FPGA image file loading***: using eclipse MCU:
     	- From eclipse IDE menu bar open the External Tools Configurations: *'Run'* -> *'External Tools'* -> *'External Tools Configurations...'*
@@ -188,7 +192,7 @@ We provide several platforms to work with, please follow the instructions for th
 
 &nbsp;
 
-- #### Setting up ISS (works as simulator for SweRV EH1, EH2 and EL2)
+- #### Setting up ISS (works as a simulator for SweRV EH1, EH2, and EL2)
     
     There is nothing to set for SweRV ISS, just select debugger luncher (following next)..
 &nbsp; 
@@ -231,12 +235,12 @@ The folder WD-Firmware/demo/build/ contains a template file (SConscript_template
 	- Check llvm-hash.txt for the precise commits of toolchain build
 
 # Notes and status
-This repo is always under work, following are notes and status for items that is still missing or under work.
+This repo is always under work; the following are notes and status for items that is still missing or under work.
 - #### 05-Oct-2020
     - All EH2 demos are working only on Whisper, no fpga
     - Currently, Software-Interrupts are not supported in EL2 fpga. Until it will be supported, you can use Whisper for this demo.
     - Bitmanip is supported only on LLVM.
-    
+
 - #### 28-Feb-2021
     - All EH2 demos are working including FPGA support
     - Supporting SMP debugging for EH2
