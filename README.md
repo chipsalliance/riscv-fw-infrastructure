@@ -41,7 +41,7 @@ This repository is WD RISC-V Firmware package, holds:
 - #### Using LLVM Toolchain 
 	From the repo root folder, unzip riscv-llvm-toolchain-debian.tar.gz to the ***WD-Firmware/demo/build/toolchain*** directory
 
-      $ tar -xvf riscv-llvm-toolchain-debian.tar.gz -C ./WD-Firmware/gdemo/build/toolchain/ 
+      $ tar -xvf riscv-llvm-toolchain-debian.tar.gz -C ./WD-Firmware/demo/build/toolchain/ 
 
   ## **Notes**:
   - **COMRV demo** will work only with the LLVM toolchain, **GCC is not supported**
