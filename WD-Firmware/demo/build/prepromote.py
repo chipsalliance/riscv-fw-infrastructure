@@ -17,6 +17,7 @@ import traceback
 from subprocess import check_output
 from copy import deepcopy
 import multiprocessing
+
 try:
     import serial
 except ImportError as e:
@@ -26,8 +27,8 @@ except ImportError as e:
         exit(1)
     import serial
 
-#TODO get is as a python input
-INT_DEMO_TO_IN_SECONDS = 7*60
+# TODO get is as a python input
+INT_DEMO_TO_IN_SECONDS = 7 * 60
 INT_PLATFORM_EXE_DELAY_IN_SECS = 2
 INT_TOOLCHAIN_INDEX = 0
 INT_PLATFORM_NAME_INDEX = 1
@@ -40,6 +41,7 @@ INT_MAX_END_COUNT = 5
 
 STR_PASSED = "passed"
 STR_FAILED = "failed"
+STR_NA = "n/a"
 STR_MODULE_PATTERN = "demos.demo_%s"
 STR_GDB_CONF_PATTERN = "swervolf_nexys_%s_debug.cfg"
 STR_RUN_CONF_PATTERN = "swervolf_nexys_%s_debug.cfg"
@@ -67,12 +69,13 @@ STR_CLEAN_CMD = "%s -c" % STR_BUILD_CMD
 
 STR_BIN_EXT = ".elf"
 
+
 strLogFile = os.path.join(STR_CI_FOLDER, "prepromote.log")
 if os.path.isfile(strLogFile):
     os.unlink(strLogFile)
 log = logging.getLogger("prepromote")
 log.setLevel(logging.DEBUG)
-#log.setLevel(logging.INFO)
+# log.setLevel(logging.INFO)
 # create file handler which logs even debug messages
 fh = logging.FileHandler(strLogFile)
 # create console handler with a higher log level
@@ -86,9 +89,9 @@ log.addHandler(fh)
 log.addHandler(ch)
 log.info("testing log")
 
-# this class is responsible for managing the prepromote.json
-class clsData(object):
 
+class clsData(object):
+    # this class is responsible for managing the prepromote.json
     def __init__(self, strDemosList):
         try:
             self.dictResults = {}
@@ -125,23 +128,24 @@ class clsData(object):
     # this function is responsible  for renaming demos that shouldn't be executed
     # function args:
     # strUserDemosList - list of demos to execute
-    def fnParseUserDemosList(self, strUserDemosList):
+    @staticmethod
+    def fnParseUserDemosList(strUserDemosList):
         try:
             # check if we need to filter demos - end user provided a demo list
-            if strUserDemosList != None:
+            if strUserDemosList:
                 strUserDemosList = re.findall(r"[\w']+", strUserDemosList)
                 listExistingDemos = []
                 # build a list of all existing demos
                 for strFilename in os.listdir(STR_DEMOS_FOLDER):
                     if strFilename.startswith("demo") and strFilename.endswith(".py"):
-                          listExistingDemos.append(strFilename)
+                        listExistingDemos.append(strFilename)
                 # remove from the list all demos the end user wishes to execute
                 listExistingDemosDuplicated = listExistingDemos[:]
                 for strDemoName in strUserDemosList:
                     for strName in listExistingDemosDuplicated:
                         if strDemoName in strName:
                             listExistingDemos.pop(listExistingDemos.index(strName))
-                # the list now contains all demos that don't need to be executed - 
+                # the list now contains all demos that don't need to be executed -
                 # rename them so they won't be included
                 for strDemoName in listExistingDemos:
                     strFileName = os.path.join(STR_DEMOS_FOLDER, strDemoName)
@@ -152,6 +156,7 @@ class clsData(object):
         except Exception as e:
             log.debug("clsData fnParseUserDemosList")
             raise e
+
 
 '''
 class clsReadPts(object):
@@ -187,6 +192,8 @@ class clsReadPts(object):
                 log.info("%s demo end" % strPTSIndex)
                 self.boolTestDone = True
 '''
+
+
 # a simple class for queue of exceptions
 class clsExceptionQueue(Queue.Queue):
 
@@ -199,8 +206,8 @@ class clsExceptionQueue(Queue.Queue):
     # functions args:
     # boolRaiseException - True, if the queue isn't empty, raise the exception 
     #                      False, if the queue isn't empty, don't raise an exception 
-    def fnQueryException(self, boolRaiseException = True):
-        #raise Exception
+    def fnQueryException(self, boolRaiseException=True):
+        # raise Exception
         # get a snapshot of the queue contents
         listExceptions = self.__fnSnapshot()
         if len(listExceptions):
@@ -215,6 +222,7 @@ class clsExceptionQueue(Queue.Queue):
             return True
         return False
 
+
 # a listener class responsible for parsing data from an output source 
 # an output example can be a file, usb, pst, etc.
 # the general purpose of the class is to capture from the output the 'start' and 'end'/'error'
@@ -228,7 +236,7 @@ class clsListener(object):
 
     # strLog - log file path
     # boolStoreResults - should we log or not
-    def __init__(self, strLog, boolStoreResults = True):
+    def __init__(self, strLog, boolStoreResults=True):
         try:
             # there can be several listeners - this holds the index of the actual listener
             self.strConnectedListenerIndex = ""
@@ -277,45 +285,47 @@ class clsListener(object):
         log.debug("clsListener fnStartListening enter %s" % strListenerIndex)
         try:
             # Keep listening as long as not completed yet 
-            while self.boolListenerDone == False:
-                 try:
-                     # Read one line
-                     data = listenerHandle.readline().strip()
-                 except Exception as e:
-                     # Make sure we only log once the exception in case  
-                     # it occurs several times
-                     if exceptionSaved == None or exceptionSaved != e:
+            while not self.boolListenerDone:
+                try:
+                    # Read one line
+                    data = listenerHandle.readline().strip()
+                except Exception as e:
+                    # Make sure we only log once the exception in case
+                    # it occurs several times
+                    if exceptionSaved is None or exceptionSaved != e:
                         log.debug("%s exception %s" % (strListenerIndex, str(e)))
                         exceptionSaved = e
-                     pass
-                 # in some cases we may get \x00 which will cause the script to get stuck
-                 # so if we find it we ignore it
-                 if not data or data.find("\x00") != -1:
-                     continue
-                 # log the data we got
-                 log.debug("%s read: %s" % (strListenerIndex, data))
-                 # add the data to the list
-                 listData.append(data)
-                 # capture start of demo
-                 if STR_TEST_STARTED in data:
-                     # save the listener string index for later use 
-                     self.strConnectedListenerIndex = strListenerIndex
-                     log.info("%s demo start" % strListenerIndex)
-                 # capture end of demo only by the selected listener
-                 elif (self.strConnectedListenerIndex == strListenerIndex) and (STR_TEST_ENDED in data or STR_TEST_ERROR in data):
-                     # mark we are done
-                     self.boolListenerDone = True
-                     #log.debug(listData)
-                     log.info("%s demo end" % strListenerIndex)
-                 # listener got aborted
-                 elif STR_LISTENER_ABORTED in data:
-                     # mark we are done
-                     self.boolListenerDone = True
-                     log.info("%s demo aborted" % strListenerIndex)
-                 # other listener is waiting for a demo to complete/timeout while this listener is capturing '...end' from older demo
-                 elif STR_TEST_ENDED in data or STR_TEST_ERROR in data:
-                     intCountDemoEnd += 1
-                     if intCountDemoEnd > INT_MAX_END_COUNT:
+                    pass
+                # in some cases we may get \x00 which will cause the script to get stuck
+                # so if we find it we ignore it
+                if not data or data.find("\x00") != -1:
+                    continue
+                # log the data we got
+                log.debug("%s read: %s" % (strListenerIndex, data))
+                # add the data to the list
+                listData.append(data)
+                # capture start of demo
+                if STR_TEST_STARTED in data:
+                    # save the listener string index for later use
+                    self.strConnectedListenerIndex = strListenerIndex
+                    log.info("%s demo start" % strListenerIndex)
+                # capture end of demo only by the selected listener
+                elif (self.strConnectedListenerIndex == strListenerIndex) and (
+                        STR_TEST_ENDED in data or STR_TEST_ERROR in data):
+                    # mark we are done
+                    self.boolListenerDone = True
+                    # log.debug(listData)
+                    log.info("%s demo end" % strListenerIndex)
+                # listener got aborted
+                elif STR_LISTENER_ABORTED in data:
+                    # mark we are done
+                    self.boolListenerDone = True
+                    log.info("%s demo aborted" % strListenerIndex)
+                # other listener is waiting for a demo to complete/timeout while this listener is capturing '...end'
+                # from older demo
+                elif STR_TEST_ENDED in data or STR_TEST_ERROR in data:
+                    intCountDemoEnd += 1
+                    if intCountDemoEnd > INT_MAX_END_COUNT:
                         listData = []
                         # we can stop capturing '...end' or '...error'
                         break
@@ -338,7 +348,7 @@ class clsListener(object):
 
     # this function is responsible for waiting until all listeners have
     # completed executing the thread function
-    def fnWaitForCompletion(self, boolForceAbort = False):
+    def fnWaitForCompletion(self, boolForceAbort=False):
         try:
             # loop as long as the listeners counter didn't get to 0
             while self.NumOfListeners != 0:
@@ -346,10 +356,11 @@ class clsListener(object):
         except Exception as e:
             log.debug("exception clsListener fnWaitForCompletion")
             raise e
-    
+
     # allow from the outide to query if an exception occurred
-    def fnQueryException(self, boolRaiseException = True):
+    def fnQueryException(self, boolRaiseException=True):
         return self.queue.fnQueryException(boolRaiseException)
+
 
 # this is a file listener class
 #                 clsListener
@@ -372,7 +383,7 @@ class clsFileListener(clsListener):
             raise e
 
     # start the listener thread
-    def fnStart(self, strListenerIndex = None, listenerHandle = None):
+    def fnStart(self, strListenerIndex=None, listenerHandle=None):
         try:
             # open the file to listen to
             self.fileHandler = open(self.listListeners[0], "r")
@@ -387,7 +398,7 @@ class clsFileListener(clsListener):
     def fnStartListening(self, strListenerIndex, listenerHandle):
         try:
             # parent thread listener function
-            super(clsFileListener,  self).fnStartListening(strListenerIndex, listenerHandle)
+            super(clsFileListener, self).fnStartListening(strListenerIndex, listenerHandle)
             # now that listener is completed, close the file
             self.fileHandler.close()
         except Exception as e:
@@ -401,12 +412,12 @@ class clsFileListener(clsListener):
             if boolForceAbort:
                 log.debug("clsFileListener fnWaitForCompletion before")
                 fileHandler = open(self.listListeners[0], "a")
-                #inject the file that listener needs to abort
+                # inject the file that listener needs to abort
                 fileHandler.write(STR_LISTENER_ABORTED)
                 fileHandler.close()
                 log.debug("clsFileListener fnWaitForCompletion after")
             # call parent function
-            super(clsFileListener,  self).fnWaitForCompletion()
+            super(clsFileListener, self).fnWaitForCompletion()
         except Exception as e:
             log.debug("exception clsFileListener fnWaitForCompletion")
             raise e
@@ -435,7 +446,7 @@ class clsSerialListener(clsListener):
             raise e
 
     # start the listener treads - depending on the number of connected USBs
-    def fnStart(self, strListenerIndex = None, listenerHandle = None):
+    def fnStart(self, strListenerIndex=None, listenerHandle=None):
         try:
             # for each connected USB start its own listener tread
             # thread function is the one in clsListener
@@ -463,15 +474,16 @@ class clsSerialListener(clsListener):
                 self.boolListenerDone = True
                 log.debug("clsSerialListener fnWaitForCompletion")
             # wait for completion
-            super(clsSerialListener,  self).fnWaitForCompletion()
+            super(clsSerialListener, self).fnWaitForCompletion()
         except Exception as e:
             log.debug("exception clsSerialListener fnWaitForCompletion")
             raise e
 
+
 # factory class to create listeners depending on the interface type
 class clsListenerFactory(object):
-
-    def fnCreateListener(self, strInterfaceName, stLogFileName):
+    @staticmethod
+    def fnCreateListener(strInterfaceName, stLogFileName):
         try:
             # create serial listener
             if strInterfaceName == "openocd":
@@ -487,6 +499,7 @@ class clsListenerFactory(object):
             log.debug("exception clsListenerFactory fnCreateListener")
             raise e
 
+
 # GDB class
 class clsGdb(object):
 
@@ -497,7 +510,8 @@ class clsGdb(object):
     def __init__(self, dictConfig, sessionNumber, strTimeStamp):
         try:
             # full path of GDB including the executable GDB file name taken from the prepromote.json file 
-            self.strCMD = os.path.join(dictConfig["gdb"]["location"].format(WS=STR_WS_FOLDER), dictConfig["gdb"]["command"])
+            self.strCMD = os.path.join(dictConfig["gdb"]["location"].format(WS=STR_WS_FOLDER),
+                                       dictConfig["gdb"]["command"])
             # object process for the GDB session
             self.objProcess = object
             # hold the GDB session parameters
@@ -505,7 +519,8 @@ class clsGdb(object):
             # session number
             self.strSessionNumber = str(sessionNumber)
             # GDB session log file
-            self.strLog = os.path.join(STR_CI_FOLDER, "%s_%s_gdb_%s.log" % (strTimeStamp, self.dictConfig["board"],self.strSessionNumber))
+            self.strLog = os.path.join(STR_CI_FOLDER, "%s_%s_gdb_%s.log" % (
+                strTimeStamp, self.dictConfig["board"], self.strSessionNumber))
         except Exception as e:
             log.debug("exception clsGdb __init__")
             raise e
@@ -537,7 +552,8 @@ class clsGdb(object):
                 listData.append(gdbCmd.format(WS=STR_WS_FOLDER))
             strData = "\n".join(cmd for cmd in listData if cmd)
             # GDB commands file name
-            strCmdFile = os.path.join(STR_CI_FOLDER, "%s_gdb_cmd_%s" % (self.dictConfig["board"], self.strSessionNumber))
+            strCmdFile = os.path.join(STR_CI_FOLDER,
+                                      "%s_gdb_cmd_%s" % (self.dictConfig["board"], self.strSessionNumber))
             # Write all the commands to the file
             f = open(strCmdFile, "w")
             f.write(strData)
@@ -552,14 +568,14 @@ class clsGdb(object):
         try:
             log.debug("clsGdb fnTerminateProcess(): enter %s" % self.strSessionNumber)
             # if the process still exist
-            if self.objProcess.poll() == None:
+            if self.objProcess.poll() is None:
                 # terminate GDB process
                 self.objProcess.terminate()
                 # wait for process termination
                 self.objProcess.wait()
                 # if the process still exist, wait for 1 second and kill it
                 # this case should never happen
-                while self.objProcess.poll() == None:
+                while self.objProcess.poll() is None:
                     log.debug("clsGdb fnTerminateProcess(): self.objProcess.poll() == None")
                     time.sleep(1)
                     self.objProcess.kill()
@@ -567,6 +583,7 @@ class clsGdb(object):
         except Exception as e:
             log.debug("exception clsGdb fnTerminateProcess")
             raise e
+
 
 # this class is responsible for executing a demo on a specific platform
 # it opens an openocd/whisper process, GDB process and a listener thread/s
@@ -613,7 +630,7 @@ class clsPlatform(object):
             for i in range(gdbSessions):
                 # we must have a delta between each session start 
                 time.sleep(2)
-                self.objGdb.append(clsGdb(self.dictConfig, i+1, self.strTimestamp))
+                self.objGdb.append(clsGdb(self.dictConfig, i + 1, self.strTimestamp))
                 # start the GDB session
                 self.objGdb[i].fnStart()
             # used to catch a timeout
@@ -644,8 +661,8 @@ class clsPlatform(object):
 
     # check if any process raised an exception
     def fnCheckForException(self):
-        self.queue.fnQueryException();
-        self.listenerObj.fnQueryException();
+        self.queue.fnQueryException()
+        self.listenerObj.fnQueryException()
 
     # start openocd/whisper process 
     def fnStart(self):
@@ -660,7 +677,7 @@ class clsPlatform(object):
         except Exception as e:
             log.debug("exception clsPlatform fnStart")
             raise e
-    
+
     # perform flush
     def fnFlush(self):
         try:
@@ -670,7 +687,8 @@ class clsPlatform(object):
                 # flush command
                 listCommand = shlex.split("%s" % (self.dictConfig["flush"].format(WS=STR_WS_FOLDER)))
                 # start the flush process
-                proc = subprocess.Popen(listCommand, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                proc = subprocess.Popen(listCommand, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE,
                                         shell=False, cwd=self.dictConfig["board_wd"])
                 # wait for the flush to complete
                 data, err = proc.communicate()
@@ -689,14 +707,14 @@ class clsPlatform(object):
     def fnTerminateProcess(self):
         try:
             # if process is still alive
-            if self.objProcess.poll() == None:
+            if self.objProcess.poll() is None:
                 # terminate it
                 self.objProcess.terminate()
                 # wait for termination to complete
                 self.objProcess.wait()
                 # if the process still exist
                 # this case should never happen
-                while self.objProcess.poll() == None:
+                while self.objProcess.poll() is None:
                     log.debug("After termination openocd Still running")
         except Exception as e:
             log.debug("exception clsPlatform fnTerminateProcess")
@@ -723,6 +741,7 @@ class clsPrepromote(object):
         try:
             self.objConfig = object
             self.strBuildFolder = ""
+            self.listBorads = []
             self.dictDemos = {}
             self.dictResults = {}
             self.dictBoards = {}
@@ -806,7 +825,7 @@ class clsPrepromote(object):
             raise e
 
     def fnGetListOfTargetsToRun(self):
-        if self.fileExpectedResultsCsv != None:
+        if self.fileExpectedResultsCsv is not None:
             return next(csv.reader(self.fileExpectedResultsCsv))
         return []
 
@@ -819,7 +838,7 @@ class clsPrepromote(object):
                 objDemo = self.dictDemos[strDemo]
                 log.info("Executing demo: %s" % strDemo)
                 log.info("Found %s supported targets: [ %s ]" % (
-                len(objDemo.listDemoSpecificTargets), ", ".join(objDemo.listDemoSpecificTargets)))
+                    len(objDemo.listDemoSpecificTargets), ", ".join(objDemo.listDemoSpecificTargets)))
                 # loop all toolchains
                 for strToolChain in objDemo.listToolchains:
                     log.info("Using \"%s\" toolchain" % strToolChain)
@@ -838,7 +857,7 @@ class clsPrepromote(object):
                                     log.info("skipping %s" % strName)
                                     continue
                                 # build only once
-                                if boolBuildFlag == False:
+                                if not boolBuildFlag:
                                     boolBuildFlag = True
                                     # build failed
                                     if self.fnBuild(strDemo, strTarget) != 0:
@@ -847,7 +866,7 @@ class clsPrepromote(object):
                                         log.error("-----------------------------------")
                                         for intf in dictConfig["interface"]:
                                             self.fnLogResults(strToolChain, intf, strTarget, strDemo, STR_FAILED)
-                                        #no need to continue to other interfaces since build fails
+                                        # no need to continue to other interfaces since build fails
                                         break
                                 # prepare all run parameters
                                 interfaceDescriptorDict = dictConfig["interface_descriptor"]
@@ -866,12 +885,14 @@ class clsPrepromote(object):
                                 # create an instance of the platform we are about to run
                                 self.platformObj = clsPlatform(interfaceDictConfig)
                                 intRetryCount = 0
+                                strResult = ""
                                 # we loop twice just in case the first run failed
                                 while intRetryCount < 2:
                                     # run the demo
                                     strLogFileResult = self.platformObj.fnRun()
-                                    os.system("echo \"\n%s\" >> %s" %(STR_END_OF_LOG, strLogFileResult))
-                                    strResult = self.fnParseResults(strToolChain, interface, strTarget, strDemo, strLogFileResult)
+                                    os.system("echo \"\n%s\" >> %s" % (STR_END_OF_LOG, strLogFileResult))
+                                    strResult = self.fnParseResults(strToolChain, interface, strTarget, strDemo,
+                                                                    strLogFileResult)
                                     log.info(strResult)
                                     # if the demo failed we go for a second run
                                     if strResult == STR_PASSED:
@@ -879,7 +900,7 @@ class clsPrepromote(object):
                                         intRetryCount = 2
                                     else:
                                         intRetryCount = intRetryCount + 1
-                                        if intRetryCount < 2: 
+                                        if intRetryCount < 2:
                                             log.info("Rerun: %s %s" % (strBoard, strDemo))
                                 # log the demo run results
                                 self.fnLogResults(strToolChain, interface, strTarget, strDemo, strResult)
@@ -892,7 +913,8 @@ class clsPrepromote(object):
     # parse the demo results
     # this function will look in the log file and search for the text 'start' and 'stop'/'error'
     # and will return 'passed'/'failed' accordingly
-    def fnParseResults(self, strToolChain, interface, strTargetName, strDemoName, strResultFile):
+    @staticmethod
+    def fnParseResults(strToolChain, interface, strTargetName, strDemoName, strResultFile):
         try:
             boolStart = False
             boolEnd = False
@@ -912,7 +934,7 @@ class clsPrepromote(object):
                     break
             f.close()
             # if no indication for start or end - this means the demo had failed 
-            if boolStart == False or boolEnd == False:
+            if not boolStart or not boolEnd:
                 strResult = STR_FAILED
         except Exception as e:
             log.debug("exception clsPrepromote fnParseResults")
@@ -969,12 +991,11 @@ class clsPrepromote(object):
     # output the results
     def fnPrintResults(self):
         try:
-            platformsList = []
+            platformsList = ["demo name"]
             # build list of platforms
-            platformsList.append("demo name")
             for demoRes in self.listDemoResults:
-                if demoRes[2]+'-'+demoRes[1] not in platformsList:
-                    platformsList.append(demoRes[2]+'-'+demoRes[1])
+                if demoRes[2] + '-' + demoRes[1] not in platformsList:
+                    platformsList.append(demoRes[2] + '-' + demoRes[1])
             # build platforms dict
             platformDict = {}
             platformDict.setdefault("demo name", 0)
@@ -989,27 +1010,28 @@ class clsPrepromote(object):
             for strDemo in sorted(listDemos):
                 demosDict.setdefault(strDemo, listDemos.index(strDemo))
             intNumOfCol = len(demosDict)
-            csvTable = [["n/a" for i in range(1+len(platformDict))] for j in range(len(demosDict)*2)]
+            csvTable = [[STR_NA for i in range(1 + len(platformDict))] for j in range(len(demosDict) * 2)]
             csvFileHandle = open(os.path.join(STR_CI_FOLDER, "checklist.csv"), "w+")
             csvFileHandle.write(','.join(platformsList))
             csvFileHandle.write("\n")
             # log all the results to a CSV file
             for listDemoResult in self.listDemoResults:
-                if listDemoResult[INT_TOOLCHAIN_INDEX] =="gcc":
+                if listDemoResult[INT_TOOLCHAIN_INDEX] == "gcc":
                     row = 0
-                else: 
+                else:
                     row = intNumOfCol
                 row = row + demosDict[listDemoResult[INT_DEMO_NAME_INDEX]]
-                col = platformDict[listDemoResult[INT_TARGET_NAME_INDEX]+'-'+listDemoResult[INT_PLATFORM_NAME_INDEX]]
+                col = platformDict[
+                    listDemoResult[INT_TARGET_NAME_INDEX] + '-' + listDemoResult[INT_PLATFORM_NAME_INDEX]]
                 csvTable[row][col] = listDemoResult[INT_RESULT_INDEX]
                 csvTable[row][len(platformsList)] = listDemoResult[INT_TOOLCHAIN_INDEX]
             for strDemo in sorted(listDemos):
                 csvTable[demosDict[strDemo]][0] = strDemo
-                csvTable[demosDict[strDemo]+intNumOfCol][0] = strDemo
+                csvTable[demosDict[strDemo] + intNumOfCol][0] = strDemo
             for row in csvTable:
                 csvFileHandle.write(','.join(row))
                 csvFileHandle.write("\n")
-            
+
             # if end user provided a CSV file, we need to compare our results
             # with the given file - maybe some test did fail but it is expected
             if self.fileExpectedResultsCsv:
@@ -1019,43 +1041,129 @@ class clsPrepromote(object):
 
             csvFileHandle.close()
 
-            if self.boolDemosFail == True:
+            if self.boolDemosFail:
                 print("Failed demos:")
                 for failedDemo in self.listDemoFailedResults:
                     print(failedDemo)
-                print("   ______    _ _  ")
-                print("  |  ____|  (_) | ")
-                print("  | |__ __ _ _| | ")
-                print("  |  __/ _` | | | ")
-                print("  | | | (_| | | | ")
-                print("  |_|  \__,_|_|_| ")
+                print(r"   ______    _ _  ")
+                print(r"  |  ____|  (_) | ")
+                print(r"  | |__ __ _ _| | ")
+                print(r"  |  __/ _` | | | ")
+                print(r"  | | | (_| | | | ")
+                print(r"  |_|  \__,_|_|_| ")
             else:
-                print("  _____               ")
-                print(" |  __ \              ")
-                print(" | |__) |_ _ ___ ___  ")
-                print(" |  ___/ _` / __/ __| ")
-                print(" | |  | (_| \__ \__ \ ")
-                print(" |_|   \__,_|___/___/ ")
+                print(r"  _____               ")
+                print(r" |  __ \              ")
+                print(r" | |__) |_ _ ___ ___  ")
+                print(r" |  ___/ _` / __/ __| ")
+                print(r" | |  | (_| \__ \__ \ ")
+                print(r" |_|   \__,_|___/___/ ")
             print(" ")
         except Exception as e:
             log.debug("exception clsPrepromote fnPrintResults")
             raise e
 
+    @staticmethod
+    def fnListFromCSV(csvFile):
+        try:
+            listData = []
+            for row in csv.reader(csvFile):
+                listData.append(row)
+            return listData
+        except Exception as e:
+            log.debug("exception clsPrepromote fnListFromCSV")
+            raise e
+
+    def fnCompareLog(self, listResHeader, listResultLine, listExpectedHeader, listExpectedLine, strMsg):
+        try:
+            log.info(strMsg)
+            if listExpectedLine:
+                log.info("          %s" % repr(listExpectedHeader))
+                log.info("Expected: %s" % repr(listExpectedLine))
+            log.info("          %s" % repr(listResHeader))
+            log.info("Recieved: %s\n" % repr(listResultLine))
+        except Exception as e:
+            log.debug("exception clsPrepromote fnCompareLog")
+            raise e
+
+    def fnCompareCsvLine(self, listResHeader, listResultLine, listExpectedHeader, listExpectedLine):
+        try:
+            boolErrorFound = False
+            # loop through the targets result over csv line
+            for i in range(0, len(listResultLine)):
+                strStatus = listResultLine[i].strip()
+                # only failed results are interesting at this point
+                if strStatus == STR_FAILED:
+                    # get the target of the failed demo
+                    strResTarget = listResHeader[i]
+                    # get the index of the target in the expected results
+                    if strResTarget not in listExpectedHeader:
+                        # set the line error flag
+                        boolErrorFound = True
+                        # break target status loop as we found first error (printing all the targets line)
+                        break
+                    intExpectedIndex = listExpectedHeader.index(strResTarget)
+                    # check if the value of the matching index in the expected list does not match the result
+                    if strStatus != listExpectedLine[intExpectedIndex]:
+                        # set the line error flag
+                        boolErrorFound = True
+                        # break target status loop as we found first error (printing all the targets line)
+                        break
+
+            if boolErrorFound:
+                self.fnCompareLog(listResHeader, listResultLine, listExpectedHeader, listExpectedLine,
+                                  "Failure found, results are not as expected!!!")
+            else:
+                # we found a missmatch but it was not due to failure
+                # the test has passed but the expected csv is not updated
+                self.fnCompareLog(listResHeader, listResultLine, listExpectedHeader, listExpectedLine,
+                                  "Something went wrong!!! a new test has passed :), Please update the expected csv")
+            return boolErrorFound
+        except Exception as e:
+            log.debug("exception clsPrepromote fnCompareCsvLine")
+            raise e
+
     # this function compares our CSV results with the end user provided CSV file
     def fnCompareCsvFiles(self, fileBaseCsv, fileNewCsv):
         try:
+            fileBaseCsv.seek(0.0)
+            listExpected = self.fnListFromCSV(fileBaseCsv)
+            listResult = self.fnListFromCSV(fileNewCsv)
+
+            # reset csv reader iterator counter to match future use in other functions
+            fileBaseCsv.seek(0.0)
+            header = csv.reader(fileBaseCsv).next()
+
+            # get the csv headers to ba able to match targets of the demo
+            listExpectedHeader = listExpected[0]
+            listResHeader = listResult[0]
+            # flag for overall compare status
             boolComparePass = True
-            # skip new csv header
-            strNewCsvFileLine = next(csv.reader(fileNewCsv))
-            strLineNewCsvFileLines = iter(csv.reader(fileNewCsv))
-            strLineBaseCsvFileLines = iter(csv.reader(fileBaseCsv))
-            for strBaseCsvFileLine, strNewCsvFileLine in zip(strLineBaseCsvFileLines, strLineNewCsvFileLines):
-                # if not match, print the diffs
-                if strNewCsvFileLine != strBaseCsvFileLine:
+            # loop through results csv and compare to expected
+            for listResLine in listResult:
+                if STR_FAILED not in listResLine:
+                    continue
+                boolMatchFound = False
+                for listExpectedLine in listExpected:
+                    if listResLine == listExpectedLine:
+                        # result has been found in the expected
+                        boolMatchFound = True
+                        # break expected loop as we found a match line with no errors
+                        break
+                    if listResLine != listExpectedLine:
+                        # check if the demo (at index 0) and the toolchain (last index) does match
+                        # we iterate though the the expected csv multiple times
+                        if listResLine[0] == listExpectedLine[0] and listResLine[-1] == listExpectedLine[-1]:
+                            # result has been found in the expected
+                            boolMatchFound = True
+                            # compare csv lines
+                            if self.fnCompareCsvLine(listResHeader, listResLine, listExpectedHeader, listExpectedLine):
+                                boolComparePass = False
+                            break
+                if not boolMatchFound:
+                    self.fnCompareLog(listResHeader, listResLine, [], [],
+                                  "Failure found, results are not as expected!!!")
                     boolComparePass = False
-                    log.info("          %s" % self.strExpectedHeaderLine)
-                    log.info("Expected: %s" % strBaseCsvFileLine)
-                    log.info("Recieved: %s\n" % strNewCsvFileLine)
         except Exception as e:
             log.debug("exception clsPrepromote fnCompareCsvFiles")
             raise e
@@ -1063,11 +1171,12 @@ class clsPrepromote(object):
 
     # allow clean exit in case of exception
     def fnExit(self):
-        if self.platformObj != None:
+        if self.platformObj is not None:
             print("Before self.platformObj.fnTerminateCurrentExecution(True)")
             self.platformObj.fnTerminateCurrentExecution(True)
             print("After self.platformObj.fnTerminateCurrentExecution(True)")
         exit(1)
+
 
 # parse user arguments
 def fnParseArguments():
@@ -1075,7 +1184,8 @@ def fnParseArguments():
         listArgs = []
         parser = argparse.ArgumentParser()
         parser.add_argument('--exp', dest='csv', help='expected results (csv file)', default=None, type=file)
-        parser.add_argument('--listdemo', dest='listdemo', help='comma seperated list to execute', default=None, type=str)
+        parser.add_argument('--listdemo', dest='listdemo', help='comma seperated list to execute', default=None,
+                            type=str)
         args = parser.parse_args()
         for arg in vars(args):
             listArgs.append(getattr(args, arg))
@@ -1086,7 +1196,9 @@ def fnParseArguments():
         raise e
     return listArgs
 
+
 if __name__ == "__main__":
+    objPrepromote = object
     try:
         log.info("Prepromote starting .... ")
         # parse end user arguments
@@ -1100,8 +1212,8 @@ if __name__ == "__main__":
         objPrepromote.fnPrintResults()
         log.info("Prepromote End .... ")
         # close the CSV provided by the end user (if provided)
-        if listArgs[0] != None:
-            listArgs[0].close();
+        if listArgs[0] is not None:
+            listArgs[0].close()
     except Exception as e:
         # log we got an exception
         log.error("Prepromote exception:")
@@ -1110,7 +1222,7 @@ if __name__ == "__main__":
         # exit due to the exception
         objPrepromote.fnExit()
     # if we had a failure, exit with 1
-    if objPrepromote.boolDemosFail == True:
+    if objPrepromote.boolDemosFail:
         exit(1)
     # not error - exit
     exit(0)
