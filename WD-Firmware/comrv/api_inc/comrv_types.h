@@ -27,7 +27,7 @@
 /**
 * include files
 */
-#include "common_types.h"
+#include "comrv_config.h"
 #include "comrv_defines.h"
 
 /**

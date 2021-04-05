@@ -1,6 +1,6 @@
 '''
  SPDX-License-Identifier: Apache-2.0
- Copyright 2019 Western Digital Corporation or its affiliates.
+ Copyright 2019-2021 Western Digital Corporation or its affiliates.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -157,8 +157,13 @@ objDemo.listSconscripts.append(strPsp + Env['TARGET_BOARD'])
 objDemo.listSconscripts.append(strBsp+ Env['TARGET_BOARD'])
 
 Env["Scan"] = True
+strPathToComrvSConscript = os.path.join(Env['ROOT_DIR'], 'comrv', 'build', strSconscriptPrefix)
 for strSconscript in objDemo.listSconscripts:
-  SConscript(strSconscriptPrefix +'%s' % strSconscript, exports='Env')
+  if strSconscript != 'comrv':
+    SConscript(strSconscriptPrefix +'%s' % strSconscript, exports='Env')
+  else:
+    Env['COMRV_OUT_DIR_BASE'] = os.path.join(Env['ROOT_DIR'], 'demo', 'build', Env['OUT_DIR_PATH'])
+    SConscript(strPathToComrvSConscript + '%s' % strSconscript, exports='Env')
   
  
 arrLibs = []
@@ -168,7 +173,11 @@ print strStartHeader
 print "Building SConscripts files:\n\n-%s" % "\n-".join(objDemo.listSconscripts)
 print strEndHeader
 for strSconscript in objDemo.listSconscripts:
-  arrLibs.append(SConscript(strSconscriptPrefix + '%s' % strSconscript, exports='Env'))
+  if strSconscript != 'comrv':
+    arrLibs.append(SConscript(strSconscriptPrefix + '%s' % strSconscript, exports='Env'))
+  else:
+    arrLibs.append(SConscript(strPathToComrvSConscript + '%s' % strSconscript, exports='Env'))
+    
 
 #execute pre build actions
 Execute(Delete(Env['ELF_FILE']))

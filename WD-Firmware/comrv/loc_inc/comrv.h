@@ -27,15 +27,46 @@
 /**
 * include files
 */
-#include "psp_api.h"
 
 /**
 * definitions
 */
 
+/* mstatus CSR */
+#define D_PSP_MSTATUS_NUM          0x300
+#define D_PSP_MSTATUS_UIE_MASK     0x00000001   /* User mode */
+#define D_PSP_MSTATUS_SIE_MASK     0x00000002   /* Supervisor mode */
+#define D_PSP_MSTATUS_MIE_MASK     0x00000008   /* Machine mode */
+
 /**
 * macros
 */
+/* __builtin_expect instruction provides branch
+   prediction information. The condition parameter is the expected
+   comparison value. If it is equal to 1 (true), the condition
+   is likely to be true, in other case condition is likely to be false.
+   this provides us a way to take rare cases out of the critical execution path */
+#define M_PSP_BUILTIN_EXPECT(condition, expected)  __builtin_expect(condition, expected)
+
+/* CSR clear bits and read */
+#define _CLEAR_AND_READ_CSR_(read_val, reg, bits) ({ \
+  if (__builtin_constant_p(bits) && (unsigned long)(bits) < 32) \
+    asm volatile ("csrrc %0, " #reg ", %1" : "=r"(read_val) : "i"(bits)); \
+  else \
+    asm volatile ("csrrc %0, " #reg ", %1" : "=r"(read_val) : "r"(bits)); \
+  read_val; })
+#define _CLEAR_AND_READ_CSR_INTERMEDIATE_(read_val, reg, bits) _CLEAR_AND_READ_CSR_(read_val, reg, bits)
+#define M_PSP_CLEAR_AND_READ_CSR(read_val, csr, bits) _CLEAR_AND_READ_CSR_INTERMEDIATE_(read_val, csr, bits)
+
+/* CSR set */
+#define _SET_CSR_(reg, bits) ({\
+  if (__builtin_constant_p(bits) && (unsigned long)(bits) < 32) \
+    asm volatile ("csrs " #reg ", %0" :: "i"(bits)); \
+  else \
+    asm volatile ("csrs " #reg ", %0" :: "r"(bits)); })
+#define _SET_CSR_INTERMEDIATE_(reg, bits) _SET_CSR_(reg, bits)
+#define M_PSP_SET_CSR(csr, bits)                      _SET_CSR_INTERMEDIATE_(csr, bits)
+
 #define D_COMRV_TEXT_SECTION     __attribute__((section("COMRV_TEXT_SEC")))
 #define D_COMRV_DATA_SECTION     __attribute__((section("COMRV_DATA_SEC")))
 #define D_COMRV_RODATA_SECTION   __attribute__((section("COMRV_RODATA_SEC")))

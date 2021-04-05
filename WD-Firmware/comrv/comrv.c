@@ -32,19 +32,10 @@ _Pragma("clang diagnostic ignored \"-Winline-asm\"")
 /**
 * include files
 */
-#include "common_types.h"
+#include "comrv_api.h"
 #include "comrv_config.h"
 #include "comrv.h"
-#include "comrv_api.h"
 #include "comrv_info.h"
-#ifdef D_COMRV_RTOS_SUPPORT
-   /* rtosal is the only module that we thread with ComRV
-      TODO: make it generic so that comrv is ported w/o rtosal */
-   #include "rtosal_types.h"
-   #include "rtosal_macros.h"
-   #include "rtosal_interrupt_api.h"
-   #include "rtosal_defines.h"
-#endif /* D_COMRV_RTOS_SUPPORT */
 #ifdef D_CTI
    #include "cti_api.h"
 #endif /* D_CTI */
@@ -277,13 +268,13 @@ extern void comrv_ret_from_callee_context_switch(void);
  * bits 4- 5: eviction policy
  * bits 6-31: reserved
  */
-D_PSP_USED D_COMRV_RODATA_SECTION
+D_COMRV_USED D_COMRV_RODATA_SECTION
 static const u32_t g_uiComrvInfo    = (D_COMRV_MULTIGROUP_OFFSET | (D_COMRV_EVICTION_POLICY << 4));
 /* comrv information:
  * bits 0  - 15: minor version
  * bits 16 - 31: major version
  */
-D_PSP_USED D_COMRV_RODATA_SECTION
+D_COMRV_USED D_COMRV_RODATA_SECTION
 static const u32_t g_uiComrvVersion = ((D_COMRV_VERSION_MAJOR << 16) | (D_COMRV_VERSION_MINOR));
 /* global comrv control block */
 D_COMRV_DATA_SECTION static comrvCB_t         g_stComrvCB;
@@ -956,9 +947,9 @@ u08_t comrvGetEvictionCandidates(u08_t ucRequestedEvictionSize, u08_t* pEvictCan
    u08_t               ucAccumulatedSize = 0, ucIndex = 0;
    u08_t               ucEntryIndex, ucNumberOfCandidates = 0;
    u32_t               uiEvictCandidateMap[D_COMRV_EVICT_CANDIDATE_MAP_SIZE], uiFindFirstSet;
-#if defined(D_COMRV_ASSERT_ENABLED) && defined(M_COMRV_ERROR_NOTIFICATIONS)
+#if defined(D_COMRV_ASSERT_ENABLED) && defined(D_COMRV_ERROR_NOTIFICATIONS)
    comrvErrorArgs_t   stErrArgs;
-#endif /* D_COMRV_ASSERT_ENABLED && M_COMRV_ERROR_NOTIFICATIONS */
+#endif /* D_COMRV_ASSERT_ENABLED && D_COMRV_ERROR_NOTIFICATIONS */
 #ifndef D_BITMANIP_EXT
    /* used for calculating the first set bit index */
    unsigned char ucArrDeBruijnBitPos[32] =
@@ -1323,9 +1314,9 @@ u32_t comrvLockUnlockOverlayGroupByFunction(const void* pOvlFuncAddress, comrvLo
    comrvOverlayToken_t unToken;
 #ifdef D_COMRV_RTOS_SUPPORT
    u32_t              ret;
-#ifdef M_COMRV_ERROR_NOTIFICATIONS
+#if defined(D_COMRV_ERROR_NOTIFICATIONS) && defined(D_COMRV_ASSERT_ENABLED)
    comrvErrorArgs_t   stErrArgs;
-#endif /* M_COMRV_ERROR_NOTIFICATIONS */
+#endif /* defined(D_COMRV_ERROR_NOTIFICATIONS) && defined(D_COMRV_ASSERT_ENABLED) */
 #endif /* D_COMRV_RTOS_SUPPORT */
 #ifdef D_COMRV_OVL_DATA_SUPPORT
    comrvCacheEntry_t* pComrvCacheEntry;
@@ -1516,12 +1507,6 @@ D_COMRV_TEXT_SECTION u32_t* comrvSaveContextSwitch(volatile u32_t* pMepc, volati
    u32_t             *pSpAddr = NULL;
    u32_t             *pComrvTaskStack, *pComrvStatus;
    comrvStackFrame_t *pStackPool, *pStackFrame, *pAppStack;
-#ifdef M_COMRV_ERROR_NOTIFICATIONS
-   comrvErrorArgs_t   stErrArgs;
-#endif /* M_COMRV_ERROR_NOTIFICATIONS */
-
-   /* make sure we are in interrupt context */
-   M_COMRV_ASSERT(rtosalIsInterruptContext() != 0 , 1, D_COMRV_INTERNAL_ERR, 0);
 
    /* check if mepc is in range of the overlay cache - means that interruption
       occurred during execution of an overlay function */
@@ -1644,6 +1629,12 @@ void comrvReset(comrvResetType_t eResetType)
    u08_t              ucIndex, ucResetCacheLoopCount, ucResetEvictionCountersLoopCount;
 #ifdef D_COMRV_RTOS_SUPPORT
    u32_t              ret;
+#ifdef D_COMRV_ASSERT_ENABLED
+#ifdef D_COMRV_ERROR_NOTIFICATIONS
+   comrvErrorArgs_t   stErrArgs;
+#endif /* D_COMRV_ERROR_NOTIFICATIONS */
+   comrvOverlayToken_t  unToken = { D_COMRV_INVALID_TOKEN };
+#endif /* D_COMRV_ASSERT_ENABLED*/
 #endif /* D_COMRV_RTOS_SUPPORT */
 
    /* clear comrv state */

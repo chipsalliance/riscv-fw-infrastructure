@@ -90,9 +90,9 @@
 #endif /* D_COMRV_ENABLE_RTOS_SUPPORT */
 
 /* enable comrv asserts */
-#ifdef D_COMRV_ENABLE_ASSERT_ENABLED
+#ifdef D_COMRV_ENABLE_ASSERT_SUPPORT
    #define D_COMRV_ASSERT_ENABLED
-#endif /* D_COMRV_ENABLE_ASSERT_ENABLED */
+#endif /* D_COMRV_ENABLE_ASSERT_SUPPORT */
 
 /* minimum size of an overlay group */
 #if D_COMRV_MIN_GROUP_SIZE_IN_BYTES > 0

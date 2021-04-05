@@ -1,6 +1,6 @@
 '''
  SPDX-License-Identifier: Apache-2.0
- Copyright 2019 Western Digital Corporation or its affiliates.
+ Copyright 2019-2021 Western Digital Corporation or its affiliates.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  limitations under the License.
 '''
 import os
-import utils
 Import('Env')
 
 #
@@ -24,8 +23,9 @@ Import('Env')
 #   
 
 # module output directory 
-strOutDir = os.path.join(Env['OUT_DIR_PATH'], 'comrv')
-utils.fnCreateFolder(strOutDir)
+strOutDir = os.path.join(Env['COMRV_OUT_DIR_BASE'], 'comrv')
+if not os.path.exists(strOutDir):
+  os.makedirs(strOutDir)
 
 # C language source and out files in list of tupples
 # (sourcefile.c, outputfile.o)
@@ -67,7 +67,7 @@ if not Env["Scan"]:
     listObjects.append(Env.Object(source=os.path.join(Env['ROOT_DIR'], tplFile[0]), target=tplFile[1], CPPPATH=listIncPaths, CCFLAGS=listAsimCompilerDirectivs, CPPDEFINES=listCompilationDefines))
 
   # for libraries
-  objComrvLib = Env.Library (target=os.path.join(Env['OUT_DIR_PATH'], 'libs', 'comrv.a'), source=listObjects)
+  objComrvLib = Env.Library (target=os.path.join(Env['COMRV_OUT_DIR_BASE'], 'libs', 'comrv.a'), source=listObjects)
 
   # return the comrv lib
   Return('objComrvLib')

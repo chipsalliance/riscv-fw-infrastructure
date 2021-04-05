@@ -27,15 +27,15 @@
 /**
 * include files
 */
-#include "psp_intrinsics.h"
-#include "psp_attributes.h"
+#include "comrv_base_types.h"
 #include "comrv_config.h"
 
 /**
 * definitions
 */
-#define D_COMRV_INLINE     D_PSP_ALWAYS_INLINE
-#define D_COMRV_NO_INLINE  D_PSP_NO_INLINE
+#define D_COMRV_USED       __attribute__((used))
+#define D_COMRV_INLINE     static inline __attribute__((always_inline))
+#define D_COMRV_NO_INLINE  __attribute__((noinline))
 #define _OVERLAY_          __attribute__((overlaycall))
 #define _DATA_OVERLAY_     __attribute__((overlaydata))
 

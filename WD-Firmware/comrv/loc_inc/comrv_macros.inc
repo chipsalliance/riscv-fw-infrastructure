@@ -25,16 +25,63 @@
 /**
 * include files
 */
-#include "psp_core_base.inc"
-.include "psp_macros.inc"
 
 /**
 * definitions
 */
+.equ D_PSP_MIE,8
 
 /**
 * macros
 */
+.if __riscv_xlen == 32
+    .equ REGBYTES, 4
+
+    .macro M_PSP_STORE operand1,operand2
+        sw \operand1, \operand2
+    .endm
+
+    .macro M_PSP_LOAD operand1,operand2
+        lw \operand1, \operand2
+    .endm
+
+    .macro M_PSP_ADDI operand1,operand2,operand3
+        addi \operand1, \operand2, \operand3
+    .endm
+
+.elseif __riscv_xlen == 64
+
+    .equ REGBYTES, 8
+
+    .macro M_PSP_STORE operand1,operand2
+        sd \operand1, \operand2
+    .endm
+
+    .macro M_PSP_LOAD operand1,operand2
+        ld \operand1, \operand2
+    .endm
+
+    .macro M_PSP_ADDI operand1,operand2,operand3
+        addiw \operand1, \operand2, \operand3
+    .endm
+.endif
+
+.macro M_PSP_STORE_BYTE operand1,operand2
+    sb \operand1, \operand2
+.endm
+
+.macro M_PSP_LOAD_BYTE operand1,operand2
+    lb \operand1, \operand2
+.endm
+
+.macro M_PSP_STORE_HALF operand1,operand2
+    sh \operand1, \operand2
+.endm
+
+.macro M_PSP_LOAD_HALF operand1,operand2
+    lh \operand1, \operand2
+.endm
+
 /* save the 'args' regs */
 .macro M_COMRV_SAVE_ARGS_REGS reg
    M_PSP_STORE a0, D_COMRV_A0_REG_STACK_OFFSET_TMP(\reg)
@@ -65,6 +112,16 @@
 .endm
 
 #ifdef D_COMRV_RTOS_SUPPORT
+/* Disable machine interrupts after reading the current status . Available in MACHINE mode only */
+.macro M_PSP_MACHINE_DISABLE_INTERRUPTS saveCurrentStatusToReg
+    csrrci \saveCurrentStatusToReg, mstatus, D_PSP_MIE
+.endm
+
+/* Restore machine interrupts status . Available in MACHINE mode only */
+.macro M_PSP_MACHINE_RESTORE_INTERRUPTS restorStatusFromReg
+    csrs mstatus, \restorStatusFromReg
+.endm
+
 /* save the 'saved' regs */
 .macro M_COMRV_SAVE_SAVED_REGS reg
    M_PSP_STORE s0, D_COMRV_S0_REG_STACK_OFFSET_TMP(\reg)

@@ -1,0 +1,94 @@
+'''
+ SPDX-License-Identifier: Apache-2.0
+ Copyright 2021 Western Digital Corporation or its affiliates.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http:www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+'''
+
+import os
+
+strSconscript    = 'SConscript_comrv'
+strBuildDirName  = 'build'
+strComrvDirName  = 'comrv'
+strOutputDirName = 'output'
+
+# scons verbose
+verbose = True
+
+
+# path to scons toolchain scripts
+Env = Environment(toolpath = [''])
+Env.Tool(os.path.join('scons-tools', 'as_rv'))
+Env.Tool(os.path.join('scons-tools', 'cc_rv'))
+Env.Tool(os.path.join('scons-tools', 'ar_rv'))
+
+# scons custom arguments
+Env['RISCV_LLVM_TC_PATH'] = ARGUMENTS.get('llvmpath', '')
+Env['RISCV_BINUTILS_TC_PATH'] = ARGUMENTS.get('gccpath', '')
+
+if Env['RISCV_BINUTILS_TC_PATH'] == '' or Env['RISCV_LLVM_TC_PATH'] == '':
+  print ("Error: missing args llvmpath=<path to llvm folder> gccpath=<path to gcc folder>")
+  exit(1)
+ 
+# check if the TC folder exist
+if not os.path.isdir(Env['RISCV_LLVM_TC_PATH']):
+  print ("Error: no such folder %s" % Env['RISCV_LLVM_TC_PATH'])
+  exit(1)
+
+# check if the TC folder exist
+if not os.path.isdir(Env['RISCV_BINUTILS_TC_PATH']):
+  print ("Error: no such folder %s" % Env['RISCV_BINUTILS_TC_PATH'])
+  exit(1)
+
+# set output file suffixes
+Env['OBJSUFFIX']  = '.o'
+Env['LIBSUFFIX']  = '.a'
+
+Env['ROOT_DIR']     = os.path.join(os.getcwd(), "..", "..")
+Env['PUBLIC_INC']   = []
+Env['OUT_DIR_PATH'] = strOutputDirName
+# remove the '#' to enable comrv specific feature
+Env['PUBLIC_DEF']   = [ 
+        'D_COMRV_ENABLE_ERROR_NOTIFICATIONS',
+        'D_COMRV_MIN_GROUP_SIZE_IN_BYTES=512',
+        'D_COMRV_MAX_GROUP_SIZE_IN_BYTES=4096',
+        'D_COMRV_MAX_CALL_STACK_DEPTH=10',
+        'D_COMRV_MAX_OVL_CACHE_SIZE_IN_BYTES=2048',
+#       'D_COMRV_ENABLE_MULTI_GROUP_SUPPORT',
+#       'D_COMRV_ENABLE_MIN_NUM_OF_MULTI_GROUP_SUPPORT',
+#       'D_COMRV_ENABLE_FW_INSTRUMENTATION_SUPPORT',
+#       'D_COMRV_ENABLE_VERIFY_INIT_ARGS_SUPPORT',
+#       'D_COMRV_ENABLE_CRC_SUPPORT',
+#       'D_COMRV_ENABLE_DEBUG_SUPPORT',
+#       'D_COMRV_ENABLE_CONTROL_SUPPORT',
+#       'D_COMRV_ENABLE_RTOS_SUPPORT',
+#       'D_COMRV_ENABLE_ASSERT_ENABLED',
+#       'D_COMRV_EVICTION_POLICY=0',
+#       'D_COMRV_ENABLE_LOAD_CONFIG_SUPPORT',
+#       'D_COMRV_ENABLE_OVL_DATA_SUPPORT',
+	]
+
+listCCOptions = ['-c', '-fcomrv', '-mabi=ilp32', '-g3', '-march=rv32imac', '-mcmodel=medlow']
+Env['C_FLAGS'] = ['-Os', '-ffunction-sections','-fdata-sections','-Wall', '-include', 'sys/cdefs.h'] + listCCOptions
+Env['A_FLAGS'] = ['-Wall', '-x', 'assembler-with-cpp'] + listCCOptions
+
+if not os.path.exists(Env['OUT_DIR_PATH']):
+  os.makedirs(Env['OUT_DIR_PATH'])
+  os.makedirs(os.path.join(Env['OUT_DIR_PATH'], 'libs'))
+
+strPathToComrvSConscript = os.path.join(Env['ROOT_DIR'], strComrvDirName, strBuildDirName, strSconscript)
+Env['COMRV_OUT_DIR_BASE'] = os.path.join(Env['ROOT_DIR'], strComrvDirName, strBuildDirName, Env['OUT_DIR_PATH'])
+
+Env["Scan"] = False
+# build comrv library
+SConscript(strPathToComrvSConscript, exports='Env')
