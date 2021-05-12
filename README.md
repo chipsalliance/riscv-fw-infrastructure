@@ -15,11 +15,16 @@ This repository is WD RISC-V Firmware package, holds:
     - Eclipse MCU 
 
 # Getting the sources 
- Getting the repository:  
+ This repository uses submodules. You need the --recursive option to fetch the submodules automatically 
 
-    $  git clone https://github.com/westerndigitalcorporation/riscv-fw-infrastructure.git
+    $  git clone --recursive https://github.com/westerndigitalcorporation/riscv-fw-infrastructure.git
 
+ Alternatively:
 
+      $ git clone https://github.com/westerndigitalcorporation/riscv-fw-infrastructure.git
+      $ cd riscv-fw-infrastructure
+      $ git submodule update --init --recursive
+    
 ## Toolchain binary: 
  To get the built toolchains please use the following links: 
 

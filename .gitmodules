@@ -1,0 +1,3 @@
+[submodule "WD-Firmware/riscv-overlay"]
+	path = WD-Firmware/riscv-overlay
+	url = https://github.com/riscv/riscv-overlay

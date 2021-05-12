@@ -157,12 +157,14 @@ objDemo.listSconscripts.append(strPsp + Env['TARGET_BOARD'])
 objDemo.listSconscripts.append(strBsp+ Env['TARGET_BOARD'])
 
 Env["Scan"] = True
-strPathToComrvSConscript = os.path.join(Env['ROOT_DIR'], 'comrv', 'build', strSconscriptPrefix)
+
 for strSconscript in objDemo.listSconscripts:
   if strSconscript != 'comrv':
     SConscript(strSconscriptPrefix +'%s' % strSconscript, exports='Env')
   else:
-    Env['COMRV_OUT_DIR_BASE'] = os.path.join(Env['ROOT_DIR'], 'demo', 'build', Env['OUT_DIR_PATH'])
+    Env['ROOT_COMRV_DIR'] = os.path.join(Env['ROOT_DIR'], "riscv-overlay")
+    strPathToComrvSConscript = os.path.join(Env['ROOT_COMRV_DIR'], 'comrv', 'build', strSconscriptPrefix)
+    Env['COMRV_OUT_DIR_BASE'] = os.path.join(Env['ROOT_COMRV_DIR'], 'demo', 'build', Env['OUT_DIR_PATH'])
     SConscript(strPathToComrvSConscript + '%s' % strSconscript, exports='Env')
   
  
