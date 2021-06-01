@@ -126,7 +126,7 @@ D_PSP_TEXT_SECTION fptrPspInterruptHandler_t pspMachineExternalInterruptRegister
    uiHartNumber = M_PSP_MACHINE_GET_HART_ID();
 
    /* Set external-interrupts vector-table address in MEIVT CSR */
-   pspMachineExternalInterruptSetVectorTableAddress(g_ExtInterruptHandlers);
+   pspMachineExternalInterruptSetVectorTableAddress(&g_ExtInterruptHandlers[uiHartNumber]);
 
    /* Register the interrupt */
    fptrPrevIsr = g_ExtInterruptHandlers[uiHartNumber][uiVectorNumber];
