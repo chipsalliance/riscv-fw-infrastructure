@@ -8,6 +8,8 @@
    "nmi_vec" : "0x8000100C",
    "enable_zbb" : "true",
    "enable_zbs" : "true",
+   "enable_zbp" : "true",
+
    "triggers" : [
       {
          "poke_mask" : [

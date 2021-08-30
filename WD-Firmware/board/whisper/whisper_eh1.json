@@ -55,6 +55,14 @@
       "pmpaddr3" : {
          "exists" : "false"
       },
+      "mrac" : {
+         "number" : "0x7c0",
+         "reset" : "0x0",
+         "comment" : "Memory region io and cache control.",
+         "shared" : "true",
+         "mask" : "0xffffffff",
+         "exists" : "true"
+      },
       "dmst" : {
          "mask" : "0x0",
          "comment" : "Memory synch trigger: Flush caches in debug mode.",
