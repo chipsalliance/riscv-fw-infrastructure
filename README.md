@@ -55,7 +55,7 @@ This repository is WD RISC-V Firmware package, holds:
 &nbsp;
 
 # Code Convention  
-   See [./code convention.htm] 
+   See [the coding convention](./coding_convention.asciidoc) 
 
 # WD Firmware      
 The constitutes an SDK FW. It contains Firmware applications and Processor Support Package (PSP) for various cores, alongside demos that support all features. 

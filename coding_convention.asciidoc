@@ -1,0 +1,465 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+= CTO RISC-V Firmware Coding Convention: Western Digital (R) Version 1.0
+
+
+**Revision History**
+[cols="3,3a,10a,5a",options="header"]
+|=============================================
+|*_Revision_* |*_Date_* |*_Contents_* |*_Author(s)_*
+|0.1 |Dec 26, 2018 |Initial revision |Ofer Shinaar
+|1.0 |Aug 30, 2021 |Converted form .docx to .adoc. Fixed minor typos. |Pasha Tikhonov
+|=============================================
+{nbsp} +
+{nbsp} +
+
+
+**List of Figures**
+
+
+{nbsp} +
+{nbsp} +
+
+**List of Tables**
+
+{nbsp} +
+{nbsp} +
+
+**Reference Documents**
+[cols=",,,",options="",]
+|========================================
+|Item # |Document |Revision Used |Comment
+|  | | |
+|========================================
+
+{nbsp} +
+{nbsp} +
+
+**Abbreviations**
+
+{nbsp} +
+{nbsp} +
+
+== Overview
+
+Firmware code convention is a guideline for how to syntaxes the firmware
+code in C and ASM languages.
+
+The basic rule for the FW engineer is “keep the common ground syntaxes”,
+meaning, if you port your code and you have different convention then
+you don’t have to modify it to this convention as long as your code have
+common ground syntaxes.
+
+Uniformity is the key for good, readable convention
+
+Following conventions are for new code written for RISCV firmware and
+Tool chain, for C and ASM languages.
+
+{nbsp} +
+{nbsp} +
+
+== C code convention 
+
+* All Prefixes/postfixes in lower case
+
+{nbsp} +
+
+=== Typedef 
+
+{nbsp} +
+
+==== Typdef header
+
+* All Defines & Macros must have header - <<One line header>>
+
+{nbsp} +
+
+==== Syntax 
+
+{nbsp} +
+
+* Postfix *_'{type name}_t'_* in the end of new declaration
+
+_Ex:_
+[source, c]
+----
+typedef BaseType_t
+----
+
+=== Structures:
+
+==== Structure header 
+
+* Must have header – <<One line header>>
+
+==== Syntax 
+
+* Must have a name
+* On structure usage the new var will have a prefix of *_'_t{newVarName}'_*
+
+_Ex:_ 
+[source, c, subs="+quotes"]
+---- 
+_Typedef struct_ *_myStruct_*
+_{_
+_}_ *_myStruct_t_*;
+----
+
+_Usage:_
+[source, c, subs="verbatim,quotes"]
+---- 
+_myStruct_t_ **_t_**_GrooveDscr_
+----
+
+=== Enum
+
+* Avoid enums usage as possible, so you will not depended on the
+compiler size translation.
+
+==== Header 
+
+* All Enums must have header - <<One line header>>
+
+==== Syntax 
+
+* Enum must have a meaningfull name and end with Prefix *_‘e\{name}’_*
+
+_Ex:_
+[source, c, subs="verbatim,quotes"]
+---- 
+_Typedef enum_ *_myHugeEnum_*
+_{_
+_}_ *_eMyHugeEnum_t*;_
+----
+
+=== Variables and Functions:
+* Using "System Hungarian notation"
+
+=== Vars
+* After Prefix the Var name will start with capital letter.
+* Variable after prefix will be with higher case
+
+==== Var Syntax
+
+* *_u{x} - unsigned + type_* {char, int, long, double, etc…}
+
+_Ex:_
+[source, c, subs="verbatim,quotes"]
+---- 
+_unsigned char **uc**Myunsigned_
+----
+
+
+* *_{x} - signed type_* {char, int, long, double, etc…}
+
+_Ex:_
+[source, c, subs="verbatim,quotes"]
+---- 
+_char **c**Mysigned_
+----
+
+* *_\{st} - struct type_*
+
+_Ex:_
+[source, c, subs="verbatim,quotes"]
+---- 
+*_myStruct_t_* _**st**GrooveDscr_
+----
+
+* *__{g_}__* *_– Global varibale_*
+
+_Ex:_
+[source, c, subs="verbatim,quotes"]
+---- 
+_unsinged int **g_ui**Myglobal;_
+----
+
+==== Pointers Syntax 
+
+* Prefix *_'p{pointer name}'_* and the type does not matter.
+
+_Ex:_
+[source, c, subs="+quotes"]
+---- 
+_void **p**MyPointer;_
+_myStruct_t **p**GrooveDscr; //this is pointer with struct type_
+----
+
+* Function pointers start with +
+prefix *_'fptr{function name starts with the capital case}'_*
+
+_Ex:_
+[source, c, subs="verbatim,quotes"]
+---- 
+_int myGrooveFunction(char);_
+_int (* **fptr**MyPointerToGroove)(char) = myGrooveFunction;_
+----
+
+
+==== Variables names
+
+[cols="]
+|===
+|_typedef signed char_ |_s8_t_
+|_typedef signed short_ |_s16_t_
+|_typedef signed int_ |_s32_t_
+|_typedef signed long long_ |_s64_t_
+|_typedef unsigned char_ |_u8_t_
+|_typedef unsigned short_ |_u16_t_
+|_typedef unsigned int_ |_u32_t_
+|_typedef unsigned long long_ |_u64_t_
+|===
+
+=== Defines & Macros
+
+==== Defines & Macros header
+
+* Must have header - <<One line header>>
+
+==== Define Syntax 
+
+* All capital letters
+* Define prefix *__'D_{define name}'__*
+
+_Ex:_
+[source, c, subs="verbatim,quotes"]
+---- 
+_#define D_MY_DEFINE_
+----
+
+==== Macro Syntax
+
+* Marco prefix *__'M_{macro name}'__*
+
+_Ex:_
+
+[source, c, subs="verbatim,quotes"]
+---- 
+__#define M_MY_MACRO(\_X_,\_Y_)__
+----
+
+
+==== Long Marcos and define 
+
+* Should be in multi lines
+
+_Ex:_
+
+[source, c, subs="verbatim,quotes"]
+---- 
+__#define M_MY_MACRO(\_X_,\_Y_) \__
+_{                           \_
+    _Syntax                  \_
+_}_
+----
+
+=== Functions
+
+==== Function Header
+
+* All functions must have header - <<Function Header>>
+* Function declaration should be in one line
+
+==== Parenthesis 
+
+* Start in a new line
+
+==== Function name
+
+* Start with lower case
+* Should be meaningful
+
+_Ex:_
+
+[source, c, subs="verbatim,quotes"]
+---- 
+_u32_t_ _**my**GrooveFunction(void);_
+
+
+_u32_t_ _**my**GrooveFunction(void)_
+_{_
+_////_
+_}_
+----
+
+
+=== Get and Set functions
+
+* Must have a postfix of Set/Get
+
+_Ex:_
+
+[source, c, subs="verbatim,quotes"]
+---- 
+_u32_t_ _**my**GrooveFunctionGet();_
+
+_u32_t_ _**my**GrooveFunctionSet(u32_t myArg);_
+----
+
+
+=== C files 
+
+==== C files header
+
+* must start with header - <<C file header>>
+
+==== C file name 
+
+* If the c file is a part of reprehensive module it should hold the
+module name as a prefix
+
+_Ex:_
+
+[source, c, subs="verbatim,quotes"]
+---- 
+_src\rtos\_
+
+_rtos_mutex.c_
+
+_rtos_sema.c_
+
+ 
+
+_src\spi\_
+
+_spi_api.c_
+
+_spi_eng.c_
+----
+
+
+=== Header files
+
+==== Header
+
+* All h files must start with header - <<C file header>>
+
+==== Nesting 
+
+* Should _[.underline]#*avoid* *nesting*#_ as much as possible
+
+==== Naming 
+
+* If the h file is a part of reprehensive module it should hold the module
+name as a prefix
+
+_Ex:_
+
+[source, c, subs="verbatim,quotes"]
+---- 
+_\rtos\inc_
+
+_rtos_mutex.h_
+
+_rtos_sema.h_
+
+ 
+
+_spi\inc\_
+
+_spi_api.h_
+
+_spi_eng.h_
+----
+
+=== Comments
+
+* Try using C89 comments
+
+[source, c]
+---- 
+/**/
+----
+* Try not mixing C comments in ASM files. In ASM files use ASM comments.
+
+=== One line header 
+* Use the following for: Marcos, Defines, and sections.
+
+[source, c, subs="verbatim,quotes"]
+----
+/*
+* *_your syntax here_*
+*/
+----
+
+=== Sections
+
+* Keep C files sections as is, even if its empty
+
+[source, c]
+----
+/*
+*   Include Files
+*/
+
+/*
+*  Macro definitions
+*/
+
+/*
+* Enumeration declarations (enum)
+*/
+
+/*
+*  Type definitions
+*/
+
+/*
+*  Structure declarations
+*/
+
+/*
+*  External prototypes
+*/
+
+/*
+*  Function prototypes
+*/
+
+/*
+*  Global Variables
+*/
+
+/*
+*  Globals
+*/
+----
+
+* Header files will have the same except globals
+
+=== C file header 
+[source, c, subs="verbatim,quotes"]
+----
+/*
+* Copyright (c) 2010-2016 Western Digital, Inc.
+*
+* #SPDX-License-Identifier: Apache-2.0 (OS-TBD)#
+*/
+
+/*
+* @file *_file name_*
+* @Author *_Author name_*
+* @Created date *_Date creted_*
+* @brief *_Short brief_*
+*/
+----
+
+=== Function header 
+[source, c, subs="verbatim,quotes"]
+----
+
+/*
+* @brief *_Short brief_*
+*
+* *_More description if needed._*
+*
+* @param *_param1_*
+* @param *_param2_*
+* @param *_paramN_*
+*
+*/
+----
