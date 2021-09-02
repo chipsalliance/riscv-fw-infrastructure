@@ -28,8 +28,9 @@ typedef struct swervolfVersion
   u08_t ucRev;
   u08_t ucMinor;
   u08_t ucMajor;
-  u08_t ucSha;
-  u08_t ucDirty;
+  u08_t ucMisc;
+  u32_t uiSha;
+
 } swervolfVersion_t;
 
 /**

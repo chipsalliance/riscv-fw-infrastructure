@@ -119,12 +119,12 @@ void demoUartInit(void)
   printfNexys("Running demo on core %d...", M_PSP_READ_CSR(D_PSP_MARCHID_NUM));
   printfNexys("Machine Implementation ID (MIMPID) = %d ", M_PSP_READ_CSR(D_PSP_MIMPID_NUM));
   printfNexys("------------------------------------------");
-  printfNexys("SweRVolf version %d.%d%d (SHA %08x) (dirty %d)",
+  printfNexys("SweRVolf version %d.%d.%d.%d (SHA %08x)",
                    stSwervolfVersion.ucMajor,
                    stSwervolfVersion.ucMinor,
                    stSwervolfVersion.ucRev,
-                   stSwervolfVersion.ucSha,
-                   stSwervolfVersion.ucDirty);
+                   stSwervolfVersion.ucMisc,
+                   stSwervolfVersion.uiSha);
   printfNexys("------------------------------------------");
 #endif
 }

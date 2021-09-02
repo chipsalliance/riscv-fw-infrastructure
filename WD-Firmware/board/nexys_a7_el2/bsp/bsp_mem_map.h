@@ -36,7 +36,7 @@
 #define D_VERSION_REV           0x80001000
 #define D_VERSION_MINOR         0x80001001
 #define D_VERSION_MAJOR         0x80001002
-#define D_VERSION_DIRTY         0x80001003
+#define D_VERSION_MISC          0x80001003
 #define D_VERSION_SHA           0x80001004
 
 
