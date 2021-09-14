@@ -35,14 +35,6 @@
 /**********************************/
 /* Non standard CSRs in SweRV EL2 */
 /**********************************/
-#define D_PSP_MDBB_NUM         0xBC2 /* D-Bus Barrier register */
-#define D_PSP_MDBAC_NUM        0xBC1 /* D-Bus 64-Bit Access Control register */
-#define D_PSP_MDBHD_NUM        0xBC7 /* D-Bus 64-Bit High Data register */
-#define D_PSP_MSPCBA_NUM       0x7F4 /* Stack Pointer Checker Base Address register */
-#define D_PSP_MSPCTA_NUM       0x7F5 /* Stack Pointer Checker Top Address register */
-#define D_PSP_MSPCC_NUM        0x7F6 /* Stack Pointer Checker Control register */
-
-
 /* mscause CSR */
 #define D_PSP_MSCAUSE_NUM              0x7FF       /* Machine Secondary cause CSR  */
 /* Instruction access fault */
