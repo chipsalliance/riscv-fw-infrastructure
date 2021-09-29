@@ -22,8 +22,6 @@
 *
 */
 
-
-#include "psp_core_base.inc"
 #include "psp_macros.inc"
 #include "psp_macros_eh1.inc"
 

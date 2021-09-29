@@ -74,7 +74,6 @@
 This implementation supports riscv privileged v1.10 and PRM of SweRV-EH1
 */
 
-#include "psp_core_base.inc"
 #include "psp_macros.inc"
 #include "rtosal_defines.inc"
 #include "rtosal_macros.inc"

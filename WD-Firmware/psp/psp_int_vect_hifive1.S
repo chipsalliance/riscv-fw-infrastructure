@@ -70,8 +70,6 @@
     1 tab == 4 spaces!
 */
 
-
-#include "psp_core_base.inc"
 #include "psp_macros.inc"
 
 #ifdef D_LLVM_COMRV
