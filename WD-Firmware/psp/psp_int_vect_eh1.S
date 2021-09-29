@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020 - 2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 
 #include "psp_core_base.inc"
 #include "psp_macros.inc"
-#include "psp_int_vect_eh1.inc"
+#include "psp_macros_eh1.inc"
 
 #ifdef D_LLVM_COMRV
 /* disable warning for reserved registers use - we are using comrv
