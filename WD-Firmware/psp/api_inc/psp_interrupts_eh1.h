@@ -37,7 +37,7 @@
 /* EH1 specific interrupt causes */
 typedef enum pspInterruptCauseEH1
 {
-   E_LAST_COMMON_CAUSE               = 12,
+   E_LAST_COMMON_CAUSE               = E_LAST_CAUSE,
    E_FIRST_EH1_CAUSE                 = 27,
    E_MACHINE_INTERNAL_TIMER1_CAUSE   = 28,
    E_MACHINE_INTERNAL_TIMER0_CAUSE   = 29,
