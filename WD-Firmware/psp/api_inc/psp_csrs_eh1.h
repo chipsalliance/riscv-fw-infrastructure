@@ -168,7 +168,7 @@
 
 #define    D_PSP_MPMC_NUM         0x7C6   /* Power management control  */
 #define    D_PSP_MPMC_HALT_MASK   0x1     /* Transition to Halted (pmu/fw-halt) state - bit 0 */
-#ifdef D_EHX1_VER_1_0  /* 'haltie' feature is added to SweRV EHX1 from version 1.0 only */
+#ifdef D_EH1_VER_1_0  /* 'haltie' feature is added to SweRV EH1 from version 1.0 only */
  #define    D_PSP_MPMC_HALTIE_MASK 0x2     /* Control interrupt enable (i.e., mie bit of mstatus CSR) when transitioning to Halted - bit 1 */
 #endif
 

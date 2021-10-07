@@ -63,7 +63,7 @@
 #define D_DEMO_IRQ           D_BSP_IRQ_3
 #define D_DEMO_TIMER_TO_IRQ  E_TIMER_TO_IRQ3
 
-#ifdef D_EHX1_VER_1_0 /* 'haltie' feature is added to SweRV EHX1 from version 1.0 only */
+#ifdef D_EH1_VER_1_0 /* 'haltie' feature is added to SweRV EH1 from version 1.0 only */
   /* Upon initiating 'Halted' mode - whether to atomically enable interrupts or not */
   #define D_DEMO_DO_NOT_ENABLE_INTERRUPTS_UPON_HALT     0
   #define D_DEMO_ATOMICALLY_ENABLE_INTERRUPTS_UPON_HALT 1
@@ -189,10 +189,10 @@ void demoSleepAndWakeupByExternalInterrupt(void)
   /* Let the SweRVolf FPGA timer to start running */
   bspStartTimer();
 
-#ifdef D_EHX1_VER_1_0 /* 'haltie' feature is added to SweRV EHX1 from version 1.0 only */
+#ifdef D_EH1_VER_1_0 /* 'haltie' feature is added to SweRV EH1 from version 1.0 only */
   /* Halt the core - do not activate the "interrupt-enable" atomically upon 'Halted' initiation */
   pspMachinePowerMngCtrlHalt(D_DEMO_DO_NOT_ENABLE_INTERRUPTS_UPON_HALT);
-#else /* D_EHX1_VER_0_9 - does not contain 'haltie' feature */
+#else /* D_EH1_VER_0_9 - does not contain 'haltie' feature */
   /* Halt the core */
   pspMachinePowerMngCtrlHalt();
 #endif
@@ -264,10 +264,10 @@ void demoSleepAndWakeupByMtimer(void)
   /* Enable all Machine level interrupts */
   pspMachineInterruptsEnable();
 
-#ifdef D_EHX1_VER_1_0 /* 'haltie' feature is added to SweRV EHX1 from version 1.0 only */
+#ifdef D_EH1_VER_1_0 /* 'haltie' feature is added to SweRV EH1 from version 1.0 only */
   /* Sets core to Sleep (pmu/fw-halt) mode - do not activate the "interrupt-enable" atomically upon 'Halted' initiation */
   pspMachinePowerMngCtrlHalt(D_DEMO_DO_NOT_ENABLE_INTERRUPTS_UPON_HALT);
-#else /* D_EHX1_VER_0_9 - does not contain 'haltie' feature */
+#else /* D_EH1_VER_0_9 - does not contain 'haltie' feature */
   /* Halt the core */
   pspMachinePowerMngCtrlHalt();
 #endif
@@ -292,7 +292,7 @@ void demoSleepAndWakeupByMtimer(void)
   }
 }
 
-#ifdef D_EHX1_VER_1_0  /* 'haltie' feature is added to SweRV EHX1 from version 1.0 only */
+#ifdef D_EH1_VER_1_0  /* 'haltie' feature is added to SweRV EH1 from version 1.0 only */
 /**
  * @brief - Set core to Sleep (pmu/fw-halt) mode with 'haltie' option enabled and wake it up with timer interrupt.
  *          This test is like demoSleepAndWakeupByMtimer test with one difference - Interrupts are enabled not via explicit write
@@ -345,7 +345,7 @@ void demoSleepHaltIeOption(void)
     M_DEMO_ENDLESS_LOOP();
   }
 }
-#endif /* D_EHX1_VER_1_0 */
+#endif /* D_EH1_VER_1_0 */
 
 /**
  * @brief - Stall the core ('pause', per EH1 PRM) and resume it when count down expires
@@ -540,7 +540,7 @@ void demoStart(void)
     /* Set core to Sleep (pmu/fw-halt) mode and wake it up with external interrupt */
     demoSleepAndWakeupByExternalInterrupt();
 
-#ifdef D_EHX1_VER_1_0 /* 'haltie' feature is added to SweRV EHX1 from version 1.0 only */
+#ifdef D_EH1_VER_1_0 /* 'haltie' feature is added to SweRV EX1 from version 1.0 only */
     /* Set core to Sleep (pmu/fw-halt) mode , with 'haltie' (Atomically interrupts-enable upon 'Halt' initiation) and wake it up with timer interrupt */
     demoSleepHaltIeOption();
 #endif

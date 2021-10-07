@@ -53,7 +53,7 @@
 * global variables
 */
 
-#ifdef D_EHX1_VER_1_0 /* 'haltie' feature is added to SweRV EHX1 from version 1.0 only */
+#ifdef D_EH1_VER_1_0 /* 'haltie' feature is added to SweRV EH1 from version 1.0 only */
 /**
 * @brief Initiate core halt (i.e., transition to Halted (pmu/fw-halt, C3) state)
 *
@@ -73,7 +73,7 @@ D_PSP_TEXT_SECTION void pspMachinePowerMngCtrlHalt(u32_t uiEnableInterrupts)
   }
 
 }
-#else /* #ifdef D_EHX1_VER_0_9 does not contain 'haltie' feature */
+#else /* #ifdef D_EH1_VER_0_9 does not contain 'haltie' feature */
 /**
 * @brief Initiate core halt (i.e., transition to Halted (pmu/fw-halt, C3) state)
 *
@@ -85,7 +85,7 @@ D_PSP_TEXT_SECTION void pspMachinePowerMngCtrlHalt(void)
 {
   M_PSP_WRITE_CSR(D_PSP_MPMC_NUM, D_PSP_MPMC_HALT_MASK); /* Initiate 'Halted' mode. Don't enable interrupts upon initiation */
 }
-#endif /* D_EHX1_VER_1_0 or D_EHX1_VER_0_9 */
+#endif /* D_EH1_VER_1_0 or D_EH1_VER_0_9 */
 
 /**
 * @brief The following function temporarily stop the core from executing instructions for given number of core clock cycles(ticks)
