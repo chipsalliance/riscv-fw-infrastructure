@@ -38,7 +38,6 @@
 /* function return codes */
 #define D_PSP_SUCCESS    0x00
 #define D_PSP_FAIL       0x01
-#define D_PSP_PTR_ERROR  0x02
 
 #define D_PSP_TRUE       1
 #define D_PSP_FALSE      0
