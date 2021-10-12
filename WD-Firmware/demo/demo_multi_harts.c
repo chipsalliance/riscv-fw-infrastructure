@@ -58,6 +58,12 @@
 /**
 * types
 */
+typedef enum pspHartNum
+{
+  E_HART0     = 0,
+  E_HART1     = 1,
+  E_LAST_HART,
+} ePspHartNum_t;
 
 /**
 * local prototypes
