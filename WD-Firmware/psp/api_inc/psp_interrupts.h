@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
 * limitations under the License.
 */
 /**
-* @file   psp_interrupts_hifive1.h
+* @file   psp_interrupts.h
 * @author Nati Rapaport
 * @date   04.05.2020
 * @brief  The file supplies information and registration API for interrupt and exception service routines on HiFive1 core.
 */
-#ifndef __PSP_INTERRUPTS_HIFIVE1_H__
-#define __PSP_INTERRUPTS_HIFIVE1_H__
+#ifndef __PSP_INTERRUPTS_H__
+#define __PSP_INTERRUPTS_H__
 
 /**
 * include files
@@ -242,4 +242,4 @@ void pspUserInterruptsDisableIntNumber(u32_t uiInterruptNumber);
 void pspUserInterruptsEnableIntNumber(u32_t uiInterruptNumber);
 
 
-#endif /* __PSP_INTERRUPTS_HIFIVE1_H__ */
+#endif /* __PSP_INTERRUPTS_H__ */

@@ -1,6 +1,6 @@
 /* 
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2019 Western Digital Corporation or its affiliates.
+* Copyright 2019-2021 Western Digital Corporation or its affiliates.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@
 #include "psp_memory_utils.h"
 #include "psp_int_vect.h"
 #include "psp_version.h"
+#include "psp_interrupts.h"
 #ifdef D_HI_FIVE1
   #include "psp_timers_hifive1.h"
-  #include "psp_interrupts_hifive1.h"
 #elif D_SWERV_EH1
   #include "psp_csrs_eh1.h"
   #include "psp_timers_eh1.h"
