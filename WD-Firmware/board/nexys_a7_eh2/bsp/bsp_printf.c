@@ -475,6 +475,7 @@ int uart_printf(const char* ctrl1, va_list argp)
   return res;
 }
 
+u32_t g_uilockMem;
 
 /*---------------------------------------------------*/
 /* printf: Console based printf            */
@@ -483,6 +484,9 @@ u32_t printfNexys( const char * cFormat, ... )
 {
   u32_t uiRes = 0;
   va_list argp;
+
+  /* lock atomic */
+  pspAtomicsEnterCriticalSection(&g_uilockMem);
 
   if (cFormat)
   {
@@ -493,6 +497,9 @@ u32_t printfNexys( const char * cFormat, ... )
   }
 
   printUartPutchar('\n');
+
+  /* free atomic */
+  pspAtomicsExitCriticalSection(&g_uilockMem);
 
   return uiRes;
 }
