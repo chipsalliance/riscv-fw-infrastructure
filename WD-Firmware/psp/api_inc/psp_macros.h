@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2019 Western Digital Corporation or its affiliates.
+* Copyright 2019-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -181,6 +181,9 @@
 
 /* TODO: - this #ifdef is temporarily here. Should replace it with proper definitions of statements in this file (e.g. "asm volatile")
  *         and wrapping them with this protection */
+
+#else
+  #error "Currently, GCC and LLVM are the only supported compilers."
 #endif /* (__GNUC__) || defined (__clang__)*/
 
 #endif /* __PSP_MACRO_H__ */

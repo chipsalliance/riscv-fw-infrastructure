@@ -54,6 +54,8 @@
 * types
 */
 
+#else
+  #error "Currently, GCC and LLVM are the only supported compilers."
 #endif /* defined (__GNUC__) || defined (__clang__) */
 
 #endif /* __PSP_ATTRIBUTES_H__ */
