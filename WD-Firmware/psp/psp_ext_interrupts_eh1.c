@@ -1,6 +1,6 @@
 /* 
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -391,7 +391,7 @@ D_PSP_TEXT_SECTION u32_t pspMachineExtInterruptGetPriority(void )
 */
 D_PSP_TEXT_SECTION void pspMachineExtInterruptIsr(void)
 {
-  fptrFunction fptrExtIntHandler = NULL;
+  fptrFunction_t fptrExtIntHandler = NULL;
   u32_t* pClaimId;
 
   /* Trigger capture of the interrupt source ID(handler address), write '1' to meicpct */
@@ -400,7 +400,7 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptIsr(void)
   /* Obtain external interrupt handler address from meihap register */
   pClaimId = (u32_t*)M_PSP_READ_CSR(D_PSP_MEIHAP_NUM);
 
-  fptrExtIntHandler = *((fptrFunction)pClaimId);
+  fptrExtIntHandler = *((fptrFunction_t)pClaimId);
 
   M_PSP_ASSERT(fptrExtIntHandler != NULL);
 

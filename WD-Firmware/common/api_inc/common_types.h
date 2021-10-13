@@ -1,6 +1,6 @@
 /* 
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2019 Western Digital Corporation or its affiliates.
+* Copyright 2019-2021 Western Digital Corporation or its affiliates.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -40,6 +40,6 @@ typedef unsigned int       u32_t;
 typedef unsigned long long u64_t;
 
 /* for general use */
-typedef void (*fptrFunction)(void);
+typedef void (*fptrFunction_t)(void);
 
 #endif /* __FW_TYPES_H__ */
