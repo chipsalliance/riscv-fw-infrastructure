@@ -143,7 +143,7 @@
 
 /*******************************************************/
 /* order device I/O and memory accesses */
-#define M_PSP_INST_FENCE()          asm volatile( "fence rw,rw" )
+#define M_PSP_INST_FENCE()          asm volatile( "fence iorw,iorw" )
 /* synchronize the instruction and data streams */
 #define M_PSP_INST_FENCEI()         asm volatile( "fence.i" )
 
