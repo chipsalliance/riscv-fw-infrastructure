@@ -1,6 +1,6 @@
 /* 
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 * limitations under the License.
 */
 /**
-* @file   psp_interrupts_hifive1.c
+* @file   psp_interrupts.c
 * @author Nati Rapaport
 * @date   04.05.2020
 * @brief  The file supplies registration API for interrupt and exception service routines in Hifive1 core.
