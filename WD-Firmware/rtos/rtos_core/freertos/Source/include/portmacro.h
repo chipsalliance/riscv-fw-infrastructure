@@ -1,6 +1,6 @@
 /*
  * FreeRTOS Kernel V10.2.1
- * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * Copyright (C) 2019-2021 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -106,7 +106,7 @@ extern void vTaskExitCritical( void );
 extern unsigned int g_uInterruptsPreserveMask, g_uInterruptsDisableCounter;
 #define portDISABLE_INTERRUPTS()                         if (g_uInterruptsDisableCounter == 0) \
                                                          { \
-                                                            M_PSP_CLEAR_AND_READ_CSR(g_uInterruptsPreserveMask, D_PSP_MSTATUS_NUM, D_PSP_MSTATUS_MIE_MASK); \
+                                                            M_PSP_READ_AND_CLEAR_CSR(g_uInterruptsPreserveMask, D_PSP_MSTATUS_NUM, D_PSP_MSTATUS_MIE_MASK); \
                                                             g_uInterruptsPreserveMask &= D_PSP_MSTATUS_MIE_MASK; \
                                                          } \
                                                          g_uInterruptsDisableCounter++;
