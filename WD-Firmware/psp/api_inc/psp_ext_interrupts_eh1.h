@@ -63,6 +63,7 @@
 #define D_PSP_EXT_INT_PRIORITY_15           15 /* In standard order - highest level. In reversed order - lowest level */
 
 
+
 /* External Interrupt Threshold - Only external interrupt with a priority HIGHER than the threshold will be served  */
 #define D_PSP_EXT_INT_THRESHOLD_0       0
 #define D_PSP_EXT_INT_THRESHOLD_1       1

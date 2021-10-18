@@ -57,6 +57,33 @@
 * macros
 */
 
+#define M_PSP_IS_STANDARD_PRIORITY_ORDER ( \
+  (M_PSP_READ_REGISTER_32(D_PSP_PIC_MPICCFG_ADDR) & D_PSP_MPICCFG_PRIORD_MASK) \
+  == D_PSP_EXT_INT_STANDARD_PRIORITY)
+
+#define M_PSP_IS_REVERSED_PRIORITY_ORDER ( \
+  (M_PSP_READ_REGISTER_32(D_PSP_PIC_MPICCFG_ADDR) & D_PSP_MPICCFG_PRIORD_MASK) \
+  == D_PSP_EXT_INT_REVERSED_PRIORITY)
+/* 
+* In the standard priority order, the avaliable values of the priority
+* are [1, 15] (including the range boundaries). The value 0 serves to "turn-off"
+* all the interruptes.
+*/
+#define M_PSP_IS_IN_STANDARD_PRIORITY_RANGE(uiPriority) \
+  ((D_PSP_EXT_INT_PRIORITY_1 <= (uiPriorityOrder)) && ((uiPriorityOrder) <= D_PSP_EXT_INT_PRIORITY_15))
+
+/* 
+* In the reversed priority order, the avaliable values of the priority
+* are [14, 0] (including the range boundaries). The value 1 serves to "turn-off"
+* all the interruptes.
+*/
+#define M_PSP_IS_IN_REVERSED_PRIORITY_RANGE(uiPriority) \
+  ((D_PSP_EXT_INT_PRIORITY_0 <= (uiPriorityOrder)) && ((uiPriorityOrder) <= D_PSP_EXT_INT_PRIORITY_14))
+
+#define M_PSP_IS_PRIORITY_IN_RANGE(uiPriority) ( \
+  (M_PSP_IS_STANDARD_PRIORITY_ORDER && M_PSP_IS_IN_STANDARD_PRIORITY_RANGE(uiPriority)) || \
+  (M_PSP_IS_REVERSED_PRIORITY_ORDER && M_PSP_IS_IN_REVERSED_PRIORITY_RANGE(uiPriority))
+
 /**
 * types
 */
@@ -189,6 +216,9 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptSetPriority(u32_t uiIntNum, u32_t 
 {
   u32_t uiInterruptsState;
 
+  /* Assertion of priority value */
+  M_PSP_ASSERT(M_PSP_IS_PRIORITY_IN_RANGE(uiPriority));
+
   /* Disable interrupts */
   pspMachineInterruptsDisable(&uiInterruptsState);
 
@@ -209,6 +239,9 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptsSetThreshold(u32_t uiThreshold)
 {
   u32_t uiInterruptsState;
 
+  /* Assert on threshold value */
+  M_PSP_ASSERT(uiThreshold <= D_PSP_EXT_INT_THRESHOLD_15);
+
   /* Disable interrupts */
   pspMachineInterruptsDisable(&uiInterruptsState);
 
@@ -228,6 +261,9 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptsSetThreshold(u32_t uiThreshold)
 D_PSP_TEXT_SECTION void  pspMachineExtInterruptsSetNestingPriorityThreshold(u32_t uiNestingPriorityThreshold)
 {
   u32_t uiInterruptsState;
+
+  /* Assert on nesting priority threshold value */
+  M_PSP_ASSERT(uiNestingPriorityThreshold <= D_PSP_EXT_INT_THRESHOLD_15);
 
   /* Disable interrupts */
   pspMachineInterruptsDisable(&uiInterruptsState);
