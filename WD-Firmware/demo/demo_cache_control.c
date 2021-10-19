@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -104,10 +104,10 @@ void demoStart(void)
       pspMachineInterruptsDisableIntNumber(D_PSP_INTERRUPTS_MACHINE_TIMER);
 
       /* Activates Core's timer */
-      pspMachineTimerCounterSetupAndRun(D_PSP_MACHINE_TIMER,  0xFFFFFFFF);
+      pspMachineTimerCounterSetupAndRun(0xFFFFFFFF);
 
       /* sample the timer value */
-      ulCounterCache_t1 = pspMachineTimerCounterGet(D_PSP_MACHINE_TIMER);
+      ulCounterCache_t1 = pspMachineTimerCounterGet();
 
       /* we disable (again) the cache just to have the same amount
          of measured instructions */
@@ -117,7 +117,7 @@ void demoStart(void)
       M_DEMO_CACHE_CONTROL_BUSYLOOP_CODE_TO_MEASURE();
 
       /* sample the timer value */
-      ulCounterCache_t2 = pspMachineTimerCounterGet(D_PSP_MACHINE_TIMER);
+      ulCounterCache_t2 = pspMachineTimerCounterGet();
 
       /* sum the result for the "busy loop example " */
       ulCounterCacheOFF = ulCounterCache_t2 - ulCounterCache_t1;
@@ -130,7 +130,7 @@ void demoStart(void)
       M_DEMO_CACHE_CONTROL_BUSYLOOP_CODE_TO_MEASURE();
 
       /* sample the timer value */
-      ulCounterCache_t2 = pspMachineTimerCounterGet(D_PSP_MACHINE_TIMER);
+      ulCounterCache_t2 = pspMachineTimerCounterGet();
 
       /* sum the result for the "busy loop example " */
       ulCounterCacheON = ulCounterCache_t2 - ulCounterCacheOFF;   /*OFF was the reference t1 */

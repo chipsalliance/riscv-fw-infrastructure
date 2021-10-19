@@ -46,7 +46,7 @@
    asm volatile ("nop");
 
 #define M_DEMO_10_NOPS()    \
-      M_DEMO_5_NOPS()	    \
+      M_DEMO_5_NOPS()      \
       M_DEMO_5_NOPS()
 
 #define M_DEMO_50_NOPS()    \

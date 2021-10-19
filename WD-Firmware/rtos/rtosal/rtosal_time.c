@@ -1,6 +1,6 @@
 /* 
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2019 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -403,7 +403,7 @@ void rtosalTimerSetup(void)
   pspMachineInterruptsEnableIntNumber(D_PSP_INTERRUPTS_MACHINE_TIMER);
 
   /* Activates Core's timer with the calculated period */
-  pspMachineTimerCounterSetupAndRun(D_PSP_MACHINE_TIMER, g_uTimerPeriod);
+  pspMachineTimerCounterSetupAndRun(g_uTimerPeriod);
 }
 
 /**

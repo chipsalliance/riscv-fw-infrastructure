@@ -1,7 +1,6 @@
 '''
  SPDX-License-Identifier: Apache-2.0
- Copyright 2019-2021 Western Digital Corporation or its affiliates.
- 
+ Copyright 2020-2021 Western Digital Corporation or its affiliates.
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -25,7 +24,7 @@ utils.fnCreateFolder(strOutDir)
 # (sourcefile.c, outputfile.o)
 listCFiles=[
    (os.path.join('psp', 'psp_interrupts.c'), os.path.join(strOutDir, 'psp_interrupts.o')),
-   (os.path.join('psp', 'psp_timer_hifive1.c'), os.path.join(strOutDir, 'psp_timer_hifive1.o')),
+   (os.path.join('psp', 'psp_timers.c'), os.path.join(strOutDir, 'psp_timers.o')),
    (os.path.join('psp', 'psp_version.c'), os.path.join(strOutDir, 'psp_version.o')),
 ]
 

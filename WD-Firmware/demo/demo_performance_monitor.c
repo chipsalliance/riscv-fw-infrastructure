@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2019 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -142,7 +142,7 @@ void demoTimerIsr(void)
     /* Enable timer interrupt */
     pspMachineInterruptsEnableIntNumber(D_PSP_INTERRUPTS_MACHINE_TIMER);
 
-    pspMachineTimerCounterSetupAndRun(D_PSP_MACHINE_TIMER, M_DEMO_MSEC_TO_CYCLES(5));
+    pspMachineTimerCounterSetupAndRun(M_DEMO_MSEC_TO_CYCLES(5));
   }
 }
 
@@ -186,7 +186,7 @@ void demoPerfMonitorDisableAll(void)
   demoGetCountersBeforeActivity();
 
   /* Setup and enable machine-timer interrupt */
-  pspMachineTimerCounterSetupAndRun(D_PSP_MACHINE_TIMER, M_DEMO_MSEC_TO_CYCLES(5));
+  pspMachineTimerCounterSetupAndRun(M_DEMO_MSEC_TO_CYCLES(5));
   pspMachineInterruptsEnableIntNumber(D_PSP_INTERRUPTS_MACHINE_TIMER);
   pspMachineInterruptsEnable();
 
@@ -232,7 +232,7 @@ void demoPerfMonitorEnableAll(void)
   pspMachinePerfMonitorEnableAll();
 
   /* Setup and enable machine-timer interrupt */
-  pspMachineTimerCounterSetupAndRun(D_PSP_MACHINE_TIMER, M_DEMO_MSEC_TO_CYCLES(5));
+  pspMachineTimerCounterSetupAndRun(M_DEMO_MSEC_TO_CYCLES(5));
   pspMachineInterruptsEnableIntNumber(D_PSP_INTERRUPTS_MACHINE_TIMER);
   pspMachineInterruptsEnable();
 

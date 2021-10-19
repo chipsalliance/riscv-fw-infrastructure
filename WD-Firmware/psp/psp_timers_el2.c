@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,10 +26,18 @@
 */
 #include "psp_api.h"
 
+
+
+ 
 /**
 * definitions
 */
-
+#if defined(D_MTIME_ADDRESS) && defined(D_MTIMECMP_ADDRESS)
+  #define D_PSP_MTIME_ADDRESS  D_MTIME_ADDRESS
+  #define D_PSP_MTIMECMP_ADDRESS D_MTIMECMP_ADDRESS
+#else
+  #error "D_MTIME_ADDRESS or D_MTIMECMP_ADDRESS is not defined"
+#endif
 /**
 * macros
 */
@@ -55,37 +63,15 @@
  */
 
 /**
-* @brief Setup the countup of Machine Timer
-*
-* @parameter - udPeriodCycles - defines the timer's period in cycles
-*
-***************************************************************************************************/
-D_PSP_TEXT_SECTION void pspMachineTimerSetupTimerCounter(u64_t udPeriodCycles)
-{
-  #if (0 == D_MTIME_ADDRESS) || (0 == D_MTIMECMP_ADDRESS)
-    #error "D_MTIME_ADDRESS or D_MTIMECMP_ADDRESS is not defined"
-  #endif
-
-  volatile u64_t *pMtime    = (u64_t*)D_MTIME_ADDRESS;
-  volatile u64_t *pMtimecmp = (u64_t*)D_MTIMECMP_ADDRESS;
-  u64_t udNow, udThen;
-
-  /* Set the mtime and mtimecmp (memory-mapped registers) per privileged spec */
-  udNow = *pMtime;
-  udThen = udNow + udPeriodCycles;
-  *pMtimecmp = udThen;
-}
-
-/**
 * @brief Cascade Timer0 and Timer1 to act as a single timer
 *        In this mode, Timer1 counts up when Timer0 reachs its bound value. Timer1 interrupt raises when Timer1 reachs its bound.
 *        **Note** In 'cascade' mode HALT-EN, and PAUSE-EN indications must be the set identically for both timers
 *                 so part this function also set disable all of them here.
 *
-* @parameter - udPeriodCycles - defines the timer's period in cycles
+* @param - udPeriodCycles - defines the timer's period in cycles
 *
-***************************************************************************************************/
-D_PSP_TEXT_SECTION void pspMachineTimerSetup64bitTimer(u64_t udPeriodCycles)
+*/
+D_PSP_TEXT_SECTION void pspMachineInternalTimerSetup64bitTimer(u64_t udPeriodCycles)
 {
   u32_t uiNow, uiThen;
 
@@ -114,28 +100,41 @@ D_PSP_TEXT_SECTION void pspMachineTimerSetup64bitTimer(u64_t udPeriodCycles)
 }
 
 /**
-* APIs
+* @brief Setup and activate  core Machine Timer
+*
+*
+* @param - udPeriodCycles  - defines the timer's period in cycles
+*
 */
+D_PSP_TEXT_SECTION void pspMachineTimerCounterSetupAndRun(u64_t udPeriodCycles)
+{
+    M_PSP_ASSERT((D_PSP_MTIME_ADDRESS != 0) && (D_PSP_MTIMECMP_ADDRESS != 0));
+
+  /* Set the mtime and mtimecmp (memory-mapped registers) per privileged spec */
+  volatile u64_t *pMtime       = (u64_t*)D_PSP_MTIME_ADDRESS;
+  volatile u64_t *pMtimecmp    = (u64_t*)D_PSP_MTIMECMP_ADDRESS;
+  u64_t udNow = *pMtime;
+  u64_t udThen = udNow + udPeriodCycles;
+  *pMtimecmp = udThen;
+}
+
 
 /**
-* @brief Setup and activate Timer
+* @brief Setup and activate Internal core's Timer
 *
-* @parameter - timer            - indicates which timer to setup and run
-* @parameter - uiPeriodCycles   - defines the timer's period in cycles
+* @param - uiTimer           - indicates which timer to setup and run
 *
-***************************************************************************************************/
-D_PSP_TEXT_SECTION void pspMachineTimerCounterSetupAndRun(u32_t uiTimer, u64_t udPeriodCycles)
+* @param - udPeriodCycles  - defines the timer's period in cycles 
+*
+*/
+D_PSP_TEXT_SECTION void pspMachineInternalTimerCounterSetupAndRun(u32_t uiTimer, u64_t udPeriodCycles)
 {
   u32_t uiNow, uiThen;
 
-  M_PSP_ASSERT((D_PSP_MACHINE_TIMER == uiTimer) || (D_PSP_INTERNAL_TIMER0 == uiTimer) ||
-           (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
+  M_PSP_ASSERT((D_PSP_INTERNAL_TIMER0 == uiTimer) ||(D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
 
   switch (uiTimer)
   {
-    case D_PSP_MACHINE_TIMER:
-      pspMachineTimerSetupTimerCounter(udPeriodCycles);
-      break;
     case D_PSP_INTERNAL_TIMER0:
       /* Read Timer0 counter */
       uiNow = M_PSP_READ_CSR(D_PSP_MITCNT0_NUM);
@@ -155,34 +154,45 @@ D_PSP_TEXT_SECTION void pspMachineTimerCounterSetupAndRun(u32_t uiTimer, u64_t u
       M_PSP_SET_CSR(D_PSP_MITCTL1_NUM, D_PSP_MITCTL_EN_MASK);
       break;
     case D_PSP_INTERNAL_64BIT_TIMER:
-      pspMachineTimerSetup64bitTimer(udPeriodCycles);
+      pspMachineInternalTimerSetup64bitTimer(udPeriodCycles);
       break;
     default:
       break;
   }
 }
 
+
 /**
-* @brief Get Timer counter value
+* @brief Get Machine Timer counter value
 *
-* @parameter - timer - indicates from which timer to get the counter value
 *
 * @return u64_t      - Timer counter value
 *
-***************************************************************************************************/
-D_PSP_TEXT_SECTION u64_t pspMachineTimerCounterGet(u32_t uiTimer)
+*/
+D_PSP_TEXT_SECTION u64_t pspMachineTimerCounterGet(void)
 {
-  u64_t udCounter = 0;
+  volatile u64_t *pMtime       = (u64_t*)D_PSP_MTIME_ADDRESS;
+  return *pMtime;
+}
+
+
+/**
+* @brief Get Core Internal Timer counter value
+*
+* @param - uitimer - indicates from which timer to get the counter value
+*
+* @return u64_t      - Timer counter value
+*
+*/
+D_PSP_TEXT_SECTION u64_t pspMachineInternalTimerCounterGet(u32_t uiTimer)
+{
+   u64_t udCounter = 0;
   u64_t udCounterTemp = 0;
 
-  M_PSP_ASSERT((D_PSP_MACHINE_TIMER == uiTimer) || (D_PSP_INTERNAL_TIMER0 == uiTimer) ||
-           (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
+  M_PSP_ASSERT((D_PSP_INTERNAL_TIMER0 == uiTimer) || (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
 
   switch (uiTimer)
   {
-    case D_PSP_MACHINE_TIMER:
-      udCounter = *(u64_t*)D_MTIME_ADDRESS;
-      break;
     case D_PSP_INTERNAL_TIMER0:
       udCounter = (u64_t)M_PSP_READ_CSR(D_PSP_MITCNT0_NUM);
       break;
@@ -202,26 +212,36 @@ D_PSP_TEXT_SECTION u64_t pspMachineTimerCounterGet(u32_t uiTimer)
 }
 
 /**
-* @brief Get Time compare counter value
+* @brief Get Machine Time compare counter value
 *
-* @parameter - timer - indicates from which timer to get the compare-counter value
 *
 * @return u64_t      – Time compare counter value
 *
-***************************************************************************************************/
-D_PSP_TEXT_SECTION u64_t pspMachineTimerCompareCounterGet(u32_t uiTimer)
+*/
+D_PSP_TEXT_SECTION u64_t pspMachineTimerCompareCounterGet(void)
+{
+  volatile u64_t *pMtimecmp    = (u64_t*)D_PSP_MTIMECMP_ADDRESS;
+  return *pMtimecmp;
+}
+
+
+/**
+* @brief Get Core Internal Timer compare counter value
+*
+* @param - uitimer - indicates from which timer to get the compare-counter value
+*
+* @return u64_t      – Time compare counter value
+*
+*/
+D_PSP_TEXT_SECTION u64_t pspMachineInternalTimerCompareCounterGet(u32_t uiTimer)
 {
   u64_t udCounterCompare = 0;
   u64_t udCounterCompareTemp = 0;
 
-  M_PSP_ASSERT((D_PSP_MACHINE_TIMER == uiTimer) || (D_PSP_INTERNAL_TIMER0 == uiTimer) ||
-           (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
+  M_PSP_ASSERT((D_PSP_INTERNAL_TIMER0 == uiTimer) || (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
 
   switch (uiTimer)
   {
-    case D_PSP_MACHINE_TIMER:
-      udCounterCompare = *(u64_t*)D_MTIMECMP_ADDRESS;
-      break;
     case D_PSP_INTERNAL_TIMER0:
       udCounterCompare = (u64_t)M_PSP_READ_CSR(D_PSP_MITBND0_NUM);
       break;
@@ -241,12 +261,12 @@ D_PSP_TEXT_SECTION u64_t pspMachineTimerCompareCounterGet(u32_t uiTimer)
 }
 
 /**
-* @brief Enable timer counting when core in sleep mode
+* @brief Enable Core Internal timer counting when core in sleep mode
 *
-* @parameter - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to setup
 *
-***************************************************************************************************/
-D_PSP_TEXT_SECTION void pspMachineTimerEnableCountInSleepMode(u32_t uiTimer)
+*/
+D_PSP_TEXT_SECTION void pspMachineInternalTimerEnableCountInSleepMode(u32_t uiTimer)
 {
   M_PSP_ASSERT((D_PSP_INTERNAL_TIMER0 == uiTimer) || (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
 
@@ -268,12 +288,12 @@ D_PSP_TEXT_SECTION void pspMachineTimerEnableCountInSleepMode(u32_t uiTimer)
 }
 
 /**
-* @brief Disable timer counting when core in sleep mode
+* @brief Disable Core Internal timer counting when core in sleep mode
 *
-* @parameter - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to setup
 *
-***************************************************************************************************/
-D_PSP_TEXT_SECTION void pspMachineTimerDisableCountInSleepMode(u32_t uiTimer)
+*/
+D_PSP_TEXT_SECTION void pspMachineInternalTimerDisableCountInSleepMode(u32_t uiTimer)
 {
   M_PSP_ASSERT((D_PSP_INTERNAL_TIMER0 == uiTimer) || (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
 
@@ -295,12 +315,12 @@ D_PSP_TEXT_SECTION void pspMachineTimerDisableCountInSleepMode(u32_t uiTimer)
 }
 
 /**
-* @brief Enable timer counting when core in in stall
+* @brief Enable Core Internal timer counting when core in in stall
 *
-* @parameter - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to setup
 *
-***************************************************************************************************/
-D_PSP_TEXT_SECTION void pspMachineTimerEnableCountInStallMode(u32_t uiTimer)
+*/
+D_PSP_TEXT_SECTION void pspMachineInternalTimerEnableCountInStallMode(u32_t uiTimer)
 {
   M_PSP_ASSERT((D_PSP_INTERNAL_TIMER0 == uiTimer) || (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
 
@@ -322,14 +342,14 @@ D_PSP_TEXT_SECTION void pspMachineTimerEnableCountInStallMode(u32_t uiTimer)
 }
 
 /**
-* @brief Disable timer counting when core in in stall
+* @brief Disable Core Internal timer counting when core in in stall
 *
-* @parameter - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to setup
 *
-***************************************************************************************************/
-D_PSP_TEXT_SECTION void pspMachineTimerDisableCountInStallMode(u32_t uiTimer)
+*/
+D_PSP_TEXT_SECTION void pspMachineInternalTimerDisableCountInStallMode(u32_t uiTimer)
 {
-  M_PSP_ASSERT((D_PSP_INTERNAL_TIMER0 == uiTimer) || (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
+   M_PSP_ASSERT((D_PSP_INTERNAL_TIMER0 == uiTimer) || (D_PSP_INTERNAL_TIMER1 == uiTimer) || (D_PSP_INTERNAL_64BIT_TIMER == uiTimer));
 
   switch (uiTimer)
   {
@@ -347,3 +367,7 @@ D_PSP_TEXT_SECTION void pspMachineTimerDisableCountInStallMode(u32_t uiTimer)
       break;
   }
 }
+
+ 
+
+

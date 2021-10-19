@@ -1,6 +1,6 @@
 /* 
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 * 
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,9 +31,8 @@
 /**
 * definitions
 */
-#define D_PSP_MACHINE_TIMER   1
-#define D_PSP_INTERNAL_TIMER0 2
-#define D_PSP_INTERNAL_TIMER1 3
+#define D_PSP_INTERNAL_TIMER0 1
+#define D_PSP_INTERNAL_TIMER1 2
 
 /**
 * types
@@ -59,66 +58,71 @@
 * APIs
 */
 
-/**
-* @brief Setup and activate core's Timer
-*
-* @parameter - timer            - indicates which timer to setup and run
-* @parameter - uiPeriodCycles   - defines the timer's period in cycles
-*
-***************************************************************************************************/
-void pspMachineTimerCounterSetupAndRun(u32_t uiTimer, u64_t udPeriodCycles);
+
+ 
+
 
 /**
-* @brief Get Timer counter value
+* @brief Setup and activate Internal core's Timer
 *
-* @parameter - timer - indicates from which timer to get the counter value
+* @param - uiTimer           - indicates which timer to setup and run
+*
+* @param - udPeriodCycles  - defines the timer's period in cycles 
+*
+*/
+void pspMachineInternalTimerCounterSetupAndRun(u32_t uiTimer, u64_t udPeriodCycles);
+
+/**
+* @brief Get Core Internal Timer counter value
+*
+* @param - uitimer - indicates from which timer to get the counter value
 *
 * @return u64_t      - Timer counter value
 *
-***************************************************************************************************/
-u64_t pspMachineTimerCounterGet(u32_t uiTimer);
+*/
+u64_t pspMachineInternalTimerCounterGet(u32_t uiTimer);
+
 
 /**
-* @brief Get Time compare counter value
+* @brief Get Core Internal Timer compare counter value
 *
-* @parameter - timer - indicates from which timer to get the compare-counter value
+* @param - uitimer - indicates from which timer to get the compare-counter value
 *
 * @return u64_t      – Time compare counter value
 *
-***************************************************************************************************/
-u64_t pspMachineTimerCompareCounterGet(u32_t uiTimer);
+*/
+u64_t pspMachineInternalTimerCompareCounterGet(u32_t uiTimer);
 
 /**
-* @brief Enable timer counting when core in sleep mode
+* @brief Enable Core Internal timer counting when core in sleep mode
 *
-* @parameter - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to setup
 *
-***************************************************************************************************/
-void pspMachineTimerEnableCountInSleepMode(u32_t uiTimer);
+*/
+void pspMachineInternalTimerEnableCountInSleepMode(u32_t uiTimer);
 
 /**
-* @brief Disable timer counting when core in sleep mode
+* @brief Disable Core Internal timer counting when core in sleep mode
 *
-* @parameter - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to setup
 *
-***************************************************************************************************/
-void pspMachineTimerDisableCountInSleepMode(u32_t uiTimer);
+*/
+void pspMachineInternalTimerDisableCountInSleepMode(u32_t uiTimer);
 
 /**
-* @brief Enable timer counting when core in in stall
+* @brief Enable Core Internal timer counting when core in in stall
 *
-* @parameter - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to setup
 *
-***************************************************************************************************/
-void pspMachineTimerEnableCountInStallMode(u32_t uiTimer);
+*/
+void pspMachineInternalTimerEnableCountInStallMode(u32_t uiTimer);
 
 /**
-* @brief Disable timer counting when core in in stall
+* @brief Disable Core Internal timer counting when core in in stall
 *
-* @parameter - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to setup
 *
-***************************************************************************************************/
-void pspMachineTimerDisableCountInStallMode(u32_t uiTimer);
-
+*/
+void pspMachineInternalTimerDisableCountInStallMode(u32_t uiTimer);
 
 #endif /* __PSP_TIMERS_EH1_H__ */

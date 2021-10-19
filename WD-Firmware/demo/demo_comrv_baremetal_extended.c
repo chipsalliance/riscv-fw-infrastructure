@@ -159,7 +159,7 @@ void _OVERLAY_ OvlTestFuncSameGroup512B1(void)
 void _OVERLAY_ OvlTestFuncSameGroup512B2(void)
 {
    /* call overlay function -  step in large group (set BP in loaded
-	  function which is about to be evicted) */
+    function which is about to be evicted) */
    OvlTestFunc4K();
    /* call non-overlay function - step in */
    NoneOverlayFunc();

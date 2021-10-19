@@ -37,10 +37,9 @@
 #include "psp_memory_utils.h"
 #include "psp_int_vect.h"
 #include "psp_version.h"
+#include "psp_timers.h"
 #include "psp_interrupts.h"
-#ifdef D_HI_FIVE1
-  #include "psp_timers_hifive1.h"
-#elif D_SWERV_EH1
+#ifdef D_SWERV_EH1
   #include "psp_csrs_eh1.h"
   #include "psp_timers_eh1.h"
   #include "psp_interrupts_eh1.h"
