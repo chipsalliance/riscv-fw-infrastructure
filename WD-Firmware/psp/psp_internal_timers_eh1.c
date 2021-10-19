@@ -15,7 +15,7 @@
 * limitations under the License.
 */
 /**
-* @file   psp_timers_eh1.c
+* @file   psp_internal_timers_eh1.c
 * @author Nati Rapaport
 * @date   8.12.2019
 * @brief  This file implements EH1 timers service functions
@@ -30,12 +30,7 @@
 /**
 * definitions
 */
-#if defined(D_MTIME_ADDRESS) && defined(D_MTIMECMP_ADDRESS)
-  #define D_PSP_MTIME_ADDRESS  D_MTIME_ADDRESS
-  #define D_PSP_MTIMECMP_ADDRESS D_MTIMECMP_ADDRESS
-#else
-  #error "D_MTIME_ADDRESS or D_MTIMECMP_ADDRESS is not defined"
-#endif
+ 
 /**
 * macros
 */
@@ -59,24 +54,6 @@
 /**
  * Internal functions
  */
-/**
-* @brief Setup and activate  core Machine Timer
-*
-*
-* @param - udPeriodCycles  - defines the timer's period in cycles
-*
-*/
-D_PSP_TEXT_SECTION void pspMachineTimerCounterSetupAndRun(u64_t udPeriodCycles)
-{
-  M_PSP_ASSERT((D_PSP_MTIME_ADDRESS != 0) && (D_PSP_MTIMECMP_ADDRESS != 0));
-
-  /* Set the mtime and mtimecmp (memory-mapped registers) per privileged spec */
-  volatile u64_t *pMtime       = (u64_t*)D_PSP_MTIME_ADDRESS;
-  volatile u64_t *pMtimecmp    = (u64_t*)D_PSP_MTIMECMP_ADDRESS;
-  u64_t udNow = *pMtime;
-  u64_t udThen = udNow + udPeriodCycles;
-  *pMtimecmp = udThen;
-}
 
 
 /**
@@ -117,18 +94,6 @@ D_PSP_TEXT_SECTION void pspMachineInternalTimerCounterSetupAndRun(u32_t uiTimer,
 }
 
 
-/**
-* @brief Get Machine Timer counter value
-*
-*
-* @return u64_t      - Timer counter value
-*
-*/
-D_PSP_TEXT_SECTION u64_t pspMachineTimerCounterGet(void)
-{
-  volatile u64_t *pMtime       = (u64_t*)D_PSP_MTIME_ADDRESS;
-  return *pMtime;
-}
 
 
 /**
@@ -159,19 +124,6 @@ D_PSP_TEXT_SECTION u64_t pspMachineInternalTimerCounterGet(u32_t uiTimer)
   }
 
   return (udCounter);
-}
-
-/**
-* @brief Get Machine Time compare counter value
-*
-*
-* @return u64_t      – Time compare counter value
-*
-*/
-D_PSP_TEXT_SECTION u64_t pspMachineTimerCompareCounterGet(void)
-{
-  volatile u64_t *pMtimecmp    = (u64_t*)D_PSP_MTIMECMP_ADDRESS;
-  return *pMtimecmp;
 }
 
 
