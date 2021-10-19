@@ -69,7 +69,7 @@ D_PSP_TEXT_SECTION void pspMachineInterruptsDefaultHandler(void);
 /* Exception handlers */
 /* */
 #if D_PSP_NUM_OF_HARTS == 2
-D_PSP_DATA_SECTION fptrPspInterruptHandler_t  g_fptrExceptions_ints[D_PSP_NUM_OF_HARTS][D_PSP_NUM_OF_INTS_EXCEPTIONS] = {
+D_PSP_DATA_SECTION fptrPspInterruptHandler_t  g_fptrExceptions_ints[D_PSP_NUM_OF_HARTS][D_PSP_NUM_EXC_CAUSE] = {
                        /* Hart0 */
                      { pspMachineInterruptsDefaultHandler,
                        pspMachineInterruptsDefaultHandler,
@@ -105,7 +105,7 @@ D_PSP_DATA_SECTION fptrPspInterruptHandler_t  g_fptrExceptions_ints[D_PSP_NUM_OF
                        pspMachineInterruptsDefaultHandler,
                        pspMachineInterruptsDefaultHandler }};
 #else /* D_PSP_NUM_OF_HARTS = 1 */
-D_PSP_DATA_SECTION fptrPspInterruptHandler_t  g_fptrExceptions_ints[D_PSP_NUM_OF_HARTS][D_PSP_NUM_OF_INTS_EXCEPTIONS] = {
+D_PSP_DATA_SECTION fptrPspInterruptHandler_t  g_fptrExceptions_ints[D_PSP_NUM_OF_HARTS][D_PSP_NUM_EXC_CAUSE] = {
                        /* Hart0 */
                      { pspMachineInterruptsDefaultHandler,
                        pspMachineInterruptsDefaultHandler,
@@ -282,7 +282,7 @@ D_PSP_TEXT_SECTION void pspMachineInterruptsExcpHandlingSelector(void)
    u32_t uiCause = M_PSP_READ_CSR(D_PSP_MCAUSE_NUM);
 
    /* is it a valid cause */
-   M_PSP_ASSERT(uiCause < D_PSP_NUM_OF_INTS_EXCEPTIONS);
+   M_PSP_ASSERT(uiCause < D_PSP_NUM_EXC_CAUSE);
 
    /* call the specific exception handler */
    g_fptrExceptions_ints[uiHartNumber][uiCause]();

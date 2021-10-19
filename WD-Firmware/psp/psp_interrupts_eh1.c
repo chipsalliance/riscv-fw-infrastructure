@@ -62,7 +62,7 @@ D_PSP_TEXT_SECTION void pspMachineInterruptsDefaultHandler(void);
 #endif
 
 /* Exception handlers */
-D_PSP_DATA_SECTION fptrPspInterruptHandler_t  g_fptrExceptions_ints[D_PSP_NUM_OF_INTS_EXCEPTIONS] = {
+D_PSP_DATA_SECTION fptrPspInterruptHandler_t  g_fptrExceptions_ints[D_PSP_NUM_EXC_CAUSE] = {
                        pspMachineInterruptsDefaultHandler,
                        pspMachineInterruptsDefaultHandler,
                        pspMachineInterruptsDefaultHandler,
@@ -233,7 +233,7 @@ D_PSP_TEXT_SECTION void pspMachineInterruptsExcpHandlingSelector(void)
    u32_t uiCause = M_PSP_READ_CSR(D_PSP_MCAUSE_NUM);
 
    /* is it a valid cause */
-   M_PSP_ASSERT(uiCause < D_PSP_NUM_OF_INTS_EXCEPTIONS);
+   M_PSP_ASSERT(uiCause < D_PSP_NUM_EXC_CAUSE);
 
    /* call the specific exception handler */
    g_fptrExceptions_ints[uiCause]();
