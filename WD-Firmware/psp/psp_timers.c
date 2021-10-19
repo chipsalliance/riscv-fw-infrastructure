@@ -30,8 +30,8 @@
 * definitions
 */
 #if defined(D_MTIME_ADDRESS) && defined(D_MTIMECMP_ADDRESS)
-  #define PSP_MTIME_ADDRESS D_MTIME_ADDRESS
-  #define PSP_MTIMECMP_ADDRESS D_MTIMECMP_ADDRESS
+  #define D_PSP_MTIME_ADDRESS D_MTIME_ADDRESS
+  #define D_PSP_MTIMECMP_ADDRESS D_MTIMECMP_ADDRESS
 #else
   #error "D_MTIME_ADDRESS or D_MTIMECMP_ADDRESS are not defined"
 #endif
@@ -71,11 +71,11 @@
 */
 D_PSP_TEXT_SECTION void pspMachineTimerCounterSetupAndRun(u64_t udPeriodCycles)
 {
-  M_PSP_ASSERT((PSP_MTIME_ADDRESS != 0) && (PSP_MTIMECMP_ADDRESS != 0));
+  M_PSP_ASSERT((D_PSP_MTIME_ADDRESS != 0) && (D_PSP_MTIMECMP_ADDRESS != 0));
 
   /* Set the mtime and mtimecmp (memory-mapped registers) per privileged spec */
-  volatile u64_t *pMtime       = (u64_t*)PSP_MTIME_ADDRESS;
-  volatile u64_t *pMtimecmp    = (u64_t*)PSP_MTIMECMP_ADDRESS;
+  volatile u64_t *pMtime       = (u64_t*)D_PSP_MTIME_ADDRESS;
+  volatile u64_t *pMtimecmp    = (u64_t*)D_PSP_MTIMECMP_ADDRESS;
   u64_t udNow = *pMtime;
   u64_t udThen = udNow + udPeriodCycles;
   *pMtimecmp = udThen;
@@ -90,7 +90,7 @@ D_PSP_TEXT_SECTION void pspMachineTimerCounterSetupAndRun(u64_t udPeriodCycles)
 */
 D_PSP_TEXT_SECTION u64_t pspMachineTimerCounterGet(void)
 {
-  volatile u64_t *pMtime       = (u64_t*)PSP_MTIME_ADDRESS;
+  volatile u64_t *pMtime       = (u64_t*)D_PSP_MTIME_ADDRESS;
   return *pMtime;
 }
 
@@ -103,7 +103,7 @@ D_PSP_TEXT_SECTION u64_t pspMachineTimerCounterGet(void)
 */
 D_PSP_TEXT_SECTION u64_t pspMachineTimerCompareCounterGet(void)
 {
-  volatile u64_t *pMtimecmp    = (u64_t*)PSP_MTIMECMP_ADDRESS;
+  volatile u64_t *pMtimecmp    = (u64_t*)D_PSP_MTIMECMP_ADDRESS;
   return *pMtimecmp;
 }
 
