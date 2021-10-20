@@ -138,10 +138,10 @@ void demoDefaultInitialization(fptrPspInterruptHandler_t pTestIsr)
     pspMachineExtInterruptSetPriority(uiSourceId, g_uiDemoPriorityLevelPerSourceId[uiSourceId]);
 
     /* Enable each one of the interrupts in the PIC */
-    pspMachineExternalInterruptEnableNumber(uiSourceId);
+    pspMachineExtInterruptEnableNumber(uiSourceId);
 
     /* Register ISRs to all interrupt sources (here we use same ISR to all of them) */
-    pspMachineExternalInterruptRegisterISR(uiSourceId, pTestIsr, 0);
+    pspMachineExtInterruptRegisterISR(uiSourceId, pTestIsr, 0);
   }
 
   /* Enable all interrupts in mstatus CSR */
@@ -320,7 +320,7 @@ void demoExtIntsTest2SpecificDisabled(void)
   demoDefaultInitialization(demoExtIntTest_1_2_3_4_5_ISR);
 
   /* Disable IRQ3 */
-  pspMachineExternalInterruptDisableNumber(D_BSP_IRQ_3);
+  pspMachineExtInterruptDisableNumber(D_BSP_IRQ_3);
 
   /* Generate external interrupts 3 & 4 (with Active-High, Level trigger type) */
   bspGenerateExtInterrupt(D_BSP_IRQ_3, D_PSP_EXT_INT_ACTIVE_HIGH, D_PSP_EXT_INT_LEVEL_TRIG_TYPE );

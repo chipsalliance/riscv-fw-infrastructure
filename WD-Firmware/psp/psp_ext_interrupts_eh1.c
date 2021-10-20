@@ -84,7 +84,7 @@ D_PSP_DATA_SECTION D_PSP_ALIGNED(1024) fptrPspInterruptHandler_t G_Ext_Interrupt
 /**
 * @brief - Set external interrupts vector-table address at MEIVT CSR
 */
-D_PSP_TEXT_SECTION void pspMachineExternalInterruptSetVectorTableAddress(void* pExtIntVectTable)
+D_PSP_TEXT_SECTION void pspMachineExtInterruptSetVectorTableAddress(void* pExtIntVectTable)
 {
   u32_t uiInterruptsState;
 
@@ -108,7 +108,7 @@ D_PSP_TEXT_SECTION void pspMachineExternalInterruptSetVectorTableAddress(void* p
 *        pParameter = NOT IN USE for baremetal implementation
 * @return pOldIsr = pointer to the previously registered ISR
 */
-fptrPspInterruptHandler_t pspMachineExternalInterruptRegisterISR(u32_t uiVectorNumber, fptrPspInterruptHandler_t pIsr, void* pParameter)
+fptrPspInterruptHandler_t pspMachineExtInterruptRegisterISR(u32_t uiVectorNumber, fptrPspInterruptHandler_t pIsr, void* pParameter)
 {
    u32_t uiInterruptsState;
    fptrPspInterruptHandler_t fptrPrevIsr = NULL;
@@ -120,7 +120,7 @@ fptrPspInterruptHandler_t pspMachineExternalInterruptRegisterISR(u32_t uiVectorN
    pspMachineInterruptsDisable(&uiInterruptsState);
 
    /* Set external-interrupts vector-table address in MEIVT CSR */
-   pspMachineExternalInterruptSetVectorTableAddress(G_Ext_Interrupt_Handlers);
+   pspMachineExtInterruptSetVectorTableAddress(G_Ext_Interrupt_Handlers);
 
    /* Register the interrupt */
    fptrPrevIsr = G_Ext_Interrupt_Handlers[uiVectorNumber];
@@ -138,7 +138,7 @@ fptrPspInterruptHandler_t pspMachineExternalInterruptRegisterISR(u32_t uiVectorN
 * @param intNum = the number of the external interrupt to disable
 * @return None
 */
-D_PSP_TEXT_SECTION void pspMachineExternalInterruptDisableNumber(u32_t uiIntNum)
+D_PSP_TEXT_SECTION void pspMachineExtInterruptDisableNumber(u32_t uiIntNum)
 {
   u32_t uiInterruptsState;
 
@@ -161,7 +161,7 @@ D_PSP_TEXT_SECTION void pspMachineExternalInterruptDisableNumber(u32_t uiIntNum)
 * @param intNum = the number of the external interrupt to enable
 * @return None
 */
-D_PSP_TEXT_SECTION void pspMachineExternalInterruptEnableNumber(u32_t uiIntNum)
+D_PSP_TEXT_SECTION void pspMachineExtInterruptEnableNumber(u32_t uiIntNum)
 {
   u32_t uiInterruptsState;
 

@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -136,7 +136,7 @@
 /**
 * @brief - Set external interrupts vector-table address at MEIVT CSR
 */
-void pspMachineExternalInterruptSetVectorTableAddress(void* pExtIntVectTable);
+void pspMachineExtInterruptSetVectorTableAddress(void* pExtIntVectTable);
 
 /*
 * This function registers external interrupt handler
@@ -146,7 +146,7 @@ void pspMachineExternalInterruptSetVectorTableAddress(void* pExtIntVectTable);
 *        pParameter = NOT IN USE for baremetal implementation
 * @return pOldIsr = pointer to the previously registered ISR (Null in case of a failure)
 */
-fptrPspInterruptHandler_t pspMachineExternalInterruptRegisterISR(u32_t uiVectorNumber, fptrPspInterruptHandler_t pIsr, void* pParameter);
+fptrPspInterruptHandler_t pspMachineExtInterruptRegisterISR(u32_t uiVectorNumber, fptrPspInterruptHandler_t pIsr, void* pParameter);
 
 
 /*
@@ -155,7 +155,7 @@ fptrPspInterruptHandler_t pspMachineExternalInterruptRegisterISR(u32_t uiVectorN
 * @param intNum = the number of the external interrupt to disable
 * @return None
 */
-void pspMachineExternalInterruptDisableNumber(u32_t uiIntNum);
+void pspMachineExtInterruptDisableNumber(u32_t uiIntNum);
 
 
 /*
@@ -164,7 +164,7 @@ void pspMachineExternalInterruptDisableNumber(u32_t uiIntNum);
 * @param intNum = the number of the external interrupt to enable
 * @return None
 */
-void pspMachineExternalInterruptEnableNumber(u32_t uiIntNum);
+void pspMachineExtInterruptEnableNumber(u32_t uiIntNum);
 
 
 /*

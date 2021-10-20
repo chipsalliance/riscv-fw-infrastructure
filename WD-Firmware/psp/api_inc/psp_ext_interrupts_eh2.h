@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -62,7 +62,7 @@
 * @parameter - external interrupt number
 * @parameter - Hart number
 */
-void pspMachineExternalInterruptDelegateToHart(u32_t uiExtIntNumber, u32_t uiHartNumber);
+void pspMachineExtInterruptDelegateToHart(u32_t uiExtIntNumber, u32_t uiHartNumber);
 
 /*
 * This function checks whether a given external interrupt is pending or not per the current Hart (HW thread)
@@ -71,7 +71,7 @@ void pspMachineExternalInterruptDelegateToHart(u32_t uiExtIntNumber, u32_t uiHar
 * @param uiExtInterrupt = Number of external interrupt
 * @return = pending (1) or not (0)
 */
-u32_t pspMachineExternalInterruptIsPendingOnHart(u32_t uiExtInterrupt);
+u32_t pspMachineExtInterruptIsPendingOnHart(u32_t uiExtInterrupt);
 
 
 #endif /* __PSP_EXT_INTERRUPTS_EH2_H__ */

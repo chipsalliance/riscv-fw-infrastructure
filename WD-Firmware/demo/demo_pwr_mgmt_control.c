@@ -144,7 +144,7 @@ void demoSetupExternalInterrupts(void)
   pspMachineExtInterruptSetPriority(D_DEMO_IRQ, M_PSP_MACHINE_EXT_INT_PRIORITY_SET_TO_HIGHEST_VALUE);
 
   /* Enable IRQ3 interrupt in the PIC */
-  pspMachineExternalInterruptEnableNumber(D_DEMO_IRQ);
+  pspMachineExtInterruptEnableNumber(D_DEMO_IRQ);
 
   /* Enable external interrupts */
   pspMachineInterruptsEnableIntNumber(E_MACHINE_EXTERNAL_CAUSE);
@@ -168,7 +168,7 @@ void demoSleepAndWakeupByExternalInterrupt(void)
   g_uiTestWayPoints = 0;
 
   /* register external interrupt handler */
-  pspMachineExternalInterruptRegisterISR(D_DEMO_IRQ, demoExternalInterruptIsr, 0);
+  pspMachineExtInterruptRegisterISR(D_DEMO_IRQ, demoExternalInterruptIsr, 0);
 
   /* Rout SweRVolf FPGA timer to IRQ3 assertion - i.e. when the timer expires, IRQ3 external interrupt is asserted */
   bspRoutTimer(D_DEMO_TIMER_TO_IRQ);
@@ -465,7 +465,7 @@ void demoStallAndResumeByExternalInterrupt(void)
   g_uiTestWayPoints = 0;
 
   /* Register external interrupt handler */
-  pspMachineExternalInterruptRegisterISR(D_DEMO_IRQ, demoExternalInterruptIsr, 0);
+  pspMachineExtInterruptRegisterISR(D_DEMO_IRQ, demoExternalInterruptIsr, 0);
 
   /* Rout SweRVolf FPGA timer to IRQ3 assertion - i.e. when the timer expires, IRQ3 external interrupt is asserted */
   bspRoutTimer(D_DEMO_TIMER_TO_IRQ);

@@ -85,7 +85,7 @@ D_PSP_DATA_SECTION D_PSP_ALIGNED(1024) fptrPspInterruptHandler_t g_ExtInterruptH
 /**
 * @brief - Set external interrupts vector-table address at MEIVT CSR
 */
-D_PSP_TEXT_SECTION void pspMachineExternalInterruptSetVectorTableAddress(void* pExtIntVectTable)
+D_PSP_TEXT_SECTION void pspMachineExtInterruptSetVectorTableAddress(void* pExtIntVectTable)
 {
   u32_t uiInterruptsState;
 
@@ -110,7 +110,7 @@ D_PSP_TEXT_SECTION void pspMachineExternalInterruptSetVectorTableAddress(void* p
 * @param pParameter = NOT IN USE for baremetal implementation
 * @return pOldIsr = pointer to the previously registered ISR
 */
-D_PSP_TEXT_SECTION fptrPspInterruptHandler_t pspMachineExternalInterruptRegisterISR(u32_t uiVectorNumber, fptrPspInterruptHandler_t pIsr, void* pParameter)
+D_PSP_TEXT_SECTION fptrPspInterruptHandler_t pspMachineExtInterruptRegisterISR(u32_t uiVectorNumber, fptrPspInterruptHandler_t pIsr, void* pParameter)
 {
    fptrPspInterruptHandler_t fptrPrevIsr = NULL;
    u32_t uiHartNumber;
@@ -126,14 +126,14 @@ D_PSP_TEXT_SECTION fptrPspInterruptHandler_t pspMachineExternalInterruptRegister
    uiHartNumber = M_PSP_MACHINE_GET_HART_ID();
 
    /* Set external-interrupts vector-table address in MEIVT CSR */
-   pspMachineExternalInterruptSetVectorTableAddress(&g_ExtInterruptHandlers[uiHartNumber]);
+   pspMachineExtInterruptSetVectorTableAddress(&g_ExtInterruptHandlers[uiHartNumber]);
 
    /* Register the interrupt */
    fptrPrevIsr = g_ExtInterruptHandlers[uiHartNumber][uiVectorNumber];
    g_ExtInterruptHandlers[uiHartNumber][uiVectorNumber] = pIsr;
 
    /* Delegate the external-interrupt to current Hart (HW thread) */
-   pspMachineExternalInterruptDelegateToHart(uiVectorNumber, uiHartNumber);
+   pspMachineExtInterruptDelegateToHart(uiVectorNumber, uiHartNumber);
 
    /* Restore interrupts */
    pspMachineInterruptsRestore(uiInterruptsState);
@@ -147,7 +147,7 @@ D_PSP_TEXT_SECTION fptrPspInterruptHandler_t pspMachineExternalInterruptRegister
 * @param intNum = the number of the external interrupt to disable
 * @return None
 */
-D_PSP_TEXT_SECTION void pspMachineExternalInterruptDisableNumber(u32_t uiIntNum)
+D_PSP_TEXT_SECTION void pspMachineExtInterruptDisableNumber(u32_t uiIntNum)
 {
   u32_t uiInterruptsState;
 
@@ -176,7 +176,7 @@ D_PSP_TEXT_SECTION void pspMachineExternalInterruptDisableNumber(u32_t uiIntNum)
 * @param intNum = the number of the external interrupt to enable
 * @return None
 */
-D_PSP_TEXT_SECTION void pspMachineExternalInterruptEnableNumber(u32_t uiIntNum)
+D_PSP_TEXT_SECTION void pspMachineExtInterruptEnableNumber(u32_t uiIntNum)
 {
   u32_t uiInterruptsState;
 
@@ -474,7 +474,7 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptIsr(void)
 * @parameter - external interrupt number
 * @parameter - Hart number
 */
-D_PSP_TEXT_SECTION void pspMachineExternalInterruptDelegateToHart(u32_t uiExtIntNumber, u32_t uiHartNumber)
+D_PSP_TEXT_SECTION void pspMachineExtInterruptDelegateToHart(u32_t uiExtIntNumber, u32_t uiHartNumber)
 {
   u32_t uiInterruptsState;
 
@@ -504,7 +504,7 @@ D_PSP_TEXT_SECTION void pspMachineExternalInterruptDelegateToHart(u32_t uiExtInt
 * @param uiExtInterrupt = Number of external interrupt
 * @return = pending (1) or not (0)
 */
-D_PSP_TEXT_SECTION u32_t pspMachineExternalInterruptIsPendingOnHart(u32_t uiExtInterruptNumber)
+D_PSP_TEXT_SECTION u32_t pspMachineExtInterruptIsPendingOnHart(u32_t uiExtInterruptNumber)
 {
   u32_t uiRegister, uiBit, uiResult;
 
