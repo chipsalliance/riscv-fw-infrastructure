@@ -82,6 +82,9 @@
 #define D_PSP_SHIFT_31   31
 #define D_PSP_SHIFT_32   32
 
-
+#ifdef NULL
+    #undef NULL
+#endif
+#define NULL ((void *)0)
 
 #endif /* __PSP_DEFINES_H__ */

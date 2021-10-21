@@ -46,11 +46,6 @@ typedef unsigned long long u64_t;
    typedef u64_t pspStack_t;
 #endif
 
-#ifdef NULL
-    #undef NULL
-#endif
-#define NULL ((void *)0)
-
 /* for general use */
 typedef void (*fptrFunction_t)(void);
 
