@@ -1,6 +1,6 @@
 '''
  SPDX-License-Identifier: Apache-2.0
- Copyright 2019 Western Digital Corporation or its affiliates.
+ Copyright 2019-2021 Western Digital Corporation or its affiliates.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ listCCompilerDirectivs = [] + Env['C_FLAGS']
 listAsimCompilerDirectivs = [] + Env['A_FLAGS']
 
 # compilation defines (-D_)
-Env['PUBLIC_DEF'] += ['D_LLVM_COMRV']
+Env['PUBLIC_DEF'] += ['D_LLVM_NO_WARN_RESERVED_REGS', 'D_RESERVE_REGS_29_31', 'D_RESERVE_TP']
 listCompilationDefines = [] + Env['PUBLIC_DEF']
 
 # public includes

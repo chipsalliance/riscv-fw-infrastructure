@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2019 Western Digital Corporation or its affiliates.
+# Copyright 2019-2021 Western Digital Corporation or its affiliates.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 
 #Simple start up file for the reference design
 
-#ifdef D_LLVM_COMRV
+#ifdef D_LLVM_NO_WARN_RESERVED_REGS
 /* disable warning for reserved registers use - we are using comrv
    reserved register and don't want to see these warnings. */
 .option nowarnreservedreg
-#endif /* __clang__ */
+#endif /* D_LLVM_NO_WARN_RESERVED_REGS */
 
 .section ".text.init"
 .global _start

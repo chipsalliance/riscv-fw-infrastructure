@@ -25,11 +25,11 @@
 #include "psp_macros.inc"
 #include "psp_macros_eh1.inc"
 
-#ifdef D_LLVM_COMRV
+#ifdef D_LLVM_NO_WARN_RESERVED_REGS
 /* disable warning for reserved registers use - we are using comrv
    reserved register and don't want to see these warnings. */
 .option nowarnreservedreg
-#endif /* __clang__ */
+#endif /* D_LLVM_NO_WARN_RESERVED_REGS */
 
 /*
 This implementation supports riscv privileged v1.10

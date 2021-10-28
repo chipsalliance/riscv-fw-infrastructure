@@ -119,12 +119,13 @@
     M_PSP_STORE    x27, 26  * REGBYTES(sp)
     M_PSP_STORE    x28, 27  * REGBYTES(sp)
     M_PSP_STORE    x30, 29  * REGBYTES(sp)
-#ifndef D_COMRV
+#ifndef D_RESERVE_REGS_29_31
     M_PSP_STORE    x29, 28  * REGBYTES(sp)
     M_PSP_STORE    x31, 30  * REGBYTES(sp)
-#else
+#endif /* D_RESERVE_REGS_29_31 */
+#ifdef D_RESERVE_TP
     M_PSP_STORE    x4,  28  * REGBYTES(sp)
-#endif /* D_COMRV */
+#endif /* D_RESERVE_TP */
 .endm
 
 /* Macro for restoring application context */
@@ -157,14 +158,17 @@
     M_PSP_LOAD    x27, 26 * REGBYTES(sp)
     M_PSP_LOAD    x28, 27 * REGBYTES(sp)
     M_PSP_LOAD    x30, 29 * REGBYTES(sp)
-#ifndef D_COMRV
+#ifndef D_RESERVE_REGS_29_31
     M_PSP_LOAD    x29, 28 * REGBYTES(sp)
     M_PSP_LOAD    x31, 30 * REGBYTES(sp)
-#else
-   M_PSP_LOAD     x4,  28  * REGBYTES(sp)
-#endif /* D_COMRV */
+#endif /* D_RESERVE_REGS_29_31 */
+#ifdef D_RESERVE_TP
+    M_PSP_LOAD    x4,  28 * REGBYTES(sp)
+#endif /* D_RESERVE_TP */
     /* Make sure SP is aligned to 16 */
     M_PSP_ADDI    sp, sp, REGBYTES * 32
+
+
 .endm
 
 

@@ -1,5 +1,6 @@
 /*
     FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
+    Copyright (c) 2021 Western Digital Corporation or its affiliates.
     All rights reserved
 
     VISIT http://www.FreeRTOS.org TO ENSURE YOU ARE USING THE LATEST VERSION.
@@ -78,11 +79,11 @@ This implementation supports riscv privileged v1.10 and PRM of SweRV-EH1
 #include "rtosal_defines.inc"
 #include "rtosal_macros.inc"
 
-#ifdef D_LLVM_COMRV
+#ifdef D_LLVM_NO_WARN_RESERVED_REGS
 /* disable warning for reserved registers use - we are using comrv
    reserved register and don't want to see these warnings. */
 .option nowarnreservedreg
-#endif /* __clang__ */
+#endif /* D_LLVM_NO_WARN_RESERVED_REGS */
 
 
 .align 4
