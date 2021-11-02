@@ -1,6 +1,6 @@
 '''
  SPDX-License-Identifier: Apache-2.0
- Copyright 2019 Western Digital Corporation or its affiliates.
+ Copyright 2019-2021 Western Digital Corporation or its affiliates.
  
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ listAssemblyFiles=[]
 
 # compiler, assembler and linker directivs update for bit-manipulation - ** for LLVM version 11.0.0 (bit-manipulation) only **
 STRARC = '-march=rv32imac'
-STRARC_BITMANIP = '-march=rv32imaczbb0p92_zbs0p92'
+STRARC_BITMANIP = '-march=rv32imaczbb0p92_zbs0p92_zbc0p92'
 LIST_BITMANIT = ['-menable-experimental-extensions']
 
 # telling the tools which toolchains we are using. by default it is empty so GCC tools will be used

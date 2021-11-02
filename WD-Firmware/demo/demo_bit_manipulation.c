@@ -1,7 +1,7 @@
 
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -135,6 +135,26 @@
 #define D_DEMO_SBEXTRACT_BIT_POSITION    25         /* Extract bit #25 */
 #define D_DEMO_SBEXTRACT_EXPECTED_RESULT 0
 /*----------------------------------*/
+#define D_DEMO_CLMUL_RS1                 0xf2ab12dc
+#define D_DEMO_CLMUL_RS2                 0xfb34ef12
+#define D_DEMO_CLMUL_CLMUL_RESULT        0x10bf7c78
+#define D_DEMO_CLMUL_CLMULH_RESULT       0x5210d09d
+#define D_DEMO_CLMUL_CLMULR_RESULT       0xa421a13a
+/*----------------------------------*/
+#define D_DEMO_SH1ADD_RS1                0x00AB12DC
+#define D_DEMO_SH1ADD_RS2                0x0034EF12
+#define D_DEMO_SH1ADD_RESULT             0xe914f100
+#define D_DEMO_SH2ADD_RS1                0x00AB12DC
+#define D_DEMO_SH2ADD_RS2                0x0034EF12
+#define D_DEMO_SH2ADD_RESULT             0xdf7ecf24
+#define D_DEMO_SH3ADD_RS1                0x00AB12DC
+#define D_DEMO_SH3ADD_RS2                0x0034EF12
+#define D_DEMO_SH3ADD_RESULT             0xcc528b6c
+/*----------------------------------*/
+#define D_DEMO_ZEXTH_RS                  0x12345678
+#define D_DEMO_ZEXTH_RESULT              0x00005678
+
+/*----------------------------------*/
 /**
 * macros
 */
@@ -218,30 +238,6 @@ void demoBitManipulation(void)
     M_PSP_EBREAK();
   }
 
-  /* andN - 'and' with negate argument */
-  M_PSP_BITMANIP_ANDN(D_DEMO_ANDN_1ST_ARG, D_DEMO_ANDN_2ND_ARG, uiResult);
-  if (D_DEMO_ANDN_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
-  /* orN - 'or' with negate argument */
-  M_PSP_BITMANIP_ORN(D_DEMO_ORN_1ST_ARG, D_DEMO_ORN_2ND_ARG, uiResult);
-  if (D_DEMO_ORN_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
-  /* xNor - 'xor' with negate argument */
-  M_PSP_BITMANIP_XNOR(D_DEMO_XNOR_1ST_ARG, D_DEMO_XNOR_2ND_ARG, uiResult);
-  if (D_DEMO_XNOR_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
   /* min - minimum of 2 signed numbers */
   M_PSP_BITMANIP_MIN(D_DEMO_MIN_1ST_ARG, D_DEMO_MIN_2ND_ARG, uiResult);
   if (D_DEMO_MIN_EXPECTED_RESULT != uiResult)
@@ -293,61 +289,6 @@ void demoBitManipulation(void)
   }
 #endif
 
-  /* pack - pack 2 lower halves of 2 arguments */
-  M_PSP_BITMANIP_PACK(D_DEMO_PACK_1ST_ARG, D_DEMO_PACK_2ND_ARG, uiResult);
-  if (D_DEMO_PACK_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
-  /* packu - pack 2 upper halves of 2 arguments  */
-  M_PSP_BITMANIP_PACKU(D_DEMO_PACKU_1ST_ARG, D_DEMO_PACKU_2ND_ARG, uiResult);
-  if (D_DEMO_PACKU_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
-  /* packh - pack 2 LSB bytes of 2 arguments  */
-  M_PSP_BITMANIP_PACKH(D_DEMO_PACKH_1ST_ARG, D_DEMO_PACKH_2ND_ARG, uiResult);
-  if (D_DEMO_PACKH_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
-  /* rotate left */
-  M_PSP_BITMANIP_ROL(D_DEMO_ROTATEL_1ST_ARG, D_DEMO_NUM_OF_LEFT_ROTATIONS,uiResult);
-  if (D_DEMO_ROTATEL_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
-  /* rotate right */
-  M_PSP_BITMANIP_ROR(D_DEMO_ROTATER_1ST_ARG, D_DEMO_NUM_OF_RIGHT_ROTATIONS,uiResult);
-  if (D_DEMO_ROTATER_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
-  /* rotate right immediate */
-  M_PSP_BITMANIP_RORI(D_DEMO_ROTATER_1ST_ARG, D_DEMO_NUM_OF_RIGHT_ROTATIONS,uiResult);
-  if (D_DEMO_ROTATER_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
-  /* reverse - reverse all 32 bits */
-  M_PSP_BITMANIP_REV(D_DEMO_REVERSE_INPUT_NUM, uiResult);
-  if (D_DEMO_REVERSE_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
 
   /* reverse8 - swap chars in each word */
   M_PSP_BITMANIP_REV8(D_DEMO_REVERSE_8_INPUT_NUM, uiResult);
@@ -360,14 +301,6 @@ void demoBitManipulation(void)
   /* orc.b */
   M_PSP_BITMANIP_ORCB(D_DEMO_ORCB_INPUT_NUM, uiResult);
   if (D_DEMO_ORCB_EXPECTED_RESULT != uiResult)
-  {
-    M_DEMO_ERR_PRINT();
-    M_PSP_EBREAK();
-  }
-
-  /* orc.16 */
-  M_PSP_BITMANIP_ORC16(D_DEMO_ORC_16_INPUT_NUM, uiResult);
-  if (D_DEMO_ORC_16_EXPECTED_RESULT != uiResult)
   {
     M_DEMO_ERR_PRINT();
     M_PSP_EBREAK();
@@ -436,6 +369,155 @@ void demoBitManipulation(void)
     M_DEMO_ERR_PRINT();
     M_PSP_EBREAK();
   }
+
+  /* clmul - carry-less multiplication (lower half) */
+  M_PSP_BITMANIP_CLMUL(D_DEMO_CLMUL_RS1, D_DEMO_CLMUL_RS2, uiResult);
+  if (D_DEMO_CLMUL_CLMUL_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* clmulh - carry-less multiplication (upper half) */
+  M_PSP_BITMANIP_CLMULH(D_DEMO_CLMUL_RS1, D_DEMO_CLMUL_RS2, uiResult);
+  if (D_DEMO_CLMUL_CLMULH_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* clmulr - Carry-less multiply (reversed) */
+  M_PSP_BITMANIP_CLMULR(D_DEMO_CLMUL_RS1, D_DEMO_CLMUL_RS2, uiResult);
+  if (D_DEMO_CLMUL_CLMULR_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* zexth - Zero-extend halfword*/
+  M_PSP_BITMANIP_ZEXTH(D_DEMO_ZEXTH_RS, uiResult);
+  if (D_DEMO_ZEXTH_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+#ifdef D_PSP_BITMANIP_ZBP
+  /* andN - 'and' with negate argument */
+  M_PSP_BITMANIP_ANDN(D_DEMO_ANDN_1ST_ARG, D_DEMO_ANDN_2ND_ARG, uiResult);
+  if (D_DEMO_ANDN_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* orN - 'or' with negate argument */
+  M_PSP_BITMANIP_ORN(D_DEMO_ORN_1ST_ARG, D_DEMO_ORN_2ND_ARG, uiResult);
+  if (D_DEMO_ORN_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* xNor - 'xor' with negate argument */
+  M_PSP_BITMANIP_XNOR(D_DEMO_XNOR_1ST_ARG, D_DEMO_XNOR_2ND_ARG, uiResult);
+  if (D_DEMO_XNOR_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+  /* pack - pack 2 lower halves of 2 arguments */
+  M_PSP_BITMANIP_PACK(D_DEMO_PACK_1ST_ARG, D_DEMO_PACK_2ND_ARG, uiResult);
+  if (D_DEMO_PACK_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* packu - pack 2 upper halves of 2 arguments  */
+  M_PSP_BITMANIP_PACKU(D_DEMO_PACKU_1ST_ARG, D_DEMO_PACKU_2ND_ARG, uiResult);
+  if (D_DEMO_PACKU_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* packh - pack 2 LSB bytes of 2 arguments  */
+  M_PSP_BITMANIP_PACKH(D_DEMO_PACKH_1ST_ARG, D_DEMO_PACKH_2ND_ARG, uiResult);
+  if (D_DEMO_PACKH_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* rotate left */
+  M_PSP_BITMANIP_ROL(D_DEMO_ROTATEL_1ST_ARG, D_DEMO_NUM_OF_LEFT_ROTATIONS,uiResult);
+  if (D_DEMO_ROTATEL_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* rotate right */
+  M_PSP_BITMANIP_ROR(D_DEMO_ROTATER_1ST_ARG, D_DEMO_NUM_OF_RIGHT_ROTATIONS,uiResult);
+  if (D_DEMO_ROTATER_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* rotate right immediate */
+  M_PSP_BITMANIP_RORI(D_DEMO_ROTATER_1ST_ARG, D_DEMO_NUM_OF_RIGHT_ROTATIONS,uiResult);
+  if (D_DEMO_ROTATER_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* reverse - reverse all 32 bits */
+  M_PSP_BITMANIP_REV(D_DEMO_REVERSE_INPUT_NUM, uiResult);
+  if (D_DEMO_REVERSE_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* orc.16 */
+  M_PSP_BITMANIP_ORC16(D_DEMO_ORC_16_INPUT_NUM, uiResult);
+  if (D_DEMO_ORC_16_EXPECTED_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+#endif /* D_PSP_BITMANIP_ZBP */
+
+  /* The current version of the compiler does not support Zba-extension
+   * instructions */
+#ifdef D_PSP_BITMANIP_ZBA
+  /* sh1add- Shift left by 1 and add */
+  M_PSP_BITMANIP_SH1ADD(D_DEMO_SH1ADD_RS1, D_DEMO_SH1ADD_RS2, uiResult);
+  if (D_DEMO_SH1ADD_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* sh2add- Shift left by 2 and add */
+  M_PSP_BITMANIP_SH2ADD(D_DEMO_SH2ADD_RS1, D_DEMO_SH2ADD_RS2, uiResult);
+  if (D_DEMO_SH2ADD_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+
+  /* sh3add- Shift left by 3 and add */
+  M_PSP_BITMANIP_SH3ADD(D_DEMO_SH3ADD_RS1, D_DEMO_SH3ADD_RS2, uiResult);
+  if (D_DEMO_SH3ADD_RESULT != uiResult)
+  {
+    M_DEMO_ERR_PRINT();
+    M_PSP_EBREAK();
+  }
+#endif /* D_PSP_BITMANIP_ZBA */
 }
 
 /**

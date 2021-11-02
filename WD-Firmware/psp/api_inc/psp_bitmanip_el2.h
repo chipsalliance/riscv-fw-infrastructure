@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,7 +18,11 @@
 * @file   psp_bitmanip_el2.h
 * @author Nati Rapaport
 * @date   23.07.2020
-* @brief  The file contains APIs for bit-manipulation operations on SweRV EL2
+* @brief  The file contains APIs for bit-manipulation operations on SweRV EL2.
+* It supports bit-manipulation extensions as defines by version 1.0.0-rc1
+* excluding Zba-extension instructions (sh1add, sh2add, sh3add). In additions,
+* Zbp extension is also supported by the core but not by bit-manip ver 1.0.0-rc1
+* therefore it will not be supported in PSP.
 */
 #ifndef  __PSP_BITMANIP_EL2_H__
 #define  __PSP_BITMANIP_EL2_H__
@@ -57,15 +61,6 @@
 /* pcnt (population count of '1' bits) command - count number of '1' bits in the argument */
 #define M_PSP_BITMANIP_PCNT(argument, number_of_ones)  asm volatile("pcnt %0, %1" : "=r"(number_of_ones) : "r"(argument) : );
 
-/* andn command - bitwise AND of 1'st argument and inverted 2'nd argument */
-#define M_PSP_BITMANIP_ANDN(argument_to_and, argument_to_invert, result) asm volatile("andn %0, %1, %2" : "=r"(result) : "r"(argument_to_and), "r"(argument_to_invert) : );
-
-/* orn command - bitwise OR of 1'st argument and inverted 2'nd argument */
-#define M_PSP_BITMANIP_ORN(argument_to_or, argument_to_invert, result) asm volatile("orn %0, %1, %2" : "=r"(result) : "r"(argument_to_or), "r"(argument_to_invert) : );
-
-/* xnor command - bitwise XOR of 1'st argument and inverted 2'nd argument */
-#define M_PSP_BITMANIP_XNOR(argument_to_xor, argument_to_invert, result) asm volatile("xnor %0, %1, %2" : "=r"(result) : "r"(argument_to_xor), "r"(argument_to_invert) : );
-
 /* min command - minimum of the 1'st and 2'nd arguments, compared as signed integers */
 #define M_PSP_BITMANIP_MIN(argument1, argument2, smallest_argument) asm volatile("min %0, %1, %2" : "=r"(smallest_argument) : "r"(argument1), "r"(argument2) : );
 
@@ -84,36 +79,11 @@
 /* sexth - sign extend half-word (16 bits) in a given 32bit argument */
 #define M_PSP_BITMANIP_SEXTH(argument , result)  asm volatile("sext.h %0, %1" : "=r"(result): "r"(argument) : );
 
-/* pack command - pack lower halves of 2 arguments into one, with 1'st argument-half in the lower output-half and 2'nd argument-half in the upper output-half */
-#define M_PSP_BITMANIP_PACK(argument1, argument2, result) asm volatile("pack %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
-
-/* packu command - pack upper halves of 2 arguments into one, with 1'st argument-half in the lower output-half and 2'nd argument-half in the upper output-half */
-#define M_PSP_BITMANIP_PACKU(argument1, argument2, result) asm volatile("packu %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
-
-/* packh command - pack least-significant BYTES of 2 input arguments into 16 least-significant BITS of returned result, zero extending the rest of the returned result */
-#define M_PSP_BITMANIP_PACKH(argument1, argument2, result) asm volatile("packh %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
-
-/* rol command - Rotate left the first argument, N times (2'nd argument). This operation is similar to shift-left operation from the base spec, except it shift in
-*                the values from the opposite side of the register, in order. This is also called ‘circular shift’. */
-#define M_PSP_BITMANIP_ROL(argument_to_rotate, number_of_rtoations, result) asm volatile("rol %0, %1, %2" : "=r"(result) : "r"(argument_to_rotate), "r"(number_of_rtoations) : );
-
-/* ror command - Rotate right the first argument, N times (2'nd argument) */
-#define M_PSP_BITMANIP_ROR(argument_to_rotate, number_of_rtoations, result) asm volatile("ror %0, %1, %2" : "=r"(result) : "r"(argument_to_rotate), "r"(number_of_rtoations) : );
-
-/* rori command - same as ror command but assembly uses 2'nd parameter as immediate number rather than using a register */
-#define M_PSP_BITMANIP_RORI(argument_to_rotate, number_of_rtoations, result) asm volatile("rori %0, %1, %2" : "=r"(result) : "r"(argument_to_rotate), "i"(number_of_rtoations) : );
-
-/* rev command - reverse the bits in the given argument (i.e. swaps bits 0 and 31, 1 and 30 etc.) */
-#define M_PSP_BITMANIP_REV(argument_to_reverse, swapped_result) asm volatile("rev %0, %1" : "=r"(swapped_result) : "r"(argument_to_reverse) : );
-
 /* rev8 command - swaps bytes in the given 32bit argument */
 #define M_PSP_BITMANIP_REV8(argument_to_reverse, swapped_result) asm volatile("rev8 %0, %1" : "=r"(swapped_result) : "r"(argument_to_reverse) : );
 
 /* orc.b command  */
 #define M_PSP_BITMANIP_ORCB(argument_to_or, or_result) asm volatile("orc.b %0, %1" : "=r"(or_result) : "r"(argument_to_or) : );
-
-/* orc.16 command  */
-#define M_PSP_BITMANIP_ORC16(argument_to_or, or_result) asm volatile("orc16 %0, %1" : "=r"(or_result) : "r"(argument_to_or) : );
 
 /* sbset command - single bit set, in a given position */
 #define M_PSP_BITMANIP_SBSET(argument, bit_position, bit_set_result) asm volatile("sbset %0, %1, %2" : "=r"(bit_set_result) : "r"(argument), "r"(bit_position) : );
@@ -139,6 +109,9 @@
 /* sbexti command - same as sbext command but assembly uses 2'nd parameter as immediate number rather than using a register */
 #define M_PSP_BITMANIP_SBEXTI(argument, bit_position, bit_ext_result) asm volatile("sbexti %0, %1, %2" : "=r"(bit_ext_result) : "r"(argument), "i"(bit_position) : );
 
+/* zext.h command - zero-extends the least-significant halfword of the source to XLEN by inserting 0’s into all of the bits more significant than 15. */
+#define M_PSP_BITMANIP_ZEXTH(argument1, result) asm volatile("zext.h %0, %1" : "=r"(result) : "r"(argument1) : );
+
 /* Find First Set macro - returns the position of the 1'st '1' bit in the input argument */
 /*
  * Note - This macro does not support a case of input argument = 0.
@@ -154,6 +127,27 @@
  */
 #define M_PSP_BITMANIP_FLS(argument, result)   M_PSP_BITMANIP_CTZ(argument, result); \
                                                result = D_PSP_HIGHEST_BIT_NUMBER - result;
+
+/* clmul command - produces the lower half of the 2*XLEN carry-less product of argument1 and argument2 */
+#define M_PSP_BITMANIP_CLMUL(argument1, argument2, result) asm volatile("clmul %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );                                               
+
+/* clmulh command - produces the upper half of the 2*XLEN carry-less product of argument1 and argument2 */
+#define M_PSP_BITMANIP_CLMULH(argument1, argument2, result) asm volatile("clmulh %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );                                               
+
+/* clmulr command - produces bits [2*XLEN−2, XLEN-1] of the 2*XLEN carry-less product of argument1 and argument2 */
+#define M_PSP_BITMANIP_CLMULR(argument1, argument2, result) asm volatile("clmulr %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
+
+#ifdef D_PSP_BITMANIP_ZBA
+/* sh1add command - shifts argument1 to the left by 1 bit and adds it to argument2 */
+#define M_PSP_BITMANIP_SH1ADD(argument1, argument2, result) asm volatile("sh1add %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
+
+/* sh2add command - shifts argument1 to the left by 2 bits and adds it to argument2 */
+#define M_PSP_BITMANIP_SH2ADD(argument1, argument2, result) asm volatile("sh2add %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
+
+/* sh3add command - shifts argument1 to the left by 3 bits and adds it to argument2 */
+#define M_PSP_BITMANIP_SH3ADD(argument1, argument2, result) asm volatile("sh3add %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
+
+#endif /* D_PSP_BITMANIP_ZBA */
 
 #if __riscv_xlen == 64
 
@@ -177,6 +171,42 @@
 
 #endif /* __riscv_xlen == 64 */
 
+#ifdef D_PSP_BITMANIP_ZBP
+/* andn command - bitwise AND of 1'st argument and inverted 2'nd argument */
+#define M_PSP_BITMANIP_ANDN(argument_to_and, argument_to_invert, result) asm volatile("andn %0, %1, %2" : "=r"(result) : "r"(argument_to_and), "r"(argument_to_invert) : );
+
+/* orn command - bitwise OR of 1'st argument and inverted 2'nd argument */
+#define M_PSP_BITMANIP_ORN(argument_to_or, argument_to_invert, result) asm volatile("orn %0, %1, %2" : "=r"(result) : "r"(argument_to_or), "r"(argument_to_invert) : );
+
+/* xnor command - bitwise XOR of 1'st argument and inverted 2'nd argument */
+#define M_PSP_BITMANIP_XNOR(argument_to_xor, argument_to_invert, result) asm volatile("xnor %0, %1, %2" : "=r"(result) : "r"(argument_to_xor), "r"(argument_to_invert) : );
+
+/* pack command - pack lower halves of 2 arguments into one, with 1'st argument-half in the lower output-half and 2'nd argument-half in the upper output-half */
+#define M_PSP_BITMANIP_PACK(argument1, argument2, result) asm volatile("pack %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
+
+/* packu command - pack upper halves of 2 arguments into one, with 1'st argument-half in the lower output-half and 2'nd argument-half in the upper output-half */
+#define M_PSP_BITMANIP_PACKU(argument1, argument2, result) asm volatile("packu %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
+
+/* packh command - pack least-significant BYTES of 2 input arguments into 16 least-significant BITS of returned result, zero extending the rest of the returned result */
+#define M_PSP_BITMANIP_PACKH(argument1, argument2, result) asm volatile("packh %0, %1, %2" : "=r"(result) : "r"(argument1), "r"(argument2) : );
+
+/* rol command - Rotate left the first argument, N times (2'nd argument). This operation is similar to shift-left operation from the base spec, except it shift in
+*                the values from the opposite side of the register, in order. This is also called ‘circular shift’. */
+#define M_PSP_BITMANIP_ROL(argument_to_rotate, number_of_rtoations, result) asm volatile("rol %0, %1, %2" : "=r"(result) : "r"(argument_to_rotate), "r"(number_of_rtoations) : );
+
+/* ror command - Rotate right the first argument, N times (2'nd argument) */
+#define M_PSP_BITMANIP_ROR(argument_to_rotate, number_of_rtoations, result) asm volatile("ror %0, %1, %2" : "=r"(result) : "r"(argument_to_rotate), "r"(number_of_rtoations) : );
+
+/* rori command - same as ror command but assembly uses 2'nd parameter as immediate number rather than using a register */
+#define M_PSP_BITMANIP_RORI(argument_to_rotate, number_of_rtoations, result) asm volatile("rori %0, %1, %2" : "=r"(result) : "r"(argument_to_rotate), "i"(number_of_rtoations) : );
+
+/* rev command - reverse the bits in the given argument (i.e. swaps bits 0 and 31, 1 and 30 etc.) */
+#define M_PSP_BITMANIP_REV(argument_to_reverse, swapped_result) asm volatile("rev %0, %1" : "=r"(swapped_result) : "r"(argument_to_reverse) : );
+
+/* orc.16 command  */
+#define M_PSP_BITMANIP_ORC16(argument_to_or, or_result) asm volatile("orc16 %0, %1" : "=r"(or_result) : "r"(argument_to_or) : );
+
+#endif /* D_PSP_BITMANIP_ZBP */
 /**
 * global variables
 */
