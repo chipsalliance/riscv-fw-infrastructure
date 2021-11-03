@@ -1,0 +1,19 @@
+= psp_pragmas
+
+The file defines the PSP pragmas.
+They are applicable only if either \\__GNUC__ or \\__clang__ are defined.
+
+|=======================
+| file | psp_pragmas.h
+| author | Ofer Shinaar
+| Date  |   01.11.2019
+|=======================
+
+== Macros
+The following macros are used to display compile-time messages.
+|========================================================================
+| *Definition* | *Value*
+| DO_PRAGMA(_PRAGMA_NAME_)     | _Pragma(#_PRAGMA_NAME_)
+| TODO(_MY_MSG_)               | DO_PRAGMA(message ("TODO - " #_MY_MSG_))
+| PRE_COMPILED_MSG(_MY_MSG_)   | DO_PRAGMA(message (#_MY_MSG_))
+|========================================================================

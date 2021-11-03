@@ -1,0 +1,52 @@
+
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+= psp_types
+This section includes type definitions.
+
+|=======================
+| file | psp_types.h
+| author | Nati Rapaport
+| Date  |  04.11.2019
+|=======================
+
+== Types
+|=======================
+| signed char     |   s08_t
+| signed short    |   s16_t
+| signed int      |   s32_t
+| signed long long |   s64_t
+| unsigned char    |  u08_t
+| unsigned short   |  u16_t
+| unsigned int     |  u32_t
+| unsigned long long | u64_t
+|=======================
+
+=== __riscv_xlen == 32
+32 bits core types.
+
+==== pspStack_t
+[source, c, subs="verbatim,quotes"]
+----
+  typedef u32_t pspStack_t;
+----
+
+=== __riscv_xlen == 64
+64 bits core types.
+
+==== pspStack_t
+[source, c, subs="verbatim,quotes"]
+----
+  typedef u64_t pspStack_t;
+----
+
+=== fptrFunction_t
+General use function pointer.
+[source, c, subs="verbatim,quotes"]
+----
+  typedef void (* fptrFunction_t)(void);
+---- 

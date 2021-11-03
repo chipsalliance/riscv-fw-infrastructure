@@ -1,0 +1,51 @@
+[[psp_int_vect_eh2_ref]]
+= psp_int_vect_eh2
+Define the interrupts vector tables of hart0 and hart1 in SweRV EH2.
+
+|=======================
+| file | psp_int_vect_eh2.h
+| author | Nati Rapaport
+| Date  |   12.07.2020
+|=======================
+
+== Definitions
+=== single HW thread
+In SweRV EH2 with a single HW thread - only psp_vect_table_hart0 is used.
+|========================================================================
+| *Definition* |*Value*
+| M_PSP_VECT_TABLE | psp_vect_table_hart0
+|========================================================================
+
+=== 2 HW threads
+In SweRV EH2 with 2 HW thread - both psp_vect_table_hart0 psp_vect_table_hart1
+are used.
+|========================================================================
+| *Definition* |*Value*
+| M_PSP_VECT_TABLE_HART0 | psp_vect_table_hart0
+| M_PSP_VECT_TABLE_HART1 | psp_vect_table_hart1
+|========================================================================
+
+== External Prototypes
+=== Single HW thread
+[source, c, subs="verbatim,quotes"]
+----
+void psp_vect_table(void);
+----
+.parameters
+* *None*
+
+.return
+* *None*
+
+
+=== 2 HW threads
+[source, c, subs="verbatim,quotes"]
+----
+void psp_vect_table_hart0(void);
+void psp_vect_table_hart1(void);
+----
+.parameters
+* *None*
+
+.return
+* *None*

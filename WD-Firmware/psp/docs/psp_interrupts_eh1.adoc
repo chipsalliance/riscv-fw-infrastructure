@@ -1,0 +1,108 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_interrupts_eh1_ref]]
+= psp_interrupts_eh1
+The file supplies information and registration API for interrupt and exception
+service routines on EH1 core.
+
+|=======================
+| file |psp_interrupts_eh1.h
+| author | Nati Rapaport
+| Date  |  14.01.2020
+|=======================
+
+== Types
+=== ePspInterruptCauseEH1 (typedef enum)
+EH1 specific interrupt causes.
+----
+typedef enum ePspInterruptCauseEH1
+{
+   E_LAST_COMMON_CAUSE               = E_LAST_CAUSE,
+   E_FIRST_EH1_CAUSE                 = 27,
+   E_MACHINE_INTERNAL_TIMER1_CAUSE   = 28,
+   E_MACHINE_INTERNAL_TIMER0_CAUSE   = 29,
+   E_MACHINE_CORRECTABLE_ERROR_CAUSE = 30,
+   E_LAST_EH1_CAUSE
+} ePspInterruptCauseEH1_t;
+----
+
+
+== Definitions
+=== Enable/Disable bits of Timer0, Timer1 and Correctable-Error-Counter interrupts
+|========================================================================
+| *Definition* |*Value*
+| D_PSP_INTERRUPTS_MACHINE_TIMER0           | E_MACHINE_INTERNAL_TIMER0_CAUSE (Value=29)
+| D_PSP_INTERRUPTS_MACHINE_TIMER1           | E_MACHINE_INTERNAL_TIMER1_CAUSE (Value=28)
+| D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER | E_MACHINE_CORRECTABLE_ERROR_CAUSE (Value=30)
+|========================================================================
+
+
+== APIs
+=== pspMachineInterruptsDisableIntNumber
+Disable specified interrupt for any privilege level.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsDisableIntNumber(u32_t uiInterruptNumber);
+----
+.parameters
+* *uiInterruptNumber* - Interrupt number to disable. When you call this
+function, you can use either one of the following defined values:
+  - D_PSP_INTERRUPTS_MACHINE_SW
+  - D_PSP_INTERRUPTS_MACHINE_TIMER
+  - D_PSP_INTERRUPTS_MACHINE_EXT
+  - D_PSP_INTERRUPTS_SUPERVISOR_SW
+  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
+  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
+  - D_PSP_INTERRUPTS_USER_SW
+  - D_PSP_INTERRUPTS_USER_TIMER
+  - D_PSP_INTERRUPTS_USER_EXT
+  - D_PSP_INTERRUPTS_MACHINE_TIMER0
+  - D_PSP_INTERRUPTS_MACHINE_TIMER1
+  - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
+
+.return
+* *None*
+
+=== pspMachineInterruptsEnableIntNumber
+Enable specified interrupt for any privilege level.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsEnableIntNumber(u32_t uiInterruptNumber);
+----
+.parameters
+* *uiInterruptNumber* - Interrupt number to enable. When you call this
+function, you can use either one of the following defined values:
+  - D_PSP_INTERRUPTS_MACHINE_SW
+  - D_PSP_INTERRUPTS_MACHINE_TIMER
+  - D_PSP_INTERRUPTS_MACHINE_EXT
+  - D_PSP_INTERRUPTS_SUPERVISOR_SW
+  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
+  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
+  - D_PSP_INTERRUPTS_USER_SW
+  - D_PSP_INTERRUPTS_USER_TIMER
+  - D_PSP_INTERRUPTS_USER_EXT
+  - D_PSP_INTERRUPTS_MACHINE_TIMER0
+  - D_PSP_INTERRUPTS_MACHINE_TIMER1
+  - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
+
+.return
+* *None*
+
+
+=== pspInterruptsGetExceptionHandler
+The function returns the address of the handler of a given exception cause.
+[source, c, subs="verbatim,quotes"]
+----
+fptrPspInterruptHandler_t pspInterruptsGetExceptionHandler(
+      u32_t uiExceptionCause);
+----
+
+.parameters
+* *uiExceptionCause* - Exception cause.
+
+.return
+* *fptrPspInterruptHandler_t* - Function pointer to the exception handler.

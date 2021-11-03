@@ -1,0 +1,113 @@
+= psp_mutex_eh2
+The file defines the PSP mutex and relevant APIs. Relevant for SweRV-EH2
+(multi-harts and atomic commands supported).
+
+|=======================
+| file | psp_mutex_eh2.h
+| author | Nati Rapaport
+| Date  |   24.06.2020
+|=======================
+
+== Definitions
+|========================================================================
+| *Definition* |*Value* | *Comment
+| D_PSP_MUTEX_OCCUIPED    | 1 | 'occupied' means- the mutex is used by the
+application (can 'lock' and 'free' it)
+| D_PSP_MUTEX_UNOCCUIPED  | 0 | 'unoccupied' means- the mutex is not used by the
+application (cannot 'lock' or 'free' it)
+| D_PSP_MUTEX_LOCKED      | 1 | 
+| D_PSP_MUTEX_UNLOCKED    | 0 | 
+|========================================================================
+
+== Types
+=== pspMutexControlBlock (typedef struct)
+----
+typedef struct pspMutexControlBlock
+{
+   u32_t  uiMutexState;        /* D_PSP_MUTEX_LOCKED / D_PSP_MUTEX_UNLOCKED */
+   u32_t  uiMutexOccupied :1;  /* D_PSP_MUTEX_OCCUIPED / D_PSP_MUTEX_UNOCCUIPED */
+   u32_t  uiMutexCreator  :1;  /* Created by: 0 - Hart0 / 1 - Hart1 .  Only the creator is allowed to destroy */
+} pspMutexCb_t;
+----
+
+
+== API
+=== pspMutexInitPspMutexs
+Initialize (zero) mutexes that PSP is using internally for multi-harts safe
+activities.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMutexInitPspMutexs(void);
+----
+.parameters
+* *None*
+
+.return
+* *None*
+
+=== pspMutexHeapInit
+Initialize (zero) heap of mutexs.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMutexHeapInit(pspMutexCb_t* pMutexHeapAddress, u32_t uiNumOfMutexs);
+----
+.parameters
+* *pMutexHeapAddress* - Address of the mutexs heap.
+* *uiNumOfMutexs* - Number of mutexs in the heap.
+
+.return
+* *None*
+
+=== pspMutexCreate
+Create a mutex in the mutex-heap:
+
+* Mark it as 'occupied'.
+* Mark the hart that created it.
+[source, c, subs="verbatim,quotes"]
+----
+pspMutexCb_t* pspMutexCreate(void);
+----
+.parameters
+* *None*
+
+.return
+* *pspMutexCb_t** - Address of the created mutex. In case of failure return
+NULL.
+
+=== pspMutexDestroy
+Destroy (remove the 'occupied' mark) a mutex in the mutex-heap.
+[source, c, subs="verbatim,quotes"]
+----
+pspMutexCb_t* pspMutexDestroy(pspMutexCb_t* pMutex);
+----
+.parameters
+* *pMutex* - Address of the mutex to be destroyed.
+
+.return
+* *pspMutexCb_t** - Address of the destroyed mutex. In case of failure return
+NULL.
+
+
+=== pspMutexAtomicLock
+Lock a mutex using atomic commands.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMutexAtomicLock(pspMutexCb_t* pMutex);
+----
+.parameters
+* *pMutex* - Pointer to the mutex to lock.
+
+.return
+* *None*
+
+=== pspMutexAtomicUnlock
+Unlock a mutex using atomic commands.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMutexAtomicUnlock(pspMutexCb_t* pMutex);
+----
+.parameters
+* *pMutex* - Pointer to the mutex to unlock.
+
+.return
+* *None*

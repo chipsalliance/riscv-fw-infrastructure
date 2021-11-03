@@ -1,0 +1,79 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_nmi_eh1_ref]]
+= psp_nmi_eh1
+The file contains the NMI handlers registration service for SweRV EH1.
+
+|=======================
+| file | psp_nmi_eh1.h
+| author | Nati Rapaport
+| Date  | 13.04.2020
+|=======================
+
+== Types
+=== interrupt handler definition
+[source, c, subs="verbatim,quotes"]
+----
+typedef void (*pspNmiHandler_t)(void); | NMI handler definition
+----
+
+== Definitions
+|========================================================================
+| *Definition* |*Value*
+|D_PSP_NMI_EXT_PIN_ASSERTION |  0
+|D_PSP_NMI_D_BUS_STORE_ERROR |  0xF0000000
+|D_PSP_NMI_D_BUS_LOAD_ERROR  |  0xF0000001
+|========================================================================
+
+
+== APIs
+
+=== pspMachineNmiSetVec
+Set address of NMI initial handler in nmi_vec.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineNmiSetVec(
+  u32_t uiNmiVecAddress,
+  pspNmiHandler_t fptrNmiSelector);
+----
+.parameters
+* *uiNmiVecAddress* - Address of NMI_VEC register.
+* *fptrNmiSelector* - Address of NMI initial handler.
+
+.return
+* *None*
+
+=== pspMachineNmiRegisterHandler
+The function registers a Non-Maskable Interrupt (NMI) service routine.
+[source, c, subs="verbatim,quotes"]
+----
+pspNmiHandler_t pspMachineNmiRegisterHandler(
+  pspNmiHandler_t fptrNmiHandler,
+  u32_t uiNmiCause);
+----
+.parameters
+* *fptrNmiHandler* - Function pointer to the NMI service routine.
+* *uiNmiCause* - NMI source. Note that the value of this input parameter could
+be only one of these:
+  - D_PSP_NMI_EXT_PIN_ASSERTION
+  - D_PSP_NMI_D_BUS_STORE_ERROR
+  - D_PSP_NMI_D_BUS_LOAD_ERROR
+
+.return
+* *u32_t* - Previously registered ISR. If NULL then registeration had an error.
+
+=== pspMachineNmiHandlerSelector
+This function is called upon NMI and selects the appropriate handler.
+[source, c, subs="verbatim,quotes"]
+----
+D_PSP_NO_RETURN void pspMachineNmiHandlerSelector(void);
+----
+.parameters
+* *None*
+
+.return
+* *None*

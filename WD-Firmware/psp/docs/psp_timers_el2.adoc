@@ -1,0 +1,41 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_timers_el2_ref]]
+= psp_timers_el2
+The file defines timer api services for EL2 core.
+
+|=======================
+| file | psp_timers_el2.h
+| author | Nati Rapaport
+| Date  | 19.08.2020
+|=======================
+
+
+== Definitions
+SweRV EL2 has an additional 64-bit timer.
+|====
+| *Definition* |*Value*
+|D_PSP_INTERNAL_64BIT_TIMER |3
+|====
+
+
+==  APIs
+=== pspMachineInternalTimerSetup64bitTimer
+Cascade Timer0 and Timer1 to act as a single timer. In this mode, Timer1 counts
+up when Timer0 reaches its bound value. Timer1 interrupt raises when Timer1
+reaches its bound. **Note:** In the 'cascade' mode, HALT-EN and PAUSE-EN
+indications must be set identically for both timers, so part of this function
+also set disable all of them here.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimerSetup64bitTimer(u64_t udPeriodCycles)
+----
+.parameters
+* *udPeriodCycles* - Defines the timer period in cycles.
+
+.return
+* *None*

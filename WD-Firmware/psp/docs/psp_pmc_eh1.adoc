@@ -1,0 +1,48 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+= psp_pmc_eh1
+The file defines power management control (PMC) API services.
+
+|=======================
+| file |  psp_pmc_eh1.h
+| author | Alex Dvoskin
+| Date  |  March 2020
+|=======================
+
+== APIs
+=== Initiate core halt
+
+==== Initiate core halt for SweRV EH1 up to version 0.9 only
+Initiate core halt (i.e., transition to Halted (pmu/fw-halt, C3) state).
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachinePowerMngCtrlHalt(void);
+----
+
+==== Initiate core halt for SweRV EH1 from version 1.0 only
+Initiate core halt (i.e., transition to Halted (pmu/fw-halt, C3) state).
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachinePowerMngCtrlHalt(u32_t uiEnableInterrupts);
+----
+
+.parameters
+
+* *uiEnableInterrupts* - Indication whether to (atomically) enable interrupts
+upon transition to 'halted' mode or not.
+
+=== psp Machine Power Mng Ctrl Stall
+The following function temporarily stop the core from executing instructions for
+given number of core clock cycles(ticks).
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachinePowerMngCtrlStall(u32_t uiTicks);
+----
+
+.parameters
+
+* *uiTicks* - Number of core clock cycles.

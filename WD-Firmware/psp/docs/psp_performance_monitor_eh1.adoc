@@ -1,0 +1,147 @@
+= psp_perfomance_monitor_eh1
+performance monitor api provider
+
+|=======================
+| file | psp_performance_monitor_eh1.h
+| author | Nidal Faour
+| Date  |   15.03.2020
+|=======================
+
+== Definitions
+|========================================================================
+| *Definition* |*Value*
+| D_PSP_CYCLE_COUNTER     | M_PSP_BIT_MASK(0)
+| D_PSP_TIME_COUNTER      | M_PSP_BIT_MASK(1)
+| D_PSP_INSTRET_COUNTER   | M_PSP_BIT_MASK(2)
+| D_PSP_COUNTER0          | M_PSP_BIT_MASK(3)
+| D_PSP_COUNTER1          | M_PSP_BIT_MASK(4)
+| D_PSP_COUNTER2          | M_PSP_BIT_MASK(5)
+| D_PSP_COUNTER3          | M_PSP_BIT_MASK(6)
+|========================================================================
+
+=== Performance monitoring events
+
+Event 0 is Reserved
+|========================================================================
+| *Definition* |*Value*
+| D_CYCLES_CLOCKS_ACTIVE                     | 1
+| D_I_CACHE_HITS                             | 2
+| D_I_CACHE_MISSES                           | 3
+| D_INSTR_COMMITTED_ALL                      | 4
+| D_INSTR_COMMITTED_16BIT                    | 5
+| D_INSTR_COMMITTED_32BIT                    | 6
+| D_INSTR_ALLIGNED_ALL                       | 7
+| D_INSTR_DECODED_ALL                        | 8
+| D_MULS_COMMITTED                           | 9
+| D_DIVS_COMMITTED                           | 10
+| D_LOADS_COMMITED                           | 11
+| D_STORES_COMMITTED                         | 12
+| D_MISALIGNED_LOADS                         | 13
+| D_MISALIGNED_STORES                        | 14
+| D_ALUS_COMMITTED                           | 15
+| D_CSR_READ                                 | 16
+| D_CSR_READ_WRITE                           | 17
+| D_WRITE_RD_0                               | 18
+| D_EBREAK                                   | 19
+| D_ECALL                                    | 20
+| D_FENCE                                    | 21
+| D_FENCE_I                                  | 22
+| D_MRET                                     | 23
+| D_BRANCHES_COMMITTED                       | 24
+| D_BRANCHES_MISPREDICTED                    | 25
+| D_BRANCHES_TAKEN                           | 26
+| D_UNPREDICTABLE_BRANCHES                   | 27
+| D_CYCLES_FETCH_STALLED                     | 28
+| D_CYCLES_ALIGNER_STALLED                   | 29
+| D_CYCLE_DECODE_STALLED                     | 30
+| D_CYCLE_POSTSYNC_STALLED                   | 31
+| D_CYCLE_PRESYNC_STALLED                    | 32
+| D_CYCLE_FROZEN                             | 33
+| D_CYCLES_SB_WB_STALLED                     | 34
+| D_CYCLES_DMA_DCCM_TRANSACTION_STALLED      | 35
+| D_CYCLES_DMA_ICCM_TRANSACTION_STALLED      | 36
+| D_EXCEPTIONS_TAKEN                         | 37
+| D_TIMER_INTERRUPTS_TAKEN                   | 38
+| D_EXTERNAL_INTERRUPTS_TAKEN                | 39
+| D_TLU_FLUSHES                              | 40
+| D_BRANCH_FLUSHES                           | 41
+| D_I_BUS_TRANSACTIONS_INSTR                 | 42
+| D_D_BUD_TRANSACTIONS_LD_ST                 | 43
+| D_D_BUS_TRANSACTIONS_MISALIGNED            | 44
+| D_I_BUS_ERRORS                             | 45
+| D_D_BUS_ERRORS                             | 46
+| D_CYCLES_STALLED_DUE_TO_I_BUS_BUSY         | 47
+| D_CYCLES_STALLED_DUE_TO_D_BUS_BUSY         | 48
+| D_CYCLES_INTERRUPTS_DISABLED               | 49
+| D_CYCLES_INTERRUPTS_STALLED_WHILE_DISABLED | 50
+|========================================================================
+
+== APIs
+
+=== pspMachinePerfMonitorDisableAll
+The function disables all the performance monitors. *Note*, only
+Performance-Monitor counters 3..6 are disabled by this setting. The
+instruction-retired cycles and time counters stay enabled.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachinePerfMonitorDisableAll(void);
+----
+.parameters
+
+* *None*
+
+.return
+* *None*
+
+
+=== pspMachinePerfMonitorDisableAll
+The function enables all the performance monitors.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachinePerfMonitorEnableAll(void);
+----
+.parameters
+* *None*
+
+.return
+* *None*
+
+
+=== pspMachinePerfCounterSet
+The function pairs a counter to an event.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachinePerfCounterSet(u32_t uiCounter, u32_t uiEvent);
+----
+.parameters
+
+* *uiCounter* - counter to be set. Supported counters are:
+    - D_PSP_COUNTER0
+    - D_PSP_COUNTER1
+    - D_PSP_COUNTER2
+    - D_PSP_COUNTER3
+* *eEvent* - event to be paired to the selected counter
+
+.return
+* *None*
+
+
+=== pspMachinePerfCounterGet
+The function gets the counter value (64 bit).
+[source, c, subs="verbatim,quotes"]
+----
+u64_t pspMachinePerfCounterGet(u32_t uiCounter);
+----
+.parameters
+
+* *uiCounter* - counter index. Supported counters are:
+    - D_PSP_CYCLE_COUNTER
+    - D_PSP_TIME_COUNTER
+    - D_PSP_INSTRET_COUNTER
+    - D_PSP_COUNTER0
+    - D_PSP_COUNTER1
+    - D_PSP_COUNTER2
+    - D_PSP_COUNTER3
+
+.return
+* *u64_t* - Counter value.

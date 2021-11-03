@@ -1,0 +1,34 @@
+
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+= psp_memory_utils
+Memory-utilities API provides basic functions for memory manipulation.
+
+These functions are supported for all the cores.
+
+
+|=======================
+| file | psp_memory_utils.h
+| author | Nati Rapaport
+| Date  |  24.06.2020
+|=======================
+
+== APIs
+=== pspMemsetBytes
+PSP implementation of memset function.
+[source, c, subs="verbatim,quotes"]
+----
+void* pspMemsetBytes(void* pMemory, s08_t siVal, u32_t uiSizeInBytes);
+----
+.parameters
+
+* *pMemory* - The memory address to be set.
+* *siVal* - The value to set.
+* *uiSizeInBytes* - The number of bytes to set.
+
+.return
+* *void** - The memory address that has been set.

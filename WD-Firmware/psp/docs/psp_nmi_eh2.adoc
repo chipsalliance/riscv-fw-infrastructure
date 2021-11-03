@@ -1,0 +1,59 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_nmi_eh2_ref]]
+= psp_nmi_eh2
+
+The file defines the PSP NMI interfaces for features of SweRV EH2.
+
+|=======================
+| file | psp_nmi_eh2.h
+| author | Nati Rapaport
+| Date  |  19.05.2020
+|=======================
+
+== APIs
+=== pspMachineNmiSetDelegation
+Delegate pin-asserted NMI to a given Hart (HW thread). That means, upon
+the occurrence of the pin-asserted NMI, it will be handled by the given hart.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineNmiSetDelegation(u32_t uiHartNumber);
+----
+.parameters
+* *uiHartNumber* - Hart number to delegate the NMI to.
+
+.return
+* *None*
+
+
+=== pspMachineNmiClearDelegation
+Clear delegation of pin-asserted NMI for a given Hart (HW thread). That means, 
+upon the occurrence of the pin-asserted NMI, the given Hart will not handle the NMI.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineNmiClearDelegation(u32_t uiHartNumber);
+----
+.parameters
+ * *uiHartNumber* - Hart number to clear NMI delegation from.
+
+.return
+* *None*
+
+
+=== pspMachineNmiIsDelegatedToHart
+Check whether pin-asserted NMI handling is delegated to the given Hart
+(HW thread) or not.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspMachineNmiIsDelegatedToHart(u32_t uiHartNumber);
+----
+.parameters
+* *uiHartNumber* - Hart number.
+
+.return
+ * *u32_t* - 0/1 to indicate whether the NMI handling is delegated to the given
+ hart-number or not.

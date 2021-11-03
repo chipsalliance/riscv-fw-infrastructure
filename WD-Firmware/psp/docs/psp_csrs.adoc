@@ -1,0 +1,380 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_csrs]]
+= psp_csrs
+
+|=======================
+| file |psp_csrs.h
+| author | Nati Rapaport
+| Date  | 28.01.2020
+|=======================
+
+== Definitions
+Definitions for the CSR addresses
+
+=== [red]#Machine information registers#
+[%hardbreaks]
+|===================================
+| *Definition* |*Value*
+|D_PSP_MVENDOID_NUM   | 0xF11
+| D_PSP_MARCHID_NUM   |  0xF12
+| D_PSP_MIMPID_NUM    |  0xF13
+| D_PSP_MHARTID_NUM   |  0xF14
+|===================================
+
+=== [red]#Machine Trap setup registers#
+|===================================
+| *Definition* |*Value*
+| D_PSP_MIDELEG_NUM   |  0x301
+| D_PSP_MEDELEG_NUM   |  0x302
+|===================================
+
+=== [red]#Machine Trap handling registers#
+|===================================
+| *Definition* |*Value*
+| D_PSP_MSCRATCH_NUM |   0x340
+| D_PSP_MEPC_NUM     |   0x341
+| D_PSP_MTVAL_NUM    |   0x343
+|===================================
+
+=== [red]#Machine Protection and Translation registers#
+|===================================
+| *Definition* |*Value*
+| D_PSP_PMPCFG0_NUM   |  0x3A0
+| D_PSP_PMPCFG1_NUM   |  0x3A1
+| D_PSP_PMPCFG2_NUM   |  0x3A2
+| D_PSP_PMPCFG3_NUM   |  0x3A3
+| D_PSP_PMPADDR0_NUM  |  0x3B0
+| D_PSP_PMPADDR1_NUM  |  0x3B1
+| D_PSP_PMPADDR2_NUM  |  0x3B2
+| D_PSP_PMPADDR3_NUM  |  0x3B3
+| D_PSP_PMPADDR4_NUM  |  0x3B4
+| D_PSP_PMPADDR5_NUM  |  0x3B5
+| D_PSP_PMPADDR6_NUM  |  0x3B6
+| D_PSP_PMPADDR7_NUM  |  0x3B7
+| D_PSP_PMPADDR8_NUM  |  0x3B8
+| D_PSP_PMPADDR9_NUM  |  0x3B9
+| D_PSP_PMPADDR10_NUM |  0x3BA
+| D_PSP_PMPADDR11_NUM |  0x3BB
+| D_PSP_PMPADDR12_NUM |  0x3BC
+| D_PSP_PMPADDR13_NUM |  0x3BD
+| D_PSP_PMPADDR14_NUM |  0x3BE
+| D_PSP_PMPADDR15_NUM |  0x3BF
+|===================================
+=== [red]#Machine Counter/Timers registers#
+==== [red]#Machine Counter/Timers registers#
+|===================================
+| *Definition* |*Value*
+| D_PSP_MCYCLE_NUM        |   0xB00
+| D_PSP_MINSTRET_NUM      |   0xB02
+| D_PSP_MHPMCOUNTER3_NUM  |   0xB03
+| D_PSP_MHPMCOUNTER4_NUM  |   0xB04
+| D_PSP_MHPMCOUNTER5_NUM  |   0xB05
+| D_PSP_MHPMCOUNTER6_NUM  |   0xB06
+| D_PSP_MHPMCOUNTER7_NUM  |   0xB07
+| D_PSP_MHPMCOUNTER8_NUM  |   0xB08
+| D_PSP_MHPMCOUNTER9_NUM  |   0xB09
+| D_PSP_MHPMCOUNTER10_NUM |   0xB0A
+| D_PSP_MHPMCOUNTER11_NUM |  0xB0B
+| D_PSP_MHPMCOUNTER12_NUM |   0xB0C
+| D_PSP_MHPMCOUNTER13_NUM |   0xB0D
+| D_PSP_MHPMCOUNTER14_NUM |   0xB0E
+| D_PSP_MHPMCOUNTER15_NUM |   0xB0F
+| D_PSP_MHPMCOUNTER16_NUM |   0xB10
+| D_PSP_MHPMCOUNTER17_NUM |   0xB11
+| D_PSP_MHPMCOUNTER18_NUM |   0xB12
+| D_PSP_MHPMCOUNTER19_NUM |   0xB13
+| D_PSP_MHPMCOUNTER20_NUM |   0xB14
+| D_PSP_MHPMCOUNTER21_NUM |   0xB15
+| D_PSP_MHPMCOUNTER22_NUM |   0xB16
+| D_PSP_MHPMCOUNTER23_NUM |   0xB17
+| D_PSP_MHPMCOUNTER24_NUM |   0xB18
+| D_PSP_MHPMCOUNTER25_NUM |   0xB19
+| D_PSP_MHPMCOUNTER26_NUM |   0xB1A
+| D_PSP_MHPMCOUNTER27_NUM |   0xB1B
+| D_PSP_MHPMCOUNTER28_NUM |   0xB1C
+| D_PSP_MHPMCOUNTER29_NUM |   0xB1D
+| D_PSP_MHPMCOUNTER30_NUM |   0xB1E
+| D_PSP_MHPMCOUNTER31_NUM |   0xB1F
+|===================================
+==== [red]#Machine Counter/Timers registers (extention for Riscv 32 bit)#
+|===================================
+| *Definition* |*Value*
+| D_PSP_MCYCLEH_NUM        |   0xB80
+| D_PSP_MINSTRETH_NUM      |   0xB82
+| D_PSP_MHPMCOUNTER3H_NUM  |   0xB83
+| D_PSP_MHPMCOUNTER4H_NUM  |   0xB84
+| D_PSP_MHPMCOUNTER5H_NUM  |  0xB85
+| D_PSP_MHPMCOUNTER6H_NUM  |   0xB86
+| D_PSP_MHPMCOUNTER7H_NUM  |   0xB87
+| D_PSP_MHPMCOUNTER8H_NUM  |   0xB88
+| D_PSP_MHPMCOUNTER9H_NUM  |   0xB89
+| D_PSP_MHPMCOUNTER10H_NUM |   0xB8A
+| D_PSP_MHPMCOUNTER11H_NUM |   0xB8B
+| D_PSP_MHPMCOUNTER12H_NUM |   0xB8C
+| D_PSP_MHPMCOUNTER13H_NUM |   0xB8D
+| D_PSP_MHPMCOUNTER14H_NUM |   0xB8E
+| D_PSP_MHPMCOUNTER15H_NUM |   0xB8F
+| D_PSP_MHPMCOUNTER16H_NUM |   0xB90
+| D_PSP_MHPMCOUNTER17H_NUM |   0xB91
+| D_PSP_MHPMCOUNTER18H_NUM |   0xB92
+| D_PSP_MHPMCOUNTER19H_NUM |   0xB93
+| D_PSP_MHPMCOUNTER20H_NUM |   0xB94
+| D_PSP_MHPMCOUNTER21H_NUM |   0xB95
+| D_PSP_MHPMCOUNTER22H_NUM |   0xB96
+| D_PSP_MHPMCOUNTER23H_NUM |   0xB97
+| D_PSP_MHPMCOUNTER24H_NUM |   0xB98
+| D_PSP_MHPMCOUNTER25H_NUM |   0xB99
+| D_PSP_MHPMCOUNTER26H_NUM |   0xB9A
+| D_PSP_MHPMCOUNTER27H_NUM |   0xB9B
+| D_PSP_MHPMCOUNTER28H_NUM |   0xB9C
+| D_PSP_MHPMCOUNTER29H_NUM |   0xB9D
+| D_PSP_MHPMCOUNTER30H_NUM |   0xB9E
+| D_PSP_MHPMCOUNTER31H_NUM |   0xB9F
+|===================================
+
+==== [red]#Machine Counter setup registers#
+|===================================
+| *Definition* |*Value*
+| D_PSP_MHPMEVENT3_NUM   |  0x323
+| D_PSP_MHPMEVENT4_NUM   |  0x324
+| D_PSP_MHPMEVENT5_NUM   |  0x325
+| D_PSP_MHPMEVENT6_NUM   |  0x326
+| D_PSP_MHPMEVENT7_NUM   |  0x327
+| D_PSP_MHPMEVENT8_NUM   |  0x328
+| D_PSP_MHPMEVENT9_NUM   |  0x329
+| D_PSP_MHPMEVENT10_NUM  |  0x32A
+| D_PSP_MHPMEVENT11_NUM  |  0x32B
+| D_PSP_MHPMEVENT12_NUM  |  0x32C
+| D_PSP_MHPMEVENT13_NUM  |  0x32D
+| D_PSP_MHPMEVENT14_NUM  |  0x32E
+| D_PSP_MHPMEVENT15_NUM  |  0x32F
+| D_PSP_MHPMEVENT16_NUM  |  0x330
+| D_PSP_MHPMEVENT17_NUM  |  0x331
+| D_PSP_MHPMEVENT18_NUM  |  0x332
+| D_PSP_MHPMEVENT19_NUM  |  0x333
+| D_PSP_MHPMEVENT20_NUM  |  0x334
+| D_PSP_MHPMEVENT21_NUM  |  0x335
+| D_PSP_MHPMEVENT22_NUM  |  0x336
+| D_PSP_MHPMEVENT23_NUM  |  0X337
+| D_PSP_MHPMEVENT24_NUM  |  0x338
+| D_PSP_MHPMEVENT25_NUM  |  0x339
+| D_PSP_MHPMEVENT26_NUM  |  0x33A
+| D_PSP_MHPMEVENT27_NUM  |  0x33B
+| D_PSP_MHPMEVENT28_NUM  |  0x33C
+| D_PSP_MHPMEVENT29_NUM  |  0x33D
+| D_PSP_MHPMEVENT30_NUM  |  0x33E
+| D_PSP_MHPMEVENT31_NUM  |  0x33F
+|===================================
+
+===  [red]#Debug/Trace registers#
+|===================================
+| *Definition* |*Value*
+| D_PSP_TSELECT_NUM |    0x7A0
+| D_PSP_TDATA1_NUM  |   0x7A1
+| D_PSP_TDATA2_NUM  |   0x7A2
+| D_PSP_TDATA3_NUM  |   0x7A3
+|===================================
+
+=== [red]#Definitions for the various fields in CSRs#
+
+==== counteren CSR
+|===================================
+| *Definition* |*Value*
+| D_PSP_MCOUNTEREN_NUM | 0x306
+| D_PSP_MCOUNTEREN_MASK| 0x0000007F
+|===================================
+
+==== misa CSR
+|===================================
+| *Definition* |*Value*
+| D_PSP_MISA_NUM           |  0x301
+| D_PSP_MISA_EXTENSIONS_MASK| 0x03FFFFFF
+| D_PSP_MISA_MXL_MASK       | 0x0C000000
+|===================================
+
+==== mtvec CSR
+|===================================
+| *Definition* |*Value*
+| D_PSP_MTVEC_NUM         |   0x305
+| D_PSP_MTVEC_MODE_MASK   |   0x00000003
+| D_PSP_MTVEC_BASE_MASK   |   0xFFFFFFFC
+|===================================
+
+==== mstatus CSR
+|===================================
+| *Definition* |*Value* | *Comment*
+| D_PSP_MSTATUS_NUM       |   0x300       |
+| D_PSP_MSTATUS_UIE_MASK  |   0x00000001  | Interrupts enable/disable  [red]#(User mode)#
+| D_PSP_MSTATUS_SIE_MASK  |   0x00000002  |     Interrupts enable/disable  [red]#(Supervisor mode)#
+| D_PSP_MSTATUS_MIE_MASK  |   0x00000008  |      Interrupts enable/disable  [red]#(Machine mode)#
+| D_PSP_MSTATUS_UPIE_MASK |   0x00000010  |
+| D_PSP_MSTATUS_SPIE_MASK |   0x00000020 |
+| D_PSP_MSTATUS_MPIE_MASK |   0x00000080 |
+| D_PSP_MSTATUS_SPP_MASK  |   0x00000100 |
+| D_PSP_MSTATUS_MPP_MASK  |   0x00001800 |
+| D_PSP_MSTATUS_FS_MASK   |   0x00006000 |
+| D_PSP_MSTATUS_XS_MASK   |   0x00018000 |
+| D_PSP_MSTATUS_MPRV_MASK |   0x00020000 |
+| D_PSP_MSTATUS_SUM_MASK  |   0x00040000 |
+| D_PSP_MSTATUS_MXR_MASK  |   0x00080000 |
+| D_PSP_MSTATUS_TVM_MASK   |  0x00100000 |
+| D_PSP_MSTATUS_TW_MASK    |  0x00200000 |
+| D_PSP_MSTATUS_TSR_MASK   |  0x00400000 |
+| D_PSP_MSTATUS_UXL_MASK   |  0x0000000300000000 |
+| D_PSP_MSTATUS_SXL_MASK   |  0x0000000C00000000 |
+| D_PSP_MSTATUS32_SD_MASK  |  0x80000000 |
+| D_PSP_MSTATUS64_SD_MASK  |  0x8000000000000000 |
+|===================================
+
+==== mip CSR
+|===================================
+| *Definition* |*Value*| *Comment*
+| D_PSP_MIP_NUM       |   0x344 |
+| D_PSP_MIP_USIP_MASK  |  0x00000001 |  Software Interrupt pending [red]#(User mode)#
+| D_PSP_MIP_SSIP_MASK  |  0x00000002 | Software Interrupt pending [red]#(Supervisor mode)#
+| D_PSP_MIP_MSIP_MASK  |  0x00000008 |  Software Interrupt pending [red]#(Machine mod)#
+| D_PSP_MIP_UTIP_MASK  |  0x00000010 | Timer Interrupt pending [red]#(User mode)#
+| D_PSP_MIP_STIP_MASK  |  0x00000020 |  Timer Interrupt pending [red]#(Supervisor mode)#
+| D_PSP_MIP_MTIP_MASK  |  0x00000080 |   Timer Interrupt pending [red]#(Machine mode)#
+| D_PSP_MIP_UEIP_MASK  |  0x00000100 | External Interrupt pending [red]#(User mode)#
+| D_PSP_MIP_SEIP_MASK  |  0x00000200 | External Interrupt pending [red]#(Supervisor mode)#
+| D_PSP_MIP_MEIP_MASK  |  0x00000800 | External Interrupt pending [red]#(Machine mod)#
+|===================================
+
+==== mie CSR
+|===================================
+| *Definition* |*Value*| *Comment*
+| D_PSP_MIE_NUM       |   0x304 |
+| D_PSP_MIE_USIE_MASK  |  0x00000001 |  Software Interrupt enable/disable [red]#(User mode)#
+| D_PSP_MIE_SSIE_MASK |  0x00000002  |   Software Interrupt enable/disable [red]#(Supervisor mode)#
+| D_PSP_MIE_MSIE_MASK |   0x00000008 |   Software Interrupt enable/disable [red]#( Machine mode)#
+| D_PSP_MIE_UTIE_MASK |   0x00000010 | Timer Interrupt enable/disable [red]#(User mode)#
+| D_PSP_MIE_STIE_MASK |   0x00000020 | Timer Interrupt enable/disable [red]#(Supervisor mode)#
+| D_PSP_MIE_MTIE_MASK |   0x00000080 | Timer Interrupt enable/disable [red]#(Machine mode)#
+| D_PSP_MIE_UEIE_MASK |   0x00000100 | External Interrupt enable/disable [red]#(User mode)#
+| D_PSP_MIE_SEIE_MASK |   0x00000200 |  External Interrupt enable/disable [red]#(Supervisor mode )#
+| D_PSP_MIE_MEIE_MASK |   0x00000800 |   External Interrupt enable/disable [red]#(Machine mode)#
+|===================================
+
+==== uie CSR
+|===================================
+| *Definition* |*Value*| *Comment*
+| D_PSP_UIE_NUM     |     0x004 |
+| D_PSP_UIE_USIE_MASK |   0x00000001 | Software Interrupt enable/disable [red]#(User mode)#
+| D_PSP_UIE_UTIE_MASK  |  0x00000010  |  Timer Interrupt enable/disable  [red]#(User mode)#
+| D_PSP_UIE_UEIE_MASK  |  0x00000100  |  External Interrupt enable/disable [red]#(User mode)#
+|===================================
+
+==== mcause CSR
+|===================================
+| *Definition* |*Value*
+| D_PSP_MCAUSE_NUM                |         0x342
+| D_PSP_MCAUSE_U_SW_INT_MASK      |         0x80000000
+| D_PSP_MCAUSE_S_SW_INT_MASK      |         0x80000001
+| D_PSP_MCAUSE_M_SW_INT_MASK      |         0x80000003
+| D_PSP_MCAUSE_U_TIMER_INT_MASK   |         0x80000004
+| D_PSP_MCAUSE_S_TIMER_INT_MASK   |         0x80000005
+| D_PSP_MCAUSE_M_TIMER_INT_MASK   |         0x80000007
+| D_PSP_MCAUSE_U_EXT_INT_MASK     |         0x80000008
+| D_PSP_MCAUSE_S_EXT_INT_MASK     |         0x80000009
+| D_PSP_MCAUSE_M_EXT_INT_MASK     |         0x80000011
+| D_PSP_MCAUSE_INSTR_ADDR_MIS_EXC_MASK  |   0x00000000
+| D_PSP_MCAUSE_INSTR_ACCS_FLT_EXC_MASK  |   0x00000001
+| D_PSP_MCAUSE_ILGL_INSTRCTION_EXC_MASK  |  0x00000002
+| D_PSP_MCAUSE_BREAKPOINT_EXC_MASK       |  0x00000003
+| D_PSP_MCAUSE_LD_ADDR_MISALGN_EXC_MASK  |  0x00000004
+| D_PSP_MCAUSE_LD_ACCESS_FLT_EXC_MASK    |  0x00000005
+| D_PSP_MCAUSE_ST_ADDR_MISALGN_EXC_MASK  |  0x00000006
+| D_PSP_MCAUSE_ST_ACCESS_FLT_EXC_MASK    |  0x00000007
+| D_PSP_MCAUSE_ENV_CALL_U_MD_EXC_MASK    |  0x00000008
+| D_PSP_MCAUSE_ENV_CALL_S_MD_EXC_MASK    |  0x00000009
+| D_PSP_MCAUSE_ENV_CALL_M_MD_EXC_MASK    |  0x00000011
+| D_PSP_MCAUSE_INSTR_PAGE_FLT_EXC_MASK   |  0x00000012
+| D_PSP_MCAUSE_LD_PAGE_FLT_EXC_MASK      |  0x00000013
+| D_PSP_MCAUSE_ST_PAGE_FLT_EXC_MASK      |  0x00000015
+|===================================
+
+==== User mode CSRs
+|===================================
+| *Definition* |*Value*
+| D_PSP_USTATUS_NUM         | 0x000
+| D_PSP_UIE_NUM             | 0x004
+| D_PSP_UTVEC_NUM           | 0x005
+| D_PSP_USCRATCH_NUM        | 0x040
+| D_PSP_UEPC_NUM            | 0x041
+| D_PSP_UCAUSE_NUM          | 0x042
+| D_PSP_UTVAL_NUM           | 0x043
+| D_PSP_UIP_NUM             | 0x044
+| D_PSP_CYCLE_NUM           | 0xC00
+| D_PSP_TIME_NUM            | 0xC01
+| D_PSP_INSTRET_NUM         | 0xC02
+| D_PSP_HPMCOUNTER3_NUM     | 0xC03
+| D_PSP_HPMCOUNTER4_NUM     | 0xC04
+| D_PSP_HPMCOUNTER5_NUM     | 0xC05
+| D_PSP_HPMCOUNTER6_NUM     | 0xC06
+| D_PSP_HPMCOUNTER7_NUM     | 0xC07
+| D_PSP_HPMCOUNTER8_NUM     | 0xC08
+| D_PSP_HPMCOUNTER9_NUM     | 0xC09
+| D_PSP_HPMCOUNTER10_NUM    | 0xC0A
+| D_PSP_HPMCOUNTER12_NUM    | 0xC0B
+| D_PSP_HPMCOUNTER13_NUM    | 0xC0C
+| D_PSP_HPMCOUNTER14_NUM    | 0xC0D
+| D_PSP_HPMCOUNTER15_NUM    | 0xC0E
+| D_PSP_HPMCOUNTER16_NUM    | 0xC0F
+| D_PSP_HPMCOUNTER17_NUM    | 0xC10
+| D_PSP_HPMCOUNTER18_NUM    | 0xC11
+| D_PSP_HPMCOUNTER19_NUM    | 0xC12
+| D_PSP_HPMCOUNTER20_NUM    | 0xC13
+| D_PSP_HPMCOUNTER21_NUM    | 0xC14
+| D_PSP_HPMCOUNTER22_NUM    | 0xC15
+| D_PSP_HPMCOUNTER23_NUM    | 0xC16
+| D_PSP_HPMCOUNTER24_NUM    | 0xC17
+| D_PSP_HPMCOUNTER25_NUM    | 0xC18
+| D_PSP_HPMCOUNTER26_NUM    | 0xC19
+| D_PSP_HPMCOUNTER27_NUM    | 0xC20
+| D_PSP_HPMCOUNTER28_NUM    | 0xC21
+| D_PSP_HPMCOUNTER29_NUM    | 0xC22
+| D_PSP_HPMCOUNTER30_NUM    | 0xC23
+| D_PSP_HPMCOUNTER31_NUM    | 0xC24
+|===================================
+
+==== User mode CSRs (extention for Riscv 32 bit)
+|===================================
+| *Definition* |*Value*
+| D_PSP_CYCLEH_NUM        |   0xC80
+| D_PSP_INSTRETH_NUM      |   0xC82
+| D_PSP_HPMCOUNTER3H_NUM  |   0xC83
+| D_PSP_HPMCOUNTER4H_NUM  |   0xC84
+| D_PSP_HPMCOUNTER5H_NUM  |   0xC85
+| D_PSP_HPMCOUNTER6H_NUM  |   0xC86
+| D_PSP_HPMCOUNTER7H_NUM  |   0xC87
+| D_PSP_HPMCOUNTER8H_NUM  |   0xC88
+| D_PSP_HPMCOUNTER9H_NUM  |   0xC89
+| D_PSP_HPMCOUNTER10H_NUM |   0xC8A
+| D_PSP_HPMCOUNTER11H_NUM |   0xC8B
+| D_PSP_HPMCOUNTER12H_NUM |   0xC8C
+| D_PSP_HPMCOUNTER13H_NUM |   0xC8D
+| D_PSP_HPMCOUNTER14H_NUM |   0xC8E
+| D_PSP_HPMCOUNTER15H_NUM |   0xC8F
+| D_PSP_HPMCOUNTER16H_NUM |   0xC90
+| D_PSP_HPMCOUNTER17H_NUM |   0xC91
+| D_PSP_HPMCOUNTER18H_NUM |   0xC92
+| D_PSP_HPMCOUNTER19H_NUM |   0xC93
+| D_PSP_HPMCOUNTER20H_NUM |   0xC94
+| D_PSP_HPMCOUNTER21H_NUM |   0xC95
+| D_PSP_HPMCOUNTER22H_NUM |   0xC96
+| D_PSP_HPMCOUNTER23H_NUM |   0xC97
+| D_PSP_HPMCOUNTER24H_NUM |   0xC98
+| D_PSP_HPMCOUNTER25H_NUM |   0xC99
+| D_PSP_HPMCOUNTER26H_NUM |   0xC9A
+| D_PSP_HPMCOUNTER27H_NUM |   0xC9B
+| D_PSP_HPMCOUNTER28H_NUM |   0xC9C
+| D_PSP_HPMCOUNTER29H_NUM |   0xC9D
+| D_PSP_HPMCOUNTER30H_NUM |   0xC9E
+| D_PSP_HPMCOUNTER31H_NUM |   0xC9F
+|===================================

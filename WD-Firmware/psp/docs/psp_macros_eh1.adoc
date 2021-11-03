@@ -1,0 +1,25 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_macros_eh1_ref]]
+=  psp_macros_eh1
+The file defines the PSP macros for SweRV EH1.
+
+|=======================
+| file | psp_macro_eh1.h
+| author | Ofer Shinaar
+| Date  |  03/2020
+|=======================
+
+== Macros
+=== Enable all cache regions
+Enable all cache regions without "side effects".  For more information, please read
+the PRM for "Region Access Control Register".
+|==================================================
+| *Definition* | *Comment*
+| M_PSP_ICACHE_ENABLE()   | Enables all cache regions without "side effects"
+| M_PSP_ICACHE_DISABLE()  | Disables all cache regions without "side effects".
+|==================================================

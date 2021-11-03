@@ -1,0 +1,27 @@
+
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+= psp_config
+The file defines core configurations.
+
+|=======================
+| file | psp_config.h
+| author | Ronen Haen
+| Date  | 20.05.2019
+|=======================
+
+== Definitions
+
+|========================================================================
+| *Definition* |*Value* | *Comment*
+| D_PSP_ERROR_CHECK | 0 | Defines whether to do runtime error checking or not.
+| D_PSP_NUM_OF_EXC_CAUSE | E_EXC_LAST_CAUSE | Number of Exceptions.
+| D_PSP_NUM_OF_HARTS | 1 or D_NUMBER_OF_HARTS | Number of HW threads in the
+core.
+|========================================================================
+
+ 

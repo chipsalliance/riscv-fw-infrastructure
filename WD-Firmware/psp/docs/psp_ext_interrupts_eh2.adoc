@@ -1,0 +1,41 @@
+[[psp_ext_interrupts_eh2_ref]]
+= psp_ext_interrupts_eh2
+The file defines the PSP external interrupts interfaces for SweRV EH2.
+
+|=======================
+| file | psp_ext_interrupts_eh2.h
+| author | Nati Rapaport
+| Date  |   18.05.2020
+|=======================
+
+== APIs
+=== pspMachineExtInterruptDelegateToHart
+Delegate external interrupt to a Hart (HW thread). When delegated, the given
+external interrupt number will be visible only to the given hart.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineExtInterruptDelegateToHart(
+    u32_t uiExtIntNumber,
+    u32_t uiHartNumber);
+----
+.parameters
+* *uiExtIntNumber* - External interrupt number.
+* *uiHartNumber* - Hart number.
+
+.return
+* *None*
+
+=== pspMachineExtInterruptIsPendingOnHart
+This function checks whether a given external interrupt is pending or not per
+the current Hart (HW thread). Via this API, only the external interrupts that
+are delegated to the current hart could be seen, whether they are pending or
+not.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspMachineExtInterruptIsPendingOnHart(u32_t uiExtInterrupt);
+----
+.parameters
+* *uiExtIntNumber* - Number of external interrupt.
+
+.return
+* pending (1) or not (0)

@@ -1,0 +1,41 @@
+[[psp_intrinsics_ref]]
+= psp_intrinsics
+
+The PSP intrinsics
+|=======================
+| file | psp_intrinsics.h
+| author | Nati Rapaport
+| Date  |   12.11.2019
+|=======================
+
+== Definitions
+
+The following definitions are a part of \\__GNUC__ and \\__clang__.
+
+=== Extern
+|========================================================================
+| *Definition* | *Comment*
+| D_PSP_EXTERNC | If __cplusplus macro is defined, this definition prevents the
+compiler to mangle the function name. Otherwise, it is discarded. 
+|========================================================================
+
+=== Inline
+|========================================================================
+| *Definition* | *Comment*
+| D_PSP_INLINE    | Gives the compiler a hint to inline the function with
+internal linkage.
+|========================================================================
+
+=== CSRs
+The following CSRs are known to be intrinsic values in GCC and LLVM. They can be
+used directly in the assembly code (e.g.: csrr t0, D_PSP_MSTATUS)
+|========================================================================
+| *Definition* |*Comment* 
+| D_PSP_MISA    | misa CSR
+| D_PSP_MTVEC   | mtvec CSR
+| D_PSP_MSTATUS | mstatus CSR
+| D_PSP_MIE     | mie CSR
+| D_PSP_MIP     | mip CSR
+| D_PSP_MCAUSE  | mcause CSR
+| D_PSP_MEPC    | mepc CSR
+|========================================================================

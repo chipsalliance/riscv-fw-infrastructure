@@ -1,0 +1,56 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_timers_ref]]
+= psp_timers
+
+The file defines the core's machine timer-counter API services.
+|=======================
+| file | psp_timers.h
+| author | Nati Rapaport
+| Date  |  28.01.2020
+|=======================
+
+
+==  APIs
+=== pspMachineTimerCounterSetupAndRun
+Setup and activate core machine timer.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineTimerCounterSetupAndRun(u64_t udPeriodCycles);
+----
+.parameters
+* *udPeriodCycles* - Defines the timer period in cycles.
+
+.return
+* *None*
+
+
+=== pspMachineTimerCounterGet
+Get machine timer counter value.
+[source, c, subs="verbatim,quotes"]
+----
+u64_t pspMachineTimerCounterGet(void);
+----
+.parameters
+* *None*
+
+.return
+* *u64_t* - Timer counter value.
+
+
+=== pspMachineTimerCompareCounterGet
+Get machine time compare counter value.
+[source, c, subs="verbatim,quotes"]
+----
+u64_t pspMachineTimerCompareCounterGet(void);
+----
+.parameters
+* *None*
+
+.return
+
+* *u64_t* – Time compare counter value.

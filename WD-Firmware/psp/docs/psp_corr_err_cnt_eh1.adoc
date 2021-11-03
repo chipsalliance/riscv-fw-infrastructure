@@ -1,0 +1,43 @@
+= psp_corr_err_cnt_eh1
+The file contains an interface for correctable-error counters in EH1.
+
+|=======================
+| file | psp_corr_err_cnt_eh1.h
+| author | Nati Rapaport
+| Date  |   03.05.2020
+|=======================
+
+== Types
+=== pspCorrectableErrorCounters (typedef enum)
+----
+typedef enum pspCorrectableErrorCounters
+{
+  E_ICACHE_CORR_ERR_COUNTER = 0,
+  E_ICCM_CORR_ERR_COUNTER   = 1,
+  E_DCCM_CORR_ERR_COUNTER   = 2,
+  E_LAST_COUNTER
+} ePspCorrectableErrorCounters_t;
+----
+
+
+== APIs
+=== pspMachineCorErrCntSetThreshold
+Set the threshold for a counter of a specific correctable error.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineCorErrCntSetThreshold(
+  ePspCorrectableErrorCounters_t eCounter,
+  u32_t uiThreshold);
+----
+.parameters
+* *eCounter* - One of the following values:
+    - E_ICACHE_CORR_ERR_COUNTER
+    - E_ICCM_CORR_ERR_COUNTER
+    - E_DCCM_CORR_ERR_COUNTER
+* *uiThreshold* - When set,  an interrupt is raised when 2**uiThreshold errors
+occure.
+    - *Note* 26 is the largest acceptable value. If a larger value is set, it is
+treated as 26.
+
+.return
+* *None*

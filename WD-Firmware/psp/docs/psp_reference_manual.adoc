@@ -1,0 +1,362 @@
+
+:toc: macro
+:sectnums:
+:doctype: book
+:toclevels: 3
+:sectnumlevels: 5
+:include_dir: .
+
+= Processor Support Package Reference Manual: Western Digital (R)
+Version 1.0
+2021-09-02
+
+SPDX-License-Identifier: Apache-2.0
+Copyright 2019-2021 Western Digital Corporation or its affiliates.
+ 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+ 
+http://www.apache.org/licenses/LICENSE-2.0
+ 
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+<<<
+
+{nbsp} +
+{nbsp} +
+
+:sectnums!:
+
+== **Revision History**
+[cols="3,3a,10a,5a",options="header"]
+|=============================================
+|*_Revision_* |*_Date_* |*_Contents_* |*_Author(s)_*
+|1 |Sep 2, 2021 |Initial draft |Pasha Tikhonov +
+Ibrahim Qashqoush
+|=============================================
+
+{nbsp} +
+{nbsp} +
+
+== **List of Figures**
+
+{nbsp} +
+{nbsp} +
+
+== **List of Tables**
+
+{nbsp} +
+{nbsp} +
+
+[#ReferenceDocuments]
+== **Reference Documents**
+[cols=",,,",options="",]
+|========================================
+|Item # |Document |Revision Used |Comment
+| 1
+|https://raw.githubusercontent.com/chipsalliance/Cores-SweRV/master/docs/RISC-V_SweRV_EH1_PRM.pdf[SweRV EH1 PRM] | Revision 1.8 |
+| 2 | https://raw.githubusercontent.com/chipsalliance/Cores-SweRV-EL2/master/docs/RISC-V_SweRV_EL2_PRM.pdf[SweRV EL2 PRM] | Revision 1.2 |
+| 3 | https://raw.githubusercontent.com/chipsalliance/Cores-SweRV-EH2/master/docs/RISC-V_SweRV_EH2_PRM.pdf[SweRV EH2 PRM] | Revision 1.2 |
+| 4 | https://github.com/riscv/riscv-isa-manual/releases/download/Ratified-IMAFDQC/riscv-spec-20191213.pdf[The RISC-V Instruction Set Manual. Volume I: Unprivileged ISA] | 20190608-Base-Ratified | Specification ratified 
+| 5 | https://github.com/riscv/riscv-isa-manual/releases/download/Ratified-IMFDQC-and-Priv-v1.11/riscv-privileged-20190608.pdf[The RISC-V Instruction Set Manual. Volume II: Privileged Architecture] | 20190608-Priv-MSU-Ratified | Specification ratified
+| 6 | https://gcc.gnu.org/onlinedocs/gcc.pdf[GCC book] |  |
+| 7 | https://llvm.org/docs/LangRef.html[LLVM Programmer's Manual] | |
+| 8 | https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html[Build-in atomic functions] | |
+Built-in Functions for Memory Model Aware Atomic Operations.
+|========================================
+
+
+{nbsp} +
+{nbsp} +
+
+== **Abbreviations**
+|========================================
+| **Abbreviation** | **Description**
+| PSP | Processor Support Package 
+| FW | Firmware
+| HW | Hardware
+| CSR | Control and Status Register
+| NMI | Non-Maskable Interrupt
+| API | Application Programming Interface
+| ISR | Interrupt Service Routine
+| PMC | Power Management Control
+| PIC | Programmable Interrupt Controller
+| PRM | Programmer's reference manual
+|========================================
+
+{nbsp} +
+{nbsp} +
+
+:sectnums:
+
+toc::[]
+
+== Overview
+This reference document provides a summary of APIs for RISC-V processors
+supported by Western Digital. It includes the SweRV family of cores EH1, EL2,
+EH2. One can find more information about SweRV cores on
+https://github.com/chipsalliance/Cores-SweRV[chipsalliance github].
+
+
+=== Usage and Compilation Flags
+Including psp_api.h per complication unit is sufficient enough for integrating
+all the PSP services per core. psp_api.h is divided into core sections,
+encapsulated in compile switches to enable all supported features for a given
+core:
+[#CompilerFlags]
+|========================================================================
+| *Compiler Flags* | *Core* | *Comment*
+| D_SWERV_EH1 | SweRV EH1 |
+| D_SWERV_EH1 D_SWERV_EL2 | SweRV EL2 |
+| D_SWERV_EH1 D_SWERV_EL2 D_SWERV_EH2 | SweRV EH2 |
+| D_BIT_MANIPULATION | SweRV EL2, SweRV_EH2 |
+| D_DCCM_SECTION_START_ADDRESS | SweRV_EH2 | The flag is required to support
+compiler build-in atomic operations.
+| D_NUMBER_OF_HARTS | all SweRV cores | the defaul value is 1
+|========================================================================
+This document is a reference manual for developers interested in writing
+applications for SweRV processors.
+
+The document is organized as follows:
+
+* <<Conventions>> section elaborates on conventions used in this PSP
+reference manual.
+* <<Common>> includes definitions common for all the cores (e.g., type
+definitions).
+* <<Compiler Manual>> includes compiler specific definitions.
+* <<Features>>, the main section of this reference, includes supported features
+divided into groups per core.
+
+
+=== Conventions
+File names are aligned to the feature names and follow the pattern
+[source, c]
+----
+psp_<feature>_<core>
+----
+Throughout the reference, we keep section (feature) structure such that every
+subsection corresponds to a specific core.
+
+Code within source and header files follows WD-Firmware
+https://bitbucket.wdc.com/projects/CTORISCVFWINFRA/repos/riscv-fw-infrastructure/browse/coding_convention.adoc[conding convention].
+
+
+== Common
+:leveloffset: +1
+
+include::{include_dir}/psp_types.adoc[leveloffset=+2]
+include::{include_dir}/psp_defines.adoc[leveloffset=+2]
+include::{include_dir}/psp_config.adoc[leveloffset=+2]
+
+include::{include_dir}/psp_version.adoc[leveloffset=+2]
+include::{include_dir}/psp_memory_utils.adoc[leveloffset=+2]
+
+:leveloffset: -1
+
+
+== Compiler Manual
+
+:leveloffset: +1
+
+include::{include_dir}/psp_attributes.adoc[leveloffset=+2]
+
+
+== psp_intrinsics
+Values intrinsic to \\__GCC__ and \\__LLVM__ compilers presented in this
+section.
+
+The subsection <<psp_intrinsics_ref, psp_intrinsics>> defines values used for
+all the cores, and <<psp_intrinsics_eh2_ref, psp_intrinsics_eh2>> defines some
+atomic operations for EH2.
+
+include::{include_dir}/psp_intrinsics.adoc[leveloffset=+2]
+include::{include_dir}/psp_intrinsics_eh2.adoc[leveloffset=+2]
+
+
+== psp_pragmas
+Currently not in use.
+// include::{include_dir}/psp_pragmas.adoc[leveloffset=+3]
+
+:leveloffset: -1
+
+== Features
+This section lists services supported by the cores.
+
+=== psp_macros
+The subsection <<psp_macros_ref, psp_macros>> includes general macros as defined
+by RISC-V spec (unprivileged and privileged, see
+<<ReferenceDocuments, Reference Documents>> table).
+<<psp_macros_eh1_ref, EH1>> and <<psp_macros_eh2_ref, EH2>> subsections add
+SweRV specific macros per core version.
+
+include::{include_dir}/psp_macros.adoc[leveloffset=+3]
+include::{include_dir}/psp_macros_eh1.adoc[leveloffset=+3]
+include::{include_dir}/psp_macros_eh2.adoc[leveloffset=+3]
+
+
+=== psp_macros_asm
+<<psp_macros_asm_ref, psp_macros_asm>> subsection is relevant for all platforms. 
+<<psp_macros_asm_eh1_ref, EH1>> and <<psp_macros_asm_eh2_ref, EH2>> subsection
+add SweRV specific macros per core version.
+
+include::{include_dir}/psp_macros_asm.adoc[leveloffset=+3]
+include::{include_dir}/psp_macros_asm_eh1.adoc[leveloffset=+3]
+include::{include_dir}/psp_macros_asm_eh2.adoc[leveloffset=+3]
+
+
+=== psp_csrs
+The subsection <<psp_csrs_ref, psp_csrs>> defines CSRs according to RISC-V
+privileged specification version 1.10
+(see <<ReferenceDocuments, Reference Documents>> table). <<psp_csrs_eh1_ref, EH1>>,
+<<psp_csrs_el2_ref, EL2>> and <<psp_csrs_eh2_ref, EH2>> subsections add SweRV
+specific macros per core version.
+
+include::{include_dir}/psp_csrs.adoc[leveloffset=+3]
+include::{include_dir}/psp_csrs_eh1.adoc[leveloffset=+3]
+include::{include_dir}/psp_csrs_el2.adoc[leveloffset=+3]
+include::{include_dir}/psp_csrs_eh2.adoc[leveloffset=+3]
+
+
+=== psp_corr_err_cnt
+This section contains an API for counters of miscellaneous correctable-errors
+that occurs in the system. For the correctable-error-counters feature to work,
+the user should register ISR for E_MACHINE_CORRECTABLE_ERROR_CAUSE interrupt.
+
+All SweRV cores support this feature.
+
+include::{include_dir}/psp_corr_err_cnt_eh1.adoc[leveloffset=+3]
+
+
+=== psp_cache_control
+The feature is supported on all SweRV cores. It allows to mark memory regions as
+cacheable and specify whether the memory access has side effects.
+
+include::{include_dir}/psp_cache_control_eh1.adoc[leveloffset=+3]
+
+
+=== psp_performance_monitor
+Performance monitoring API defines a set of counter registers and events that
+trigger the counters increment, along with functions to enable/disable access
+them. For more information refer to the PRMs (see
+<<ReferenceDocuments, Reference Documents>> table).
+
+Each subsection corresponds to a specific SweRV core.
+
+include::{include_dir}/psp_performance_monitor_eh1.adoc[leveloffset=+3]
+include::{include_dir}/psp_performance_monitor_el2.adoc[leveloffset=+3]
+
+
+=== psp_pmc
+The Power Management Control (PMC) section describes the PMC services that
+firmware can use to control the core power functionality.
+
+These functions are supported for all the cores.
+
+include::{include_dir}/psp_pmc_eh1.adoc[leveloffset=+3]
+
+
+=== psp_interrupts
+The <<psp_interrupts_ref, psp_interrupts>> subseciton lists interrupt/exception
+causes as defined by privileged spec. ver. 1.10. It provides functionality to
+manipulate ISRs and exception handlers, which are relevant for all the cores.
+The subsection <<psp_interrupts_eh1_ref, psp_interrupts_eh1>> extends the API
+for SweRV core.
+
+Functions prefixed with pspMachine/pspUser should be called from the
+corresponding modes (Machine/User).
+
+include::{include_dir}/psp_interrupts.adoc[leveloffset=+3]
+include::{include_dir}/psp_interrupts_eh1.adoc[leveloffset=+3]
+
+
+=== psp_ext_interrupts
+This section provides an API for registering, configuring and handling external
+interrupts.
+
+EL2 and EH1 cores use the same API defined in
+<<psp_ext_interrupts_eh1_ref, psp_ext_interrupts_eh1>>. EH2 having two harts,
+requires additional APIs to delegate an external interrupt to a specific hart,
+which is defined in <<psp_ext_interrupts_eh2_ref, psp_ext_interrupts_eh2>>.
+
+include::{include_dir}/psp_ext_interrupts_eh1.adoc[leveloffset=+3]
+include::{include_dir}/psp_ext_interrupts_eh2.adoc[leveloffset=+3]
+
+
+=== psp_nmi
+<<psp_nmi_eh1_ref, EH1 subsection>> of NMIs (Non-Maskable Interrupts) provides
+basic NMI functionality. <<psp_nmi_el2_ref, EL2>> adds error-value definitions
+for fast interrupts. Finally, <<psp_nmi_eh2_ref, EH2>> section extands this
+functionality further to support multiple (2) harts.
+
+include::{include_dir}/psp_nmi_eh1.adoc[leveloffset=+3]
+include::{include_dir}/psp_nmi_el2.adoc[leveloffset=+3]
+include::{include_dir}/psp_nmi_eh2.adoc[leveloffset=+3]
+
+
+=== psp_int_vect
+API defined in <<psp_int_vect_ref, psp_int_vect>> is relevant for all single
+core IPs (i.e. EH1, EL2). It is extanded in
+<<psp_int_vect_eh2_ref, psp_int_vect_eh2>> to support dual-hard cores (EH2). 
+
+Assign the vector-table address to _mtvec_ CSR (Machine trap-handler base
+address) once the program is ready to deal with an assertion of
+exception/interrupt.
+
+include::{include_dir}/psp_int_vect.adoc[leveloffset=+3]
+include::{include_dir}/psp_int_vect_eh2.adoc[leveloffset=+3]
+
+
+=== psp_timers
+Each of the cores EH1/EL2/EH2 has two internal timers and one machine timer. 
+Few differences:
+
+* An internal timer is a hardware timer inside a core, while the machine timer
+is a platform timer.
+* Internal timers can be pauses on HALT mode. Machine timer can not do that.
+This feature is suitable for Software debugging on RTOS-based systems since RTOS
+ticks can be stopped on debugging.
+* EL2 and EH2 can cascade internal timers 1 and 2 to a single 64-bit timer.
+
+In EH1/EL2/EH2 cores there is a capability to determine whether the internal
+timers continue to tick even when the core is in sleep/halt mode.
+
+The subsection <<psp_timers_ref, psp_timers>> provides API support on all
+cores. <<psp_timers_eh1_ref, psp_timers_eh1>> adds functionality to the SweRV
+cores. Finally, <<psp_timers_el2_ref, psp_timers_el2>> content is supported only
+on the second generation of SweRV cores (EL2, EH2).
+
+include::{include_dir}/psp_timers.adoc[leveloffset=+3]
+include::{include_dir}/psp_timers_eh1.adoc[leveloffset=+3]
+include::{include_dir}/psp_timers_el2.adoc[leveloffset=+3]
+
+
+=== psp_atomics
+This section describes atomic operations as defined in the standard RISC-V 
+Atomic (A) extension.
+
+It is only supported on EH2.
+
+include::{include_dir}/psp_atomics_eh2.adoc[leveloffset=+3]
+
+
+=== psp_mutex
+PSP Mutex provides mutual exclusion services for multi-hurt (HW threading) based
+systems, e.g. EH2. Mutual exclusion pertains to controlling the access of HW
+threads to certain hart. The API's use the Atomic operation do handle mutual
+exclusion.
+
+It is only supported on EH2.
+
+include::{include_dir}/psp_mutex_eh2.adoc[leveloffset=+3]
+
+
+=== psp_bitmanip
+Support of bit manipulations exists for the second generation of SweRV cores
+(EL2, EH2).
+
+include::{include_dir}/psp_bitmanip_el2.adoc[leveloffset=+3]

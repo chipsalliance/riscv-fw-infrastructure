@@ -1,0 +1,63 @@
+= psp_perfomance_monitor_el2
+Performance monitor api provider for SweRV EL2. The relevant headers for the
+content of this reference are: psp_perfomance_monitor_eh1.h and
+psp_perfomance_monitor_el2.h
+
+|=======================
+| file | psp_performance_monitor_el2.h
+| author | Nati Rapaport
+| Date  |   20.08.2020
+|=======================
+
+== Definitions
+=== Performance monitoring events
+|========================================================================
+| *Definition* |*Value*
+| D_BITMANIP_COMMITED        | 54
+| D_BUS_LOADS_COMMITED       | 55
+| D_BUS_STORES_COMMITED      | 56
+| D_CYCLES_IN_SLEEP_C3_STATE | 512
+| D_DMA_READS_ALL            | 513
+| D_DMA_WRITES_ALL           | 514
+| D_DMA_READS_TO_DCCM        | 515
+| D_DMA_WRITESS_TO_DCCM      | 516
+|========================================================================
+
+== APIs
+=== pspMachinePerfMonitorDisableCounter
+The function disables a specific performance monitor counter
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachinePerfMonitorDisableCounter(u32_t uiPerfMonCounter);
+----
+.parameters
+* *uiPerfMonCounter* - Performance-Monitor counter to disable. Supported
+counters to disbale are:
+    - D_PSP_CYCLE_COUNTER
+    - D_PSP_INSTRET_COUNTER
+    - D_PSP_COUNTER0
+    - D_PSP_COUNTER1
+    - D_PSP_COUNTER2
+    - D_PSP_COUNTER3
+
+.return
+* *None*
+
+=== pspMachinePerfMonitorEnableCounter
+The function enables a specific performance monitor counter.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachinePerfMonitorEnableCounter(u32_t uiPerfMonCounter);
+----
+.parameters
+* *uiPerfMonCounter* - Performance-Monitor counter to enable. Supported counters
+to enable are:
+    - D_PSP_CYCLE_COUNTER
+    - D_PSP_INSTRET_COUNTER
+    - D_PSP_COUNTER0
+    - D_PSP_COUNTER1
+    - D_PSP_COUNTER2
+    - D_PSP_COUNTER3
+
+.return
+* *None*

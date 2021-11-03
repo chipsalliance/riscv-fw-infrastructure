@@ -1,0 +1,56 @@
+[[psp_macros_asm_ref]]
+= psp_macros_asm
+The file defines PSP macros that are used in Assembly code. These macros depend
+on the core definition of 32/64 bits.
+
+|=======================
+| file | psp_macros.inc
+| author |  Nati Rapaport
+| Date  |  13.11.2019
+|=======================
+
+== Macros
+===  XLEN dependent macros
+|==================================================
+| *Definition* | *Comment* 
+| M_PSP_STORE operand1,operand2 | Store to the memory defined by operand2
+the value of operand1.
+| M_PSP_LOAD operand1,operand2 | Load a byte from memory defined by
+operand2 to register operand1.
+| M_PSP_ADDI operand1,operand2,operand3 | Add sign-extended immediate defined by
+operand3 to the value of register operand2 and write the result to the register
+operand1.
+|==================================================
+
+=== Handling bytes and half words
+|==================================================
+| *Definition* | *Comment* 
+| M_PSP_STORE_BYTE operand1,operand2 | Store to the memory defined by operand2
+the value of operand1.
+| M_PSP_LOAD_BYTE operand1,operand2 | Load a byte from memory defined by
+operand2 to register operand1.
+| M_PSP_STORE_HALF operand1,operand2 | Store the two least-significant bytes in
+register operand1 to memory defined by operand2.
+| M_PSP_LOAD_HALF operand1,operand2 | Load two bytes from memory defined by
+operand2 and write them to operand1 register.
+|==================================================
+
+=== Interrupt handler and push/pop registers
+To use ISR stack one should define it's size by providig a non-zero value for
+D_ISR_STACK_SIZE while building the PSP. The current implementation uses the
+same stack for both applicatons and ISRs. 
+|==================================================
+| *Definition* | *Comment* 
+| M_PSP_CALL_INT_HANDLER fptIntHandler | Macro for calling interrupt handler.
+| M_PSP_PUSH_REGFILE | Macro for saving application context.
+| M_PSP_POP_REGFILE | Macro for restoring application context.
+| M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK | Macro for setting SP to use stack
+dedicated to ISRs. It loads the sp register with the address of the current
+Task-CB.
+| M_PSP_CHANGE_SP_FROM_ISR_TO_APP_STACK | Macro for setting SP to use a stack of
+the current application.
+| M_PSP_MACHINE_DISABLE_INTERRUPTS | Macro for disabling machine interrupts
+after reading the current status. Available in MACHINE mode only.
+| M_PSP_MACHINE_RESTORE_INTERRUPTS | Macro for restoring machine interrupts
+status. Available in MACHINE mode only.
+|==================================================

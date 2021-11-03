@@ -1,0 +1,43 @@
+[[psp_csrs_eh2_ref]]
+= psp_csrs_eh2
+
+|=======================
+| file | psp_csrs_eh2.h
+| author | Nati Rapaport
+| Date  |   1.12.2020
+|=======================
+
+== Definitions
+Definitions of Swerv's (EH2 version) CSRs
+
+=== Non standard CSRs
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* | *Comment* 
+| D_PSP_MHARTSTART_NUM  | 0x7FC        | Hart Start Control register
+| D_PSP_MNMIPDEL_NUM    | 0x7FE        | NMI Pin Delegation register
+| D_PSP_MNMIPDEL_MASK   | 0x00000003   | Only bits 0 and 1 are relevant
+| D_PSP_MHARTNUM_NUM         | 0xFC4      | Total Number of Harts register
+| D_PSP_MHARTNUM_TOTAL_MASK  | x00000003 | Total number of Harts in this core - bits 0..1
+|===================================
+
+=== PIC memory mapped registers
+==== meidel CSR
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* | *Comment* 
+| D_PSP_PIC_MEIDEL_OFFSET       | 0x6000 |
+| D_PSP_PIC_MEIDEL_ADDR         | PSP_PIC_BASE_ADDRESS + D_PSP_PIC_MEIDEL_OFFSET  |External interrupts delegation register
+| D_PSP_MEIDEL_DELEGATION_MASK  | 0x00000001 | bit 0
+|===================================
+
+=== EH2 specific fields in standard CSRs
+==== mhartid CSR
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* | *Comment* 
+| D_PSP_MHARTID_CORE_ID_MASK    | 0xFFFFFFF0  | Core ID field - bits 4..31
+| D_PSP_MHARTID_CORE_ID_SHIFT   | 4           | Core ID field shift - 4
+| D_PSP_MHARTID_HART_ID_MASK    | 0x0000000F  | Hart ID field - bits 0..3
+| D_PSP_MHARTID_HART_ID_SHIFT   | 0           | Hart ID field shift - 0
+|===================================

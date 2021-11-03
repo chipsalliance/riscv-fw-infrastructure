@@ -1,0 +1,84 @@
+
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+= psp_cache_control_eh1
+Cache control interface.
+
+|=======================
+| file | psp_cache_control_eh1.h
+| author | Ronen Haen
+| Date  |   26.03.2020
+|=======================
+
+
+== Definitions
+|========================================================================
+| *Definition* |*Value*
+| D_CACHE_CONTROL_MAX_NUMBER_OF_REGIONS  |          16
+|========================================================================
+
+
+== Macros
+|===================================================================================
+| M_CACHE_CONTROL_ICACHE_OFFSET(memRegionId)   |  Convert region number into icache offset.
+| M_CACHE_CONTROL_SIDEEFFECT_OFFSET(memRegionId) | Convert region number into side-effect offset.
+| M_PSP_CACHE_CONTROL_ICACHE_VAL(memRegionId) | Return mrac icache value of a specific memory region.
+| M_PSP_CACHE_CONTROL_SIDEEFFECT_VAL(memRegionId) | Return mrac side-effect value of a specific region.
+|===================================================================================
+
+
+==  APIs
+=== pspMachineCacheControlEnableIcache
+Enable I-Cache for a given memory-id.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineCacheControlEnableIcache(u32_t uiMemoryRegionId);
+----
+.parameters
+* *uiMemoryRegionId*- Memory-id.
+
+.return
+* *None*
+
+
+=== pspMachineCacheControlEnableSideEfect
+Enable side-effect for a given memory-id.
+[source, c, subs="verbatim,quotes"]
+----
+pspMachineCacheControlEnableSideEfect(u32_t uiMemoryRegionId);
+----
+.parameters
+* *uiMemoryRegionId*- Memory-id.
+
+.return
+* *None*
+
+
+=== pspMachineCacheControlDisableIcache
+Disable I-Cache for a given memory-id.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineCacheControlDisableIcache(u32_t uiMemoryRegionId);
+----
+.parameters
+* *uiMemoryRegionId* - Memory-id.
+
+.return
+* *None*
+
+
+=== pspMachineCacheControlDisableSideEfect
+Disable side-effect for a given memory-id.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineCacheControlDisableSideEfect(u32_t uiMemoryRegionId);
+----
+.parameters
+* *uiMemoryRegionId* - Memory-id.
+
+.return
+* *None*

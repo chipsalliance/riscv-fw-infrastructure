@@ -1,0 +1,302 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_interrupts_ref]]
+= psp_interrupts
+
+The file supplies information and registration API for interrupt and exception
+service routines.
+
+|=======================
+| file | psp_interrupts.h
+| author | Nati Rapaport
+| Date  |  04.05.2020
+|=======================
+
+== Types
+=== pspInterruptCause (typedef enum)
+----
+typedef enum pspInterruptCause
+{
+   E_USER_SOFTWARE_CAUSE             = 0,
+   E_SUPERVISOR_SOFTWARE_CAUSE       = 1,
+   E_RESERVED_SOFTWARE_CAUSE         = 2,
+   E_MACHINE_SOFTWARE_CAUSE          = 3,
+   E_USER_TIMER_CAUSE                = 4,
+   E_SUPERVISOR_TIMER_CAUSE          = 5,
+   E_RESERVED_TIMER_CAUSE            = 6,
+   E_MACHINE_TIMER_CAUSE             = 7,
+   E_USER_EXTERNAL_CAUSE             = 8,
+   E_SUPERVISOR_EXTERNAL_CAUSE       = 9,
+   E_RESERVED_EXTERNAL_CAUSE         = 10,
+   E_MACHINE_EXTERNAL_CAUSE          = 11,
+   E_LAST_CAUSE
+} ePspInterruptCause_t;
+----
+
+=== pspExceptionCause (typedef enum)
+----
+typedef enum pspExceptionCause
+{
+   E_EXC_INSTRUCTION_ADDRESS_MISALIGNED           = 0,
+   E_EXC_INSTRUCTION_ACCESS_FAULT                 = 1,
+   E_EXC_ILLEGAL_INSTRUCTION                      = 2,
+   E_EXC_BREAKPOINT                               = 3,
+   E_EXC_LOAD_EXC_ADDRESS_MISALIGNED              = 4,
+   E_EXC_LOAD_EXC_ACCESS_FAULT                    = 5,
+   E_EXC_STORE_AMO_ADDRESS_MISALIGNED             = 6,
+   E_EXC_STORE_AMO_ACCESS_FAULT                   = 7,
+   E_EXC_ENVIRONMENT_CALL_FROM_UMODE              = 8,
+   E_EXC_ENVIRONMENT_CALL_FROM_SMODE              = 9,
+   E_EXC_RESERVED                                 = 10,
+   E_EXC_ENVIRONMENT_CALL_FROM_MMODE              = 11,
+   E_EXC_INSTRUCTION_PAGE_FAULT                   = 12,
+   E_EXC_LOAD_EXC_PAGE_FAULT                      = 13,
+   E_EXC_RESERVEE_EXC_FOR_FUTURE_STANDARE_EXC_USE = 14,
+   E_EXC_STORE_AMO_PAGE_FAULT                     = 15,
+   E_EXC_LAST_CAUSE
+} ePspExceptionCause_t;
+----
+
+=== interrupt handler definition
+[source, c, subs="verbatim,quotes"]
+----
+typedef void (*fptrPspInterruptHandler_t)(void);
+----
+
+== Definitions
+
+=== Enable/Disable bits of SW, Timer and External interrupts in Machine privilege level
+|========================================================================
+| *Definition* |*Value*
+| D_PSP_INTERRUPTS_MACHINE_SW   |     E_MACHINE_SOFTWARE_CAUSE (Value=3)
+| D_PSP_INTERRUPTS_MACHINE_TIMER |    E_MACHINE_TIMER_CAUSE (Value=7)
+| D_PSP_INTERRUPTS_MACHINE_EXT    |   E_MACHINE_EXTERNAL_CAUSE (Value=11)
+|========================================================================
+
+=== Enable/Disable bits of SW, Timer and External interrupts in Supervisor privilege level
+|========================================================================
+| *Definition* |*Value*
+| D_PSP_INTERRUPTS_SUPERVISOR_SW    | E_SUPERVISOR_SOFTWARE_CAUSE (value=1)
+| D_PSP_INTERRUPTS_SUPERVISOR_TIMER | E_SUPERVISOR_TIMER_CAUSE (value =5)
+| D_PSP_INTERRUPTS_SUPERVISOR_EXT   | E_SUPERVISOR_EXTERNAL_CAUSE (value =9)
+|========================================================================
+
+=== Enable/Disable bits of SW, Timer and External interrupts in User privilege level
+|========================================================================
+| *Definition* |*Value*
+| D_PSP_INTERRUPTS_USER_SW       |    E_USER_SOFTWARE_CAUSE (value=0)
+| D_PSP_INTERRUPTS_USER_TIMER    |    E_USER_TIMER_CAUSE (value=4)
+| D_PSP_INTERRUPTS_USER_EXT      |    E_USER_EXTERNAL_CAUSE (value=8)
+|========================================================================
+
+
+== APIs
+=== pspMachineInterruptsRegisterIsr
+The function registers an interrupt service routine per interrupt cause.
+[source, c, subs="verbatim,quotes"]
+----
+fptrPspInterruptHandler_t pspMachineInterruptsRegisterIsr(
+      fptrPspInterruptHandler_t fptrInterruptHandler,
+      u32_t uiInterruptCause);
+----
+
+.parameters
+* *fptrInterruptHandler* - Function pointer to the interrupt service routine.
+* *interruptCause* - Interrupt cause. Supported values are:
+  - E_USER_SOFTWARE_CAUSE
+  - E_SUPERVISOR_SOFTWARE_CAUSE
+  - E_RESERVED_SOFTWARE_CAUSE
+  - E_MACHINE_SOFTWARE_CAUSE
+  - E_USER_TIMER_CAUSE
+  - E_SUPERVISOR_TIMER_CAUSE
+  - E_RESERVED_TIMER_CAUSE
+  - E_MACHINE_TIMER_CAUSE
+  - E_USER_EXTERNAL_CAUSE
+  - E_SUPERVISOR_EXTERNAL_CAUSE
+  - E_RESERVED_EXTERNAL_CAUSE
+  - E_MACHINE_EXTERNAL_CAUSE
+
+.Return
+* *u32_t* - Previously registered ISR.
+
+
+=== pspMachineInterruptsRegisterExcpHandler
+The function registers an exception handler per exception cause.
+[source, c, subs="verbatim,quotes"]
+----
+fptrPspInterruptHandler_t pspMachineInterruptsRegisterExcpHandler(
+      fptrPspInterruptHandler_t fptrInterruptHandler,
+      u32_t uiExceptionCause);
+----
+.parameters
+* *fptrInterruptHandler* - Function pointer to the exception handler.
+* *exceptionCause* - Exception cause. Supported values are:
+  - E_EXC_INSTRUCTION_ADDRESS_MISALIGNED
+  - E_EXC_INSTRUCTION_ACCESS_FAULT
+  - E_EXC_ILLEGAL_INSTRUCTION
+  - E_EXC_BREAKPOINT
+  - E_EXC_LOAD_EXC_ADDRESS_MISALIGNED
+  - E_EXC_LOAD_EXC_ACCESS_FAULT
+  - E_EXC_STORE_AMO_ADDRESS_MISALIGNED
+  - E_EXC_STORE_AMO_ACCESS_FAULT
+  - E_EXC_ENVIRONMENT_CALL_FROM_UMODE
+  - E_EXC_ENVIRONMENT_CALL_FROM_SMODE
+  - E_EXC_RESERVED
+  - E_EXC_ENVIRONMENT_CALL_FROM_MMODE
+  - E_EXC_INSTRUCTION_PAGE_FAULT
+  - E_EXC_LOAD_EXC_PAGE_FAULT
+  - E_EXC_RESERVEE_EXC_FOR_FUTURE_STANDARE_EXC_USE
+  - E_EXC_STORE_AMO_PAGE_FAULT
+
+.return
+* *u32_t* - Previously registered ISR.
+
+
+=== pspMachineInterruptsSetVecTableAddress
+Set vector-table address at mtvec CSR.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsSetVecTableAddress(void* pVectTable);
+----
+.parameters
+* *pVectTable* Pointer to the vector-table.
+
+.return
+* *None*
+
+
+=== pspMachineInterruptsDefaultHandler
+Default empty interrupt handler. All the interrupts/exceptions are initialized
+with this handler by default.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsDefaultHandler(void);
+----
+.parameters
+* *None*
+
+.return
+* *None*
+
+=== pspMachineInterruptsDisable
+Disable interrupts and return the current interrupt state in each one of the
+privileged levels.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsDisable(u32_t  *pOutPrevIntState);
+----
+.parameters
+* *pOutPrevIntState* - Current (== before the 'disable') interrupts state
+in each one of the privileged levels (read from mstatus CSR).
+
+.return
+* *None*
+
+
+=== pspMachineInterruptsRestore
+Restore the interrupts state in each one of the privileged levels.
+i.e., if they were already disabled - they will stay disabled. If they were
+enabled - they will become enabled now.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsRestore(u32_t uiPrevIntState);
+----
+.parameters
+* *uiPrevIntState* - Previous interrupts state in each one of the privileged
+levels.
+
+.return
+* *None*
+
+
+=== pspMachineInterruptsEnable
+Enable interrupts (in all privilege levels) regardless their previous state.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsEnable(void);
+----
+
+
+=== pspMachineInterruptsDisableIntNumber
+Disable specified interrupt for any privilege level.                             
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsDisableIntNumber(u32_t uiInterruptNumber);
+----
+
+.parameters
+* *uiInterruptNumber* - Interrupt number to disable. When you call this
+function, you can use either one of the following defined values:
+  - D_PSP_INTERRUPTS_MACHINE_SW
+  - D_PSP_INTERRUPTS_MACHINE_TIMER
+  - D_PSP_INTERRUPTS_MACHINE_EXT
+  - D_PSP_INTERRUPTS_SUPERVISOR_SW
+  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
+  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
+  - D_PSP_INTERRUPTS_USER_SW
+  - D_PSP_INTERRUPTS_USER_TIMER
+  - D_PSP_INTERRUPTS_USER_EXT
+
+.return
+* *None*
+
+
+=== pspMachineInterruptsEnableIntNumber
+Enable specified interrupt for any privilege level.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsEnableIntNumber(u32_t uiInterruptNumber);
+----
+
+.parameters
+* *uiInterruptNumber* - Interrupt number to enable. When you call this function,
+you can use either one of the following defined values:
+  - D_PSP_INTERRUPTS_MACHINE_SW
+  - D_PSP_INTERRUPTS_MACHINE_TIMER
+  - D_PSP_INTERRUPTS_MACHINE_EXT
+  - D_PSP_INTERRUPTS_SUPERVISOR_SW
+  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
+  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
+  - D_PSP_INTERRUPTS_USER_SW
+  - D_PSP_INTERRUPTS_USER_TIMER
+  - D_PSP_INTERRUPTS_USER_EXT
+
+.return
+* *None*
+
+
+=== pspUserInterruptsDisableIntNumber
+Disable specified interrupt.
+[source, c, subs="verbatim,quotes"]
+----
+void pspUserInterruptsDisableIntNumber(u32_t uiInterruptNumber);
+----
+.parameters
+* *uiInterruptNumber* - Interrupt number to disable. When you call this
+function, use ONLY one of the following defined values:
+  - D_PSP_INTERRUPTS_USER_SW
+  - D_PSP_INTERRUPTS_USER_TIMER
+  - D_PSP_INTERRUPTS_USER_EXT
+
+.return
+* *None*
+
+=== pspUserInterruptsEnableIntNumber
+Enable specified interrupt.
+[source, c, subs="verbatim,quotes"]
+----
+void pspUserInterruptsEnableIntNumber(u32_t uiInterruptNumber);
+----
+.parameters
+* *uiInterruptNumber* - Interrupt number to enable. When you call this function,
+use ONLY one of the following defined values:
+  - D_PSP_INTERRUPTS_USER_SW
+  - D_PSP_INTERRUPTS_USER_TIMER
+  - D_PSP_INTERRUPTS_USER_EXT
+
+.return
+* *None*

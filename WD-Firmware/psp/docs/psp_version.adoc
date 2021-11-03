@@ -1,0 +1,34 @@
+= psp_version
+The file defines the PSP version and API to fetch it.
+
+|=======================
+| file | psp_version.h
+| author | Nati Rapaport
+| Date  |   13.05.2020
+|=======================
+
+== Types
+=== version sturct (typedef struct)
+Changes in the major number of the version reflect new features.
+[source, c, subs="verbatim,quotes"]
+----
+typedef struct pspVersion
+{
+  u16_t usMajor;
+  u16_t usMinor;
+} pspVersion_t;
+----
+
+
+== APIs
+=== pspGetVersion
+The function return PSP version.
+[source, c, subs="verbatim,quotes"]
+----
+void pspGetVersion(pspVersion_t *pPspVersion);
+----
+.parameters
+* *pPspVersion* - output parameter pointer to copy PSP version structure.
+
+.return
+* *None*

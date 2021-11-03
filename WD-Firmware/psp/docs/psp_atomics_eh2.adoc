@@ -1,0 +1,222 @@
+= psp_atomics_eh2
+The file defines APIs for atomic commands on SweRV EH2.
+
+|=======================
+| file | psp_atomics_eh2.h
+| author | Nati Rapaport
+| Date  |   21.06.2020
+|=======================
+
+== Macros
+Atomic operations macros
+|========================================================================
+| *Name* | *Value*
+| M_PSP_ATOMIC_COMPARE_AND_SET(pAddress, uiExpectedValue, uiDesiredValue)
+  | pspAtomicsCompareAndSet(pAddress, uiExpectedValue, uiDesiredValue);
+| M_PSP_ATOMIC_ENTER_CRITICAL_SECTION(pAddress)
+  | pspAtomicsEnterCriticalSection(pAddress);
+| M_PSP_ATOMIC_EXIT_CRITICAL_SECTION(pAddress)
+  | pspAtomicsExitCriticalSection(pAddress);
+| M_PSP_ATOMIC_AMO_SWAP(pAddress, uiValueToSwap)
+  | pspAtomicsAmoSwap(pAddress, uiValueToSwap);
+| M_PSP_ATOMIC_AMO_ADD(pAddress, uiValueToAdd)
+  | pspAtomicsAmoAdd(pAddress, uiValueToAdd);
+| M_PSP_ATOMIC_AMO_AND(pAddress, uiValueToAndWith)
+  | pspAtomicsAmoAnd(pAddress, uiValueToAndWith);
+| M_PSP_ATOMIC_AMO_OR(pAddress, uiValueToOrWith)
+  | pspAtomicsAmoOr(pAddress, uiValueToOrWith);
+| M_PSP_ATOMIC_AMO_XOR(pAddress, uiValueToXorWith)
+  | pspAtomicsAmoXor(pAddress, uiValueToXorWith);
+| M_PSP_ATOMIC_AMO_MIN(pAddress, uiValueToCompare)
+  | pspAtomicsAmoMin(pAddress, uiValueToCompare);
+| M_PSP_ATOMIC_AMO_MAX(pAddress, uiValueToCompare)
+  | pspAtomicsAmoMax(pAddress, uiValueToCompare);
+| M_PSP_ATOMIC_AMO_MIN_UNSIGINED(pAddress, uiValueToCompare)
+  | pspAtomicsAmoMinUnsigned(pAddress, uiValueToCompare);
+| M_PSP_ATOMIC_AMO_MAX_UNSIGNED(pAddress, uiValueToCompare)
+  | pspAtomicsAmoMaxUnsigned(pAddress, uiValueToCompare);
+|========================================================================
+
+== API
+=== pspAtomicsCompareAndSet
+Compare and set a value in the memory using atomic commands.
+[source, c, subs="verbatim,quotes"]
+----
+D_PSP_NO_INLINE u32_t pspAtomicsCompareAndSet(
+  u32_t* pAddress,
+  u32_t uiExpectedValue,
+  u32_t uiDesiredValue);
+----
+.parameters
+* *pAddress* - Address in the memory to compare and set the value there.
+* *uiExpectedValue* - Expected value in the memory address.
+* *uiDesiredValue* - New value to set at that memory address.
+    
+.return
+* 0 - success. Otherwise - failure
+
+
+=== pspAtomicsEnterCriticalSection
+Run a spin-lock on a parameter in a given memory address.
+[source, c, subs="verbatim,quotes"]
+----
+D_PSP_NO_INLINE void pspAtomicsEnterCriticalSection(u32_t* pAddress);
+----
+.parameters
+* *pAddress* - (a0) address in the memory with the parameter to check.
+    
+.return
+* *None*
+
+
+=== pspAtomicsExitCriticalSection
+Release the lock by the parameter in a given memory address using an atomic command.
+[source, c, subs="verbatim,quotes"]
+----
+D_PSP_NO_INLINE void pspAtomicsExitCriticalSection(u32_t* pAddress);
+----
+.parameters
+* *pAddress* - (a0) address in the memory with the parameter to set.
+    
+.return
+* *None*
+
+
+=== pspAtomicsAmoSwap
+AMO (Atomic Memory Operation) Swap command.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspAtomicsAmoSwap(u32_t* pAddress, u32_t uiValueToSwap);
+----
+.parameters
+
+* *pAddress* - (a0) address in the memory with the parameter to check and add.
+* *uiValueToSwap* - (a1) value to load to that address.
+    
+.return
+* (a0) previous value in the address.
+
+=== pspAtomicsAmoAdd
+AMO (Atomic Memory Operation) Add command.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspAtomicsAmoAdd(u32_t* pAddress, u32_t uiValueToAdd);
+----
+.parameters
+* *pAddress* - (a0) address in the memory with the parameter to check and add.
+* *uiValueToAdd* - (a1) value to add.
+    
+.return
+* (a0) previous value in the address
+
+
+=== pspAtomicsAmoAnd
+AMO (Atomic Memory Operation) bitwise AND command.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspAtomicsAmoAnd(u32_t* pAddress, u32_t uiValueToAndWith);
+----
+.parameters
+
+* *pAddress* - (a0) address in the memory with the parameter to check and do
+bitwise-AND with.
+* *uiValueToAndWith* - (a1) value to do bitwise-AND with the content of the
+given memory.
+    
+.return
+* (a0) previous value in the address.
+
+
+=== pspAtomicsAmoOr
+AMO (Atomic Memory Operation) bitwise OR command.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspAtomicsAmoOr(u32_t* pAddress, u32_t uiValueToOrWith);
+----
+.parameters
+
+* *pAddress* - (a0) address in the memory with the parameter to check and do
+bitwise-OR with.
+* *uiValueToOrWith* - (a1) value to do bitwise-OR with the content of the
+given memory.
+    
+.return
+* (a0) previous value in the address
+
+
+=== pspAtomicsAmoXor
+AMO (Atomic Memory Operation) bitwise XOR command.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspAtomicsAmoXor(u32_t* pAddress, u32_t uiValueToXorWith);
+----
+.parameters
+* *pAddress* - (a0) address in the memory with the parameter to check and do
+bitwise-XOR with.
+* *uiValueToXorWith* - (a1) value to do bitwise-XOR with the content of the
+given memory.
+    
+.return
+* (a0) previous value in the address.
+
+
+=== pspAtomicsAmoMin
+AMO (Atomic Memory Operation) min command.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspAtomicsAmoMin(u32_t* pAddress, u32_t uiValueToCompare);
+----
+.parameters
+* *pAddress* - (a0) address in the memory with the parameter to compare.
+* *uiValueToCompare* - (a1) value to compare with the content of the given
+memory, to determine the minimum.
+    
+.return
+* (a0) previous value in the address
+
+=== pspAtomicsAmoMax
+AMO (Atomic Memory Operation) max command.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspAtomicsAmoMax(u32_t* pAddress, u32_t uiValueToCompare);
+----
+.parameters
+* *pAddress* - (a0) address in the memory with the parameter to compare.
+* *uiValueToCompare* - (a1) value to compare with the content of the given
+memory, to determine the maximum.
+    
+.return
+* (a0) previous value in the address.
+
+
+=== pspAtomicsAmoMinUnsigned
+AMO (Atomic Memory Operation) min command - unsigned.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspAtomicsAmoMinUnsigned(u32_t* pAddress, u32_t uiValueToCompare);
+----
+.parameters
+* *pAddress* - (a0) address in the memory with the parameter to compare
+(unsigned).
+* *uiValueToCompare* - (a1) unsigned value to compare with the content of the
+given memory, to determine the minimum.
+    
+.return
+* (a0) previous value in the address.
+
+
+=== pspAtomicsAmoMaxUnsigned
+AMO (Atomic Memory Operation) max command - unsigned.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspAtomicsAmoMaxUnsigned(u32_t* pAddress, u32_t uiValueToCompare);
+----
+.parameters
+* *pAddress* - (a0) address in the memory with the parameter to compare
+(unsigned).
+* *uiValueToCompare* - (a1) unsigned value to compare with the content of the
+given memory, to determine the maximum.
+    
+.return
+* (a0) previous value in the address.
+

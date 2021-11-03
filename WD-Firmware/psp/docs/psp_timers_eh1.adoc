@@ -1,0 +1,115 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_timers_eh1_ref]]
+= psp_timers_eh1
+The file defines timer api services for EH1 core.
+
+|=======================
+| file | psp_timers_eh1.h
+| author | Nati Rapaport
+| Date  |  05.05.2020
+|=======================
+
+== Definitions
+|====
+| *Definition* |*Value*
+|D_PSP_INTERNAL_TIMER0 |1
+|D_PSP_INTERNAL_TIMER1 |2
+|====
+
+
+==  APIs
+=== pspMachineInternalTimerCounterSetupAndRun
+Setup and activate internal core timer.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimerCounterSetupAndRun(
+    u32_t uiTimer,
+    u64_t udPeriodCycles);
+----
+
+.parameters
+* *uiTimer* - Indicates which timer to setup and run.
+* *udPeriodCycles* - Defines timer period in cycles.
+
+.return
+* *None*
+
+
+=== pspMachineInternalTimerCounterGet
+Get core internal time counter value.
+[source, c, subs="verbatim,quotes"]
+----
+u64_t pspMachineInternalTimerCounterGet(u32_t uiTimer)
+----
+.parameters
+* *uiTimer* - Indicates which timer to get the counter value.
+
+.return
+* *u64_t* - Timer counter value.
+
+
+=== pspMachineInternalTimerCompareCounterGet
+Get core internal timer compare counter value.
+[source, c, subs="verbatim,quotes"]
+----
+u64_t pspMachineInternalTimerCompareCounterGet(u32_t uiTimer);
+----
+.parameters
+* *uiTimer* - Indicates which timer to get the compare-counter value.
+
+.return
+* *u64_t* – Time compare counter value.
+
+
+=== pspMachineInternalTimerEnableCountInSleepMode
+Enable core internal timer counting when core in sleep mode.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimerEnableCountInSleepMode(u32_t uiTimer)
+----
+.parameters
+* *uiTimer* - Indicates which timer to set up.
+
+.return
+* *None*
+
+
+=== pspMachineInternalTimerDisableCountInSleepMode
+Disable core internal timer counting when core in sleep mode.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimerDisableCountInSleepMode(u32_t uiTimer);
+----
+.parameters
+* *uiTimer* - Indicates which timer to setup.
+
+.return
+* *None*
+
+=== psp Machine Internal Timer Enable Count In Stall Mode
+Enable core internal timer counting when core in the stall.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimerEnableCountInStallMode(u32_t uiTimer);
+----
+.parameters
+* *uiTimer* - Indicates which timer to setup.
+
+.return
+* *None*
+
+
+=== pspMachineInternalTimerDisableCountInStallMode
+Disable core internal timer counting when core in in stall.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimerDisableCountInStallMode(u32_t uiTimer);
+----
+.parameters
+
+* *uiTimer* - Indicates which timer to set up.

@@ -1,0 +1,170 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+= psp_bitmanip_el2
+The file contains APIs for bit-manipulation operations on SweRV EL2. It supports
+bit-manipulation extensions as defines by version 1.0.0-rc1 excluding
+Zba-extension instructions (sh1add, sh2add, sh3add). In additions, Zbp extension
+is also supported by the core but not by bit-manip ver 1.0.0-rc1 therefore it
+will not be supported in PSP.
+
+|=======================
+| file | psp_bitmanip_el2.h
+| author | Nati Rapaport
+| Date  |  23.07.2020
+|=======================
+
+== Definitions
+|====
+| *Definition* |*Value*
+| D_PSP_HIGHEST_BIT_NUMBER |  __riscv_xlen-1
+|====
+
+
+== Macros
+=== Zbb, Zbc and Zbs extensions instructions.
+|========================================================================
+| *Definition* |*Comment*
+| M_PSP_BITMANIP_CLZ(argument , result) | clz (count leading zeros) command
+- count the number of zero-bits up to the most significant '1' bit.
+| M_PSP_BITMANIP_CTZ(argument , result) | ctz (count trailing zeros) command
+- count number of zero-bits from the least significant '1' bit.
+| M_PSP_BITMANIP_PCNT(argument, number_of_ones)
+| pcnt (population count of '1' bits) command - count number of '1' bits in the
+argument.
+| M_PSP_BITMANIP_MIN(argument1, argument2, smallest_argument)
+|  min command - minimum of the 1'st and 2'nd arguments, compared as signed
+integers.
+| M_PSP_BITMANIP_MAX(argument1, argument2, largest_argument)
+| max command - maximum of the 1'st and 2'nd arguments, compared as signed
+integers.
+| M_PSP_BITMANIP_MINU(argument1, argument2, smallest_argument)
+|  minu command - minimum of the 1'st and 2'nd arguments, compared as unsigned
+integers.
+| M_PSP_BITMANIP_MAXU(argument1, argument2, largest_argument)
+|  maxu command - maximum of the 1'st and 2'nd arguments, compared as unsigned
+integers.
+| M_PSP_BITMANIP_SEXTB(argument , result)
+|  sextb - sign extend byte in a given 32bit argument.
+| M_PSP_BITMANIP_SEXTH(argument , result)
+|  sexth - sign extend half-word (16 bits) in a given 32bit argument.
+|  M_PSP_BITMANIP_REV8(argument_to_reverse, swapped_result)
+|   rev8 command - swaps bytes in the given 32bit argument.
+|   M_PSP_BITMANIP_ORCB(argument_to_or, or_result)
+|   orc.b command.
+|  M_PSP_BITMANIP_SBSET(argument, bit_position, bit_set_result)
+| sbset command - single bit set, in a given position.
+|   M_PSP_BITMANIP_SBSETI(argument, bit_position, bit_set_result)
+| sbseti command - same as sbset command but assembly uses 2'nd parameter as
+immediate number rather than using a register.
+|   M_PSP_BITMANIP_SBCLR(argument, bit_position, bit_clr_result)
+| sbclr command - single bit clear, in a given position.
+| M_PSP_BITMANIP_SBCLRI(argument, bit_position, bit_clr_result)
+| sbclri command - same as sbclr command but assembly uses 2'nd parameter as
+immediate number rather than using a register.
+| M_PSP_BITMANIP_SBINV(argument, bit_position, bit_inv_result)
+| sbinv command - single bit invert, in a given position.
+| M_PSP_BITMANIP_SBINVI(argument, bit_position, bit_inv_result)
+|  sbinvi command - same as sbinv command but assembly uses 2'nd parameter as
+immediate number rather than using a register.
+| M_PSP_BITMANIP_SBEXT(argument, bit_position, bit_ext_result)
+|  sbext command - single bit extract, from a given position.
+| M_PSP_BITMANIP_SBEXTI(argument, bit_position, bit_ext_result)
+|  sbexti command - same as sbext command but assembly uses 2'nd parameter as
+immediate number rather than using a register.
+| M_PSP_BITMANIP_FFS(argument, result)
+|  Find First Set macro - returns the position of the 1'st '1' bit in the input
+argument. [red]#*Note*# - This macro does not support a case of input
+argument = 0. In the case of input=0, the returned value is -1.
+| M_PSP_BITMANIP_FLS(argument, result) |  Find Last Set macro - returns the
+last '1' position in the input argument. [red]#*Note*# - This macro does
+not support a case of input argument = 0. In the case of input=0, the returned
+value is -1.
+| M_PSP_BITMANIP_CLMUL(argument1, argument2, result) | clmul command - produces
+the lower half of the 2*XLEN carry-less product of argument1 and argument2.
+|M_PSP_BITMANIP_CLMULH(argument1, argument2, result) | clmulh command - produces
+the upper half of the 2*XLEN carry-less product of argument1 and argument2.
+| M_PSP_BITMANIP_CLMULR(argument1, argument2, result) | clmulr command -
+produces bits [2*XLEN−2, XLEN-1] of the 2*XLEN carry-less product of argument1
+and argument2.
+| M_PSP_BITMANIP_ZEXTH(argument1, result) | zext.h command - zero-extends the
+least-significant halfword of the source to XLEN by inserting 0’s into all of
+the bits more significant than 15.
+|========================================================================
+
+=== ZBA-extension instructions
+The following instructions are a part of bit-manip ver 1.0.0-rc1, but may
+not be supported older compilers.
+|========================================================================
+| *Definition* |*Comment*
+| M_PSP_BITMANIP_SH1ADD(argument1, argument2, result) | sh1add command - shifts
+argument1 to the left by 1 bit and adds it to argument2.
+| M_PSP_BITMANIP_SH2ADD(argument1, argument2, result) | sh2add command - shifts
+argument1 to the left by 2 bits and adds it to argument2.
+| M_PSP_BITMANIP_SH3ADD(argument1, argument2, result) | sh3add command - shifts
+argument1 to the left by 3 bits and adds it to argument2.
+|========================================================================
+
+=== ZBP-extension instructions
+Are not supported by the current PSP.
+|========================================================================
+| *Definition* |*Comment*
+| M_PSP_BITMANIP_ANDN(argument_to_and, argument_to_invert, result)
+| andn command - bitwise AND of 1'st argument and inverted 2'nd argument.
+|  M_PSP_BITMANIP_ORN(argument_to_or, argument_to_invert, result)
+| orn command - bitwise OR of 1'st argument and inverted 2'nd argument.
+|  M_PSP_BITMANIP_XNOR(argument_to_xor, argument_to_invert, result)
+|  xnor command - bitwise XOR of 1'st argument and inverted 2'nd argument.
+| M_PSP_BITMANIP_PACK(argument1, argument2, result)
+|  pack command - pack lower halves of 2 arguments into one, with 1'st
+argument-half in the lower output-half and 2'nd argument-half in the upper
+output-half.
+| M_PSP_BITMANIP_PACKU(argument1, argument2, result)
+| packu command - pack upper halves of 2 arguments into one, with 1'st
+argument-half in the lower output-half and 2'nd argument-half in the upper
+output-half.
+| M_PSP_BITMANIP_PACKH(argument1, argument2, result)
+| packh command - pack least-significant BYTES of 2 input arguments into 16
+least-significant BITS of returned result, zero extending the rest of the
+returned result.
+| M_PSP_BITMANIP_ROL(argument_to_rotate, number_of_rtoations, result)
+| rol command - Rotate left the first argument, N times (2'nd argument). This
+operation is similar to shift-left operation from the base spec, except it shift
+in the values from the opposite side of the register, in order. This is also
+called ‘circular shift’.
+|  M_PSP_BITMANIP_ROR(argument_to_rotate, number_of_rtoations, result)
+|  ror command - Rotate right the first argument, N times (2'nd argument).
+| M_PSP_BITMANIP_RORI(argument_to_rotate, number_of_rtoations, result)
+|  rori command - same as ror command but assembly uses 2'nd parameter as
+immediate number rather than using a register.
+| M_PSP_BITMANIP_REV(argument_to_reverse, swapped_result)
+|  rev command - reverse the bits in the given argument (i.e. swaps bits 0 and
+31, 1 and 30 etc.).
+| M_PSP_BITMANIP_ORC16(argument_to_or, or_result)
+| orc.16 command.
+|========================================================================
+
+
+=== Macros extension for  SweRV EL2 64-bit
+|========================================================================
+| *Definition* |*Comment*
+| M_PSP_BITMANIP_ADDWU(argument1, argument2, result)
+|  addwu command - add arg2 to arg1 and then zero upper 32 bits.
+| M_PSP_BITMANIP_ADDIWU(argument1, argument2, result)
+|  addiwu command - same as addwu command but assembly uses 2'nd parameter as
+immediate number rather than using a register.
+| M_PSP_BITMANIP_SUBWU(argument1, argument2, result)
+|  subwu command - subtract arg2 from arg1 and then zero upper 32 bits.
+| M_PSP_BITMANIP_ADDUW(argument1, argument2, result)
+|  addu.w command - zero upper 32 bits of arg2 and then add it to arg1.
+|  M_PSP_BITMANIP_SUBUW(argument1, argument2, result)
+| subu.w command - zero upper 32 bits of arg2 and then subtract it from arg1.
+|  M_PSP_BITMANIP_SLLIUW(argument_to_shift, num_of_shifts, result)
+| slliu.w command - zero upper 32 bits of input argument and then shift-left it
+num_of_shifts times.
+|========================================================================
+
+ 

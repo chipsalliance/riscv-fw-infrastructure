@@ -1,0 +1,114 @@
+[[psp_csrs_el2_ref]]
+= psp_csrs_el2
+
+|=======================
+| file | psp_csrs_el2.h
+| author | Nati Rapaport
+| Date  |   8.09.2020
+|=======================
+
+== Definitions
+Definitions of Swerv's (EL2 version) CSRs
+
+=== Non standard CSRs
+==== mscause CSR
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* | *Comment* 
+| D_PSP_MSCAUSE_NUM              | 0x7FF       | Machine Secondary cause CSR
+|===================================
+
+===== Instruction access fault
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* 
+| D_PSP_I_SIDE_BUS_ERROR                                       | 0
+| D_PSP_I_SIDE_DOUBLE_BIT_ECC_ERROR                            | 1
+| D_PSP_I_SIDE_UNMAPPED_ADDRESS_ERROR                          | 2
+| D_PSP_I_SIDE_ACCESS_OUT_OF_MPU_RANGE                         | 3
+|===================================
+
+===== Illegal instruction
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* 
+| D_PSP_INSTRUCTION_DATA                                       | 0
+|===================================
+
+===== Breakpoint
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* 
+| D_PSP_EBREAK_NOT_TODEBUG_MODE                                | 0
+| D_PSP_TRIGGER_HIT_NOT_TO_DEBUG_MODE                          | 1
+|===================================
+
+===== Load address misaligned
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* 
+| D_PSP_D_SIDE_LOAD_ACROSS_REGION_BOUNDARY                     | 0
+| D_PSP_D_SIDE_SIZE_MISALIGNED_LOAD_TO_NON_IDEMPOTENT_ADDRESS  | 1
+|===================================
+
+===== Load access fault
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* 
+| D_PSP_D_SIDE_CORE_LOCAL_LOAD_UNMAPPED_ADDRESS_ERROR          | 0
+| D_PSP_D_SIDE_DCCM_LOAD_DOUBLE_BIT_ECC_ERROR                  | 1
+| D_PSP_D_SIDE_LOAD_STACK_CHECK_ERROR                          | 2
+| D_PSP_D_SIDE_LOAD_SIDE_LOAD_ACCESS_OUT_OF_MPU_RANGE          | 3
+| D_PSP_D_SIDE_64_LOAD_ACCESS_ERROR                            | 4
+| D_PSP_D_SIDE_LOAD_REGION_PREDICTION_ERROR                    | 5
+| D_PSP_D_SIDE_PIC_LOAD_ACCESS_ERROR                           | 6
+|===================================
+
+
+===== Store/AMO address misaligned
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* 
+| D_PSP_D_SIDE_STORE_ACROSS_REGION_BOUNDARY                    | 0
+| D_PSP_D_SIDE_SIZE_MISALIGNED_STORE_TO_NON_IDEMPOTENT_ADDRESS | 1
+|===================================
+
+===== Store/AMO access fault
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* 
+| D_PSP_D_SIDE_CORE_LOCAL_STORE_UNMAPPED_ADDRESS_ERROR         | 0
+| D_PSP_D_SIDE_DCCM_STORE_DOUBLE_BIT_ECC_ERROR                 | 1
+| D_PSP_D_SIDE_STORE_STACK_CHECK_ERROR                         | 2
+| D_PSP_D_SIDE_STORE_SIDE_LOAD_ACCESS_OUT_OF_MPU_RANGE         | 3
+| D_PSP_D_SIDE_64_STORE_ACCESS_ERROR                           | 4
+| D_PSP_D_STORE_REGION_PREDICTION_ERROR                        | 5
+| D_PSP_D_SIDE_PIC_STORE_ACCESS_ERROR                          | 6
+|===================================
+
+===== Environment call from M-mode
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* 
+| D_PSP_ECALL                                                  | 0
+|===================================
+
+=== Force-Debug CSRs
+[%hardbreaks]
+|===================================
+| *Definition* | *Value* | *Comment* 
+| D_PSP_MFDHT_NUM             | 0x7CE     | Forced Debug Halt Threshold register
+| D_PSP_MFDHT_ENABLE_MASK     | 0x00000001 | bit 0
+| D_PSP_MFDHT_THRESHOLD_MASK  | 0x0000003E | Power-of-two exponent of timeout threshold - bits 1..5
+| D_PSP_MFDHT_THRESHOLD_SHIFT | 1 |
+| D_PSP_MFDHS_NUM             | 0x7CF       | Forced Debug Halt Status register
+| D_PSP_MFDS_LSU_STATUS_MASK  | 0x00000001  | LSU bus transaction termination status - bit 0
+| D_PSP_MFDS_IFU_STATUS_MASK  | 0x00000002  | IFU bus transaction termination status - bit 1
+|===================================
+
+=== Performance monitoring control CSR
+[%hardbreaks]
+|===================================
+| *Definition* | *Value*
+| D_PSP_MCOUNTINHIBIT_NUM | 0x320
+|===================================

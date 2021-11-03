@@ -1,0 +1,24 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_nmi_el2_ref]]
+= psp_nmi_el2
+The file defines the PSP NMI interfaces for features of SweRV EL2.
+
+|=======================
+| file | psp_nmi_el2.h
+| author | Nati Rapaport
+| Date  | 18.08.2020
+|=======================
+
+== Definitions
+Additional causes that can be used for registring NMI handlers.
+|========================================================================
+| *Definition* |*Value*
+| D_PSP_NMI_FAST_INT_DOUBLE_BIT_ECC_ERROR |   0xF0001000
+| D_PSP_NMI_FAST_INT_DCCM_ACCESS_ERROR    |  0xF0001001
+| D_PSP_NMI_FAST_INT_NON_DCCM_REGION_ERROR | 0xF0001002
+|========================================================================

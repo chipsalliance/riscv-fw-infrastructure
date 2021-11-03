@@ -1,0 +1,373 @@
+[[psp_ext_interrupts_eh1_ref]]
+= psp_ext_interrupts_eh1
+The file defines the PSP external interrupts interfaces for SweRV EH1.
+
+|=======================
+| file | psp_ext_interrupts_eh1.h
+| author | Nati Rapaport
+| Date  |   16.03.2020
+|=======================
+
+== Definitions
+=== External-Interrupts type
+|========================================================================
+| *Definition* |*Value*
+| D_PSP_EXT_INT_LEVEL_TRIG_TYPE  | 0
+| D_PSP_EXT_INT_EDGE_TRIG_TYPE   | 1
+|========================================================================
+
+=== External-Interrupts polarity
+|========================================================================
+| *Definition* |*Value*
+| D_PSP_EXT_INT_ACTIVE_HIGH  | 0
+| D_PSP_EXT_INT_ACTIVE_LOW   | 1
+|========================================================================
+
+=== External-Interrupts priority-order
+|========================================================================
+| *Definition* |*Value*
+| D_PSP_EXT_INT_STANDARD_PRIORITY  | 0
+| D_PSP_EXT_INT_REVERSED_PRIORITY  | 1
+|========================================================================
+
+=== External Interrupt Priorities
+While all the values below are valid values of priority, Setting the value 0 for
+the standard order (15 for reversed order) priority effectively disables the
+corresponding external interrupt, because it is always lower than any priority
+threshold.
+|========================================================================
+| *Definition* |*Value* | *Comments*
+| D_PSP_EXT_INT_PRIORITY_0            | 0 | In standard order - lowest level.
+In reversed order - highest level
+| D_PSP_EXT_INT_PRIORITY_1            | 1 |
+| D_PSP_EXT_INT_PRIORITY_2            | 2 |
+| D_PSP_EXT_INT_PRIORITY_3            | 3 |
+| D_PSP_EXT_INT_PRIORITY_4            | 4 |
+| D_PSP_EXT_INT_PRIORITY_5            | 5 |
+| D_PSP_EXT_INT_PRIORITY_6            | 6 |
+| D_PSP_EXT_INT_PRIORITY_7            | 7 |
+| D_PSP_EXT_INT_PRIORITY_8            | 8 |
+| D_PSP_EXT_INT_PRIORITY_9            | 9 |
+| D_PSP_EXT_INT_PRIORITY_10           | 10 |
+| D_PSP_EXT_INT_PRIORITY_11           | 11 |
+| D_PSP_EXT_INT_PRIORITY_12           | 12 |
+| D_PSP_EXT_INT_PRIORITY_13           | 13 |
+| D_PSP_EXT_INT_PRIORITY_14           | 14 |
+| D_PSP_EXT_INT_PRIORITY_15           | 15 | In standard order - highest level.
+In reversed order - lowest level
+|========================================================================
+
+
+=== External Interrupt Threshold
+Only an external interrupt with a *priority* strictly higher than the threshold
+will be served. *Note:* In standard mode, "higher priority" is a higher number,
+but in reversed mode, "higher priority" is a lower number.
+|========================================================================
+| *Definition* |*Value* 
+| D_PSP_EXT_INT_THRESHOLD_0       | 0
+| D_PSP_EXT_INT_THRESHOLD_1       | 1
+| D_PSP_EXT_INT_THRESHOLD_2       | 2
+| D_PSP_EXT_INT_THRESHOLD_3       | 3
+| D_PSP_EXT_INT_THRESHOLD_4       | 4
+| D_PSP_EXT_INT_THRESHOLD_5       | 5
+| D_PSP_EXT_INT_THRESHOLD_6       | 6
+| D_PSP_EXT_INT_THRESHOLD_7       | 7
+| D_PSP_EXT_INT_THRESHOLD_8       | 8
+| D_PSP_EXT_INT_THRESHOLD_9       | 9
+| D_PSP_EXT_INT_THRESHOLD_10      | 10
+| D_PSP_EXT_INT_THRESHOLD_11      | 11
+| D_PSP_EXT_INT_THRESHOLD_12      | 12
+| D_PSP_EXT_INT_THRESHOLD_13      | 13
+| D_PSP_EXT_INT_THRESHOLD_14      | 14
+| D_PSP_EXT_INT_THRESHOLD_15      | 15
+|========================================================================
+
+== Macros
+|========================================================================
+| *Name* |*Comment*
+| M_PSP_MACHINE_EXT_INT_PRIORITY_SET_TO_HIGHEST_VALUE  | Set the highest
+priority level in meiplS (External Interrupt Priority Level Register). In case
+of standard-priority-order, the priority is 15, in case of reversed priority
+order - 0
+
+|M_PSP_MACHINE_EXT_INT_PRIORITY_SET_TO_MASKED_VALUE | When set this priority
+level in meiplS (External Interrupt Priority Level Register), the corresponding
+interrupt will not be served. In the case of standard-priority-order, the
+priority is 0, in case of reversed priority order - 15
+
+| M_PSP_MACHINE_EXT_INT_THRESHOLD_MASK_ALL_VALUE | When setting this threshold
+level in meipt (External Interrupt Priority Threshold Register), all interrupts
+will be masked (not served). In the case of standard priority order - 15, in
+case of reversed priority order - 0.
+
+| M_PSP_MACHINE_EXT_INT_THRESHOLD_UNMASK_ALL_VALUE | When setting this threshold
+level in meipt (External Interrupt Priority Threshold Register), no interrupt
+will be masked (all served). In case of standard priority order - 0, in case of
+reversed priority order - 15
+|========================================================================
+
+
+== APIs
+=== pspMachineExtInterruptSetVectorTableAddress
+Set external interrupts vector-table address at MEIVT CSR.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineExtInterruptSetVectorTableAddress(void* pExtIntVectTable);
+----
+.parameters
+
+* *pExtIntVectTable* - Pointer to the vector-table.
+
+.return
+* *None*
+
+=== pspMachineExtInterruptRegisterISR
+This function registers an external interrupt handler
+[source, c, subs="verbatim,quotes"]
+----
+fptrPspInterruptHandler_t pspMachineExtInterruptRegisterISR(
+    u32_t uiVectorNumber,
+    fptrPspInterruptHandler_t pIsr,
+    void* pParameter);
+----
+.parameters
+
+* *uiVectorNumber* - The number of the external interrupt to register.
+* *pIsr* - The ISR to register.
+* *pParameter* - NOT IN USE for baremetal implementation.
+
+.return
+* *pOldIsr* - Pointer to the previously registered ISR
+(Null in case of failure).
+
+
+=== pspMachineExtInterruptDisableNumber
+This function disables a specified external interrupt.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineExtInterruptDisableNumber(u32_t uiIntNum);
+----
+.parameters
+* *intNum* - The number of the external interrupt to disable.
+
+.return
+* *None*
+
+
+=== pspMachineExtInterruptEnableNumber
+This function enables a specified external interrupt.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineExtInterruptEnableNumber(u32_t uiIntNum);
+----
+.parameters
+* *intNum* - The number of the external interrupt to enable.
+
+.return
+* *None*
+
+
+=== pspMachineExtInterruptIsPending
+This function checks whether a given external interrupt is pending.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspMachineExtInterruptIsPending(u32_t uiExtInterrupt);
+----
+.parameters
+* *uiExtInterrupt* - Number of external interrupt.
+
+.return
+* pending (1) or not (0)
+
+
+=== pspMachineExtInterruptSetType
+This function sets external-interrupt type (Level-triggered or Edge-triggered).
+[source, c, subs="verbatim,quotes"]
+----
+void  pspMachineExtInterruptSetType(u32_t uiIntNum, u32_t uiIntType);
+----
+.parameters
+* *uiIntNum* - Number of external interrupt.
+* *uiIntType* - Interrupt type. Supported values are:
+  - D_PSP_EXT_INT_LEVEL_TRIG_TYPE
+  - D_PSP_EXT_INT_EDGE_TRIG_TYPE
+
+.return
+* *None*
+
+
+=== pspMachineExtInterruptSetPolarity
+This function set external-interrupt polarity (active-high or active-low)
+[source, c, subs="verbatim,quotes"]
+----
+void  pspMachineExtInterruptSetPolarity(u32_t uiIntNum, u32_t uiPolarity);
+----
+.parameters
+* *uiIntNum* - Number of external interrupt
+* *uiPolarity* - External interrupt polarity. Supported values are:
+  - D_PSP_EXT_INT_ACTIVE_HIGH
+  - D_PSP_EXT_INT_ACTIVE_LOW 
+
+.return
+* *None*
+
+
+=== pspMachineExtInterruptClearPendingInt
+This function clears the indication of pending interrupt.
+[source, c, subs="verbatim,quotes"]
+----
+void  pspMachineExtInterruptClearPendingInt(u32_t uiIntNum);
+----
+.parameters
+* *uiIntNum* - Number of external interrupt.
+
+.return
+* *None*
+
+=== pspMachineExtInterruptSetPriorityOrder
+This function set Priority Order (Standard or Reserved).
+[source, c, subs="verbatim,quotes"]
+----
+void  pspMachineExtInterruptSetPriorityOrder(u32_t uiPriorityOrder);
+----
+.parameters
+* *uiPriorityOrder* - Priority order. Supported values are:
+  - D_PSP_EXT_INT_STANDARD_PRIORITY
+  - D_PSP_EXT_INT_REVERSED_PRIORITY
+
+.return
+* *None*
+
+
+=== pspMachineExtInterruptSetPriority
+This function sets the priority of a specified external interrupt.
+[source, c, subs="verbatim,quotes"]
+----
+void  pspMachineExtInterruptSetPriority(u32_t uiIntNum, u32_t uiPriority);
+----
+.parameters
+
+* *uiIntNum* - The number of the external interrupt to disable.
+* *uiPriority* - Priority to be set. Supported values are:
+  - D_PSP_EXT_INT_PRIORITY_0 (only for *reversed* order)
+  - D_PSP_EXT_INT_PRIORITY_1
+  - D_PSP_EXT_INT_PRIORITY_2
+  - D_PSP_EXT_INT_PRIORITY_3
+  - D_PSP_EXT_INT_PRIORITY_4
+  - D_PSP_EXT_INT_PRIORITY_5
+  - D_PSP_EXT_INT_PRIORITY_6
+  - D_PSP_EXT_INT_PRIORITY_7
+  - D_PSP_EXT_INT_PRIORITY_8
+  - D_PSP_EXT_INT_PRIORITY_9
+  - D_PSP_EXT_INT_PRIORITY_10
+  - D_PSP_EXT_INT_PRIORITY_11
+  - D_PSP_EXT_INT_PRIORITY_12
+  - D_PSP_EXT_INT_PRIORITY_13
+  - D_PSP_EXT_INT_PRIORITY_14
+  - D_PSP_EXT_INT_PRIORITY_15 (only for *standard* order)
+
+.return
+* *None*
+
+
+=== pspMachineExtInterruptsSetThreshold
+This function sets the priority threshold of the external interrupts.
+[source, c, subs="verbatim,quotes"]
+----
+void  pspMachineExtInterruptsSetThreshold(u32_t uiThreshold);
+----
+.parameters
+* *threshold* - Priority threshold. Supported values are:
+  - D_PSP_EXT_INT_THRESHOLD_0
+  - D_PSP_EXT_INT_THRESHOLD_1
+  - D_PSP_EXT_INT_THRESHOLD_2
+  - D_PSP_EXT_INT_THRESHOLD_3
+  - D_PSP_EXT_INT_THRESHOLD_4
+  - D_PSP_EXT_INT_THRESHOLD_5
+  - D_PSP_EXT_INT_THRESHOLD_6
+  - D_PSP_EXT_INT_THRESHOLD_7
+  - D_PSP_EXT_INT_THRESHOLD_8
+  - D_PSP_EXT_INT_THRESHOLD_9
+  - D_PSP_EXT_INT_THRESHOLD_10
+  - D_PSP_EXT_INT_THRESHOLD_11
+  - D_PSP_EXT_INT_THRESHOLD_12
+  - D_PSP_EXT_INT_THRESHOLD_13
+  - D_PSP_EXT_INT_THRESHOLD_14
+  - D_PSP_EXT_INT_THRESHOLD_15
+
+.return
+* *None*
+
+
+=== pspMachineExtInterruptsSetNestingPriorityThreshold
+This function sets the nesting priority threshold of the external interrupts.
+[source, c, subs="verbatim,quotes"]
+----
+void  pspMachineExtInterruptsSetNestingPriorityThreshold(
+      u32_t uiNestingPriorityThreshold);
+----
+.parameters
+* *uiNestingPriorityThreshold* - Nesting priority threshold. Supported values
+are:
+  - D_PSP_EXT_INT_THRESHOLD_0
+  - D_PSP_EXT_INT_THRESHOLD_1
+  - D_PSP_EXT_INT_THRESHOLD_2
+  - D_PSP_EXT_INT_THRESHOLD_3
+  - D_PSP_EXT_INT_THRESHOLD_4
+  - D_PSP_EXT_INT_THRESHOLD_5
+  - D_PSP_EXT_INT_THRESHOLD_6
+  - D_PSP_EXT_INT_THRESHOLD_7
+  - D_PSP_EXT_INT_THRESHOLD_8
+  - D_PSP_EXT_INT_THRESHOLD_9
+  - D_PSP_EXT_INT_THRESHOLD_10
+  - D_PSP_EXT_INT_THRESHOLD_11
+  - D_PSP_EXT_INT_THRESHOLD_12
+  - D_PSP_EXT_INT_THRESHOLD_13
+  - D_PSP_EXT_INT_THRESHOLD_14
+  - D_PSP_EXT_INT_THRESHOLD_15
+
+.return
+* *None*
+
+
+=== pspMachineExtInterruptGetClaimId
+This function gets the current selected external interrupt (claim-id).
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspMachineExtInterruptGetClaimId(void);
+----
+.parameters
+* *None*
+
+.return
+* *u32_t* - Claim-id number.
+
+
+=== pspMachineExtInterruptGetPriority
+This function gets the priority of the currently served external interrupt.
+[source, c, subs="verbatim,quotes"]
+----
+u32_t pspMachineExtInterruptGetPriority(void);
+----
+.parameters
+
+* *None*
+
+.return
+* *u32_t* - Priority level. Supported values are:
+  - D_PSP_EXT_INT_PRIORITY_0 (only for *reversed* order)
+  - D_PSP_EXT_INT_PRIORITY_1
+  - D_PSP_EXT_INT_PRIORITY_2
+  - D_PSP_EXT_INT_PRIORITY_3
+  - D_PSP_EXT_INT_PRIORITY_4
+  - D_PSP_EXT_INT_PRIORITY_5
+  - D_PSP_EXT_INT_PRIORITY_6
+  - D_PSP_EXT_INT_PRIORITY_7
+  - D_PSP_EXT_INT_PRIORITY_8
+  - D_PSP_EXT_INT_PRIORITY_9
+  - D_PSP_EXT_INT_PRIORITY_10
+  - D_PSP_EXT_INT_PRIORITY_11
+  - D_PSP_EXT_INT_PRIORITY_12
+  - D_PSP_EXT_INT_PRIORITY_13
+  - D_PSP_EXT_INT_PRIORITY_14
+  - D_PSP_EXT_INT_PRIORITY_15 (only for *standard* order)

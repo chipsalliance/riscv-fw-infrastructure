@@ -1,0 +1,27 @@
+[[psp_int_vect_ref]]
+= psp_int_vect
+Define the interrupts vector table.
+
+|=======================
+| file | psp_int_vect.h
+| author | Nati Rapaport
+| Date  |   12.07.2020
+|=======================
+
+== Definitions
+|========================================================================
+| *Definition* |*Value*
+| M_PSP_VECT_TABLE | psp_vect_table
+|========================================================================
+
+
+== External Prototypes
+[source, c, subs="verbatim,quotes"]
+----
+void psp_vect_table(void);
+----
+.parameters
+* *None*
+
+.return
+* *None*

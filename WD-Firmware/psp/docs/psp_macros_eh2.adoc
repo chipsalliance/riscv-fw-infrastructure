@@ -1,0 +1,27 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_macros_eh2_ref]]
+=  psp_macros_eh2
+Macros for Swerv EH2 - information and functionalities of core and harts (HW
+threads).
+
+|=======================
+| file | psp_macros_eh2.h
+| author | Nati Rapaport
+| Date  |   08.07.2020
+|=======================
+
+==  Macros
+=== Core/Hart Macros
+|======================================================
+|M_PSP_MACHINE_GET_CORE_ID()      | Get Core-Id. Available in MACHINE mode only.
+|M_PSP_MACHINE_GET_HART_ID()      | Get HART-Id. Available in MACHINE mode only.
+|M_PSP_MACHINE_GET_NUM_OF_HARTS() | GET NUM OF HARTS. Available in MACHINE mode
+only.
+|M_PSP_MACHINE_START_HART1()      | Start Hart1. Available in MACHINE mode only.
+|======================================================
+

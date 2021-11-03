@@ -1,0 +1,10 @@
+[[psp_macros_asm_eh1_ref]]
+= psp_macros_asm_eh1
+
+== Macros
+===  Call external interrupt handler
+|==================================================
+| *Definition* | *Comment* 
+| M_PSP_CALL_EXT_INT_HANDLER | Macro for calling the root external interrupt
+handler.
+|==================================================

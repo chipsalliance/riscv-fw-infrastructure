@@ -1,0 +1,90 @@
+:toc:
+:sectnums:
+:doctype: book
+:toclevels: 5
+:sectnumlevels: 5
+
+[[psp_macros_ref]]
+=  psp_macros
+The file defines the PSP macros.
+
+|=======================
+| file | psp_macros.h
+| author |  Ronen Haen
+| Date  |  20.05.2019
+|=======================
+
+== Macros
+===  Macros of CSRs handling
+|==================================================
+| *Definition* | *Comment* 
+| M_PSP_READ_CSR(csr)                           | Read CSR into uint32_t
+variable.
+| M_PSP_WRITE_CSR(csr, val)                     | Write val into CSR.
+| M_PSP_SET_CSR(csr, bits)                      | Set bits fo CSR.
+| M_PSP_CLEAR_CSR(csr, bits)                    | Clear bits of CSR.
+| M_PSP_SWAP_CSR(read_val, csr, write_val)      | Read from CSR to read_val
+variable and write write_val to CSR.
+| M_PSP_SET_AND_READ_CSR(read_val, csr, bits)   | Read CSR value into read_val
+and then write into CSR bitwise OR of bits and the original CSR value.
+| M_PSP_CLEAR_AND_READ_CSR(read_val, csr, bits) | Read CSR into read_val and
+then clear bits of the CSR.
+|==================================================
+
+===  read/write/set/clear register Macros
+|==================================================
+| *Definition* | *Comment*
+| M_PSP_WRITE_REGISTER_32(reg, value) | Write value into reg.
+| M_PSP_READ_REGISTER_32(reg)         | Return the value of reg.
+| M_PSP_SET_REGISTER_32(reg, bits)    | Set bits of reg.
+| M_PSP_CLEAR_REGISTER_32(reg, bits)  | Clear bits of reg.
+| M_PSP_WRITE_REGISTER_8(reg, value)  | Write value into reg. (8 of least
+significant bits)
+| M_PSP_READ_REGISTER_8(reg)          | Return the value of reb. (8 of least
+significant bits)
+| M_PSP_SET_REGISTER_8(reg, bits)     | Set bits of reg. (8 of least significant
+bits)
+| M_PSP_CLEAR_REGISTER_8(reg, bits)   | Clear bits of reg. (8 of least
+significant bits)
+|==================================================
+
+=== Assembly instructions Macros
+|==================================================
+| *Definition* | *Comment*
+| M_PSP_EBREAK()           | Makes a request of the debugger by raising a
+Breakpoint exception.
+| M_PSP_ECALL()            | Makes a request of the execution environment by
+raising the Environment Call exception.
+| M_PSP_NOP()              | No operation. PC is advanced to the next
+instruction.
+| M_PSP_MEMORY_BARRIER()   | Forces compiler optimizer to *not* re-order memory
+accesses across the barrier.
+|==================================================
+
+=== Divide and round Macros
+|==================================================
+| *Definition* | *Comment*
+| M_PSP_DIV_AND_ROUND_CEILING(value, divisor) |  Divides the number "value" and
+applies _ceiling rounding to the result.
+| M_PSP_DIV_AND_ROUND_FLOOR(value, divisor) | Divides the number "value" and
+applies _floor rounding to the result.
+|==================================================
+
+=== Other Macros
+|==================================================
+| *Definition* | *Comment*
+| M_PSP_BUILTIN_EXPECT(condition, expected) | __builtin_expect instruction
+provides branch prediction information. The condition parameter is the expected
+comparison value. If it is equal to 1 (true), the condition is likely to be
+true; in other cases condition is likely to be false.
+| M_PSP_INST_FENCE() | Renders preceding memory and I/O accesses observable to
+other threads before subsequent memory and I/O accesses.
+| M_PSP_INST_FENCEI() | Renders stores to instruction memory observable to
+subsequent instruction fetches. FENCE.I is a supper set of FENCE + instructions.
+| M_PSP_MACHINE_SET_MEPC_TO_NEXT_INSTRUCTION() | Set MEPC (Machine Exception
+Program Counter) to next instruction. Available in MACHINE mode only.
+| M_PSP_MACHINE_GET_CORE_ID() | Return Core-Id value. Available in MACHINE mode
+only.
+| M_PSP_ASSURE_MACHINE_MODE() | Macro to verify that core is in MACHINE mode. If
+not in MACHINE mode - an exception is raised.
+|==================================================

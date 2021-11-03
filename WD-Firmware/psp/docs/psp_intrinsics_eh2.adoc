@@ -1,0 +1,34 @@
+[[psp_intrinsics_eh2_ref]]
+= psp_intrinsics_eh2
+psp intrinsics for eh2 - atomic built-in operations
+
+|=======================
+| file | psp_intrinsics_eh2.h
+| author | Nati Rapaport
+| Date  |   12.11.2019
+|=======================
+
+== Definitions
+The following definitions are a part of \\__GNUC__ and \\__clang__.
+
+=== Atomic operations
+You can operate atomic commands only on variables in the DCCM (see the
+<<CompilerFlags, Compiler Flags>> table). Do not define the
+atomic operation intrinsics if DCCM does not exist in the system. SweRV EH2
+takes the most conservative approach to atomic and implements .aq znd .rl
+semantics with all atomic instructions. So we could afford to use
+__ATOMIC_RELAXED (see build-in function reference in
+<<ReferenceDocuments, Reference Documents>> table).
+|========================================================================
+| *Definition* |*Value* 
+| PSP_ATOMIC_SWAP(pAddress, value)
+  | __atomic_exchange_n(pAddress, value, __ATOMIC_RELAXED)
+| PSP_ATOMIC_ADD(pAddress, value)
+  | __atomic_add_fetch(pAddress, value, __ATOMIC_RELAXED)
+| PSP_ATOMIC_AND(pAddress, value)
+  | __atomic_and_fetch(pAddress, value, __ATOMIC_RELAXED)
+| PSP_ATOMIC_XOR(pAddress, value)
+  | __atomic_xor_fetch(pAddress, value, __ATOMIC_RELAXED)
+| PSP_ATOMIC_OR(pAddress, value)
+  | __atomic_or_fetch(pAddress, value, __ATOMIC_RELAXED)
+|========================================================================
