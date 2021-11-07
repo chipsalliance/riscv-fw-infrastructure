@@ -17,11 +17,11 @@ This repository is WD RISC-V Firmware package, holds:
 # Getting the sources 
  This repository uses submodules. You need the --recursive option to fetch the submodules automatically 
 
-    $  git clone --recursive https://github.com/westerndigitalcorporation/riscv-fw-infrastructure.git
+    $  git clone --recursive https://github.com/chipsalliance/riscv-fw-infrastructure.git
 
  Alternatively:
 
-      $ git clone https://github.com/westerndigitalcorporation/riscv-fw-infrastructure.git
+      $ git clone https://github.com/chipsalliance/riscv-fw-infrastructure.git
       $ cd riscv-fw-infrastructure
       $ git submodule update --init --recursive
     
