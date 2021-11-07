@@ -10,18 +10,18 @@ This repository is WD RISC-V Firmware package, holds:
     -  ComRV
     -  Demos for SweRV cores
  - From Web (Download)
-    - GCC 10.2.0 Toolchain for RISC-V 
+    - GCC 11 Toolchain for RISC-V 
     - LLVM/Clang 12.0.0 Toolchain for RISC-V ***[along with Custom GCC Binutils COMRV]*** 
     - Eclipse MCU 
 
 # Getting the sources 
  This repository uses submodules. You need the --recursive option to fetch the submodules automatically 
 
-    $  git clone --recursive https://github.com/westerndigitalcorporation/riscv-fw-infrastructure.git
+    $  git clone --recursive https://github.com/chipsalliance/riscv-fw-infrastructure.git
 
  Alternatively:
 
-      $ git clone https://github.com/westerndigitalcorporation/riscv-fw-infrastructure.git
+      $ git clone https://github.com/chipsalliance/riscv-fw-infrastructure.git
       $ cd riscv-fw-infrastructure
       $ git submodule update --init --recursive
     
@@ -273,3 +273,7 @@ This repo is always under work; the following are notes and status for items tha
    - Support ComRV data overlay 
    - EL2 includes dccm  
    - Added getchar() demo
+   
+- #### July-2021 
+   - Adding ASCIIDOC for PSP: [psp_reference_manual.adoc](https://github.com/chipsalliance/riscv-fw-infrastructure/tree/master/WD-Firmware/psp/docs/psp_reference_manual.adoc)  
+   - Move to gcc 11
