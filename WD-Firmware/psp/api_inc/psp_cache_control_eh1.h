@@ -2,7 +2,7 @@
 * Copyright (c) 2010-2016 Western Digital, Inc.
 *
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -46,6 +46,13 @@
 #define M_PSP_CACHE_CONTROL_ICACHE_VAL(memRegionId)      (1 << M_CACHE_CONTROL_ICACHE_OFFSET(memRegionId))
 /* mrac sideeffect value of a specific region */
 #define M_PSP_CACHE_CONTROL_SIDEEFFECT_VAL(memRegionId)  (1 << M_CACHE_CONTROL_SIDEEFFECT_OFFSET(memRegionId))
+
+/**
+* Enable/Disable instruction cache by preventing caching from all memory
+* regions
+*/
+#define M_PSP_ICACHE_ENABLE()      M_PSP_WRITE_CSR(D_PSP_MRAC,0x55555555)
+#define M_PSP_ICACHE_DISABLE()     M_PSP_WRITE_CSR(D_PSP_MRAC,0x0)
 
 /**
 * types

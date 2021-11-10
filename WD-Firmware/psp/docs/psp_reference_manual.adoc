@@ -191,11 +191,9 @@ This section lists services supported by the cores.
 The subsection <<psp_macros_ref, psp_macros>> includes general macros as defined
 by RISC-V spec (unprivileged and privileged, see
 <<ReferenceDocuments, Reference Documents>> table).
-<<psp_macros_eh1_ref, EH1>> and <<psp_macros_eh2_ref, EH2>> subsections add
-SweRV specific macros per core version.
+<<psp_macros_eh2_ref, EH2>> subsection adds SweRV specific macros.
 
 include::{include_dir}/psp_macros.adoc[leveloffset=+3]
-include::{include_dir}/psp_macros_eh1.adoc[leveloffset=+3]
 include::{include_dir}/psp_macros_eh2.adoc[leveloffset=+3]
 
 

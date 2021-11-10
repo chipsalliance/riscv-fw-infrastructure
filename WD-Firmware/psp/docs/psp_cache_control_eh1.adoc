@@ -23,12 +23,21 @@ Cache control interface.
 
 
 == Macros
-|===================================================================================
-| M_CACHE_CONTROL_ICACHE_OFFSET(memRegionId)   |  Convert region number into icache offset.
-| M_CACHE_CONTROL_SIDEEFFECT_OFFSET(memRegionId) | Convert region number into side-effect offset.
-| M_PSP_CACHE_CONTROL_ICACHE_VAL(memRegionId) | Return mrac icache value of a specific memory region.
-| M_PSP_CACHE_CONTROL_SIDEEFFECT_VAL(memRegionId) | Return mrac side-effect value of a specific region.
-|===================================================================================
+|==================================================
+| *Definition* | *Comment*
+| M_PSP_ICACHE_ENABLE()   | Enable instruction cache by preventing caching from
+all memory regions.
+| M_PSP_ICACHE_DISABLE()  | Disable instruction cache by preventing caching from
+all memory regions.
+| M_CACHE_CONTROL_ICACHE_OFFSET(memRegionId)
+  |  Convert region number into icache offset.
+| M_CACHE_CONTROL_SIDEEFFECT_OFFSET(memRegionId)
+  | Convert region number into side-effect offset.
+| M_PSP_CACHE_CONTROL_ICACHE_VAL(memRegionId)
+  | Return mrac icache value of a specific memory region.
+| M_PSP_CACHE_CONTROL_SIDEEFFECT_VAL(memRegionId)
+  | Return mrac side-effect value of a specific region.
+|==================================================
 
 
 ==  APIs
