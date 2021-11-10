@@ -1,6 +1,6 @@
 /*
 * SPDX-License-Identifier: Apache-2.0
-* Copyright 2020 Western Digital Corporation or its affiliates.
+* Copyright 2020-2021 Western Digital Corporation or its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,9 +18,12 @@
 * @file   psp_mutex_eh2.h
 * @author Nati Rapaport
 * @date   24.06.2020
-* @brief  The file defines the psp mutex and relevant APIs
-*         Relevant for SweRV-EH2 (multi-harts and atomic commands supported)
-*         
+* @brief  The file defines the psp mutex and relevant APIs.
+* Relevant for SweRV-EH2 (multi-harts and with atomic commands supported). Apart
+* from the basic create/destroy/lock/unlock API functions for a mutex, the user
+* has to provide memory for a required number of mutexes by calling
+* pspMutexHeapInit. The user also has to initialize mutexes for internal
+* use by calling pspMutexInitPspMutexes.
 */
 #ifndef __PSP_MUTEX_EH2_H__
 #define __PSP_MUTEX_EH2_H__

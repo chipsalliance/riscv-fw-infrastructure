@@ -1,6 +1,9 @@
 = psp_mutex_eh2
 The file defines the PSP mutex and relevant APIs. Relevant for SweRV-EH2
-(multi-harts and atomic commands supported).
+(multi-harts and atomic commands supported). Apart from the basic create/destroy
+/lock/unlock API functions for a mutex, the user has to provide memory for a
+required number of mutexes by calling *pspMutexHeapInit*. The user also has
+to initialize mutexes for internal use by calling *pspMutexInitPspMutexes*.
 
 |=======================
 | file | psp_mutex_eh2.h
