@@ -79,54 +79,6 @@ typedef void (*fptrPspInterruptHandler_t)(void);
 */
 
 /**
-* @brief - Disable specified interrupt when called in MACHINE-LEVEL
-*                                                     *************
-* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values:
-  *************** - D_PSP_INTERRUPTS_MACHINE_SW
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER
-                  - D_PSP_INTERRUPTS_MACHINE_EXT
-                  - D_PSP_INTERRUPTS_SUPERVISOR_SW
-                  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
-                  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
-                  - D_PSP_INTERRUPTS_USER_SW
-                  - D_PSP_INTERRUPTS_USER_TIMER
-                  - D_PSP_INTERRUPTS_USER_EXT
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER0
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER1
-                  - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
-*
-* @input parameter - Interrupt number to disable
-*
-* @return - none
-*/
-void pspMachineInterruptsDisableIntNumber(u32_t uiInterruptNumber);
-
-/**
-*  @brief - Enable specified interrupt when called in MACHINE-LEVEL
-*                                                    *************
-* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values:
-  *************** - D_PSP_INTERRUPTS_MACHINE_SW
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER
-                  - D_PSP_INTERRUPTS_MACHINE_EXT
-                  - D_PSP_INTERRUPTS_SUPERVISOR_SW
-                  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
-                  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
-                  - D_PSP_INTERRUPTS_USER_SW
-                  - D_PSP_INTERRUPTS_USER_TIMER
-                  - D_PSP_INTERRUPTS_USER_EXT
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER0
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER1
-                  - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
-*
-* @input parameter - Interrupt number to enable
-*
-* @return - none
-*/
-void pspMachineInterruptsEnableIntNumber(u32_t uiInterruptNumber);
-
-
-
-/**
 * @brief - The function returns the address the handler of a given exception
 *
 * @parameter -  exceptionCause           - exception cause
