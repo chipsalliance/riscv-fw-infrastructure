@@ -129,10 +129,10 @@ void demoSetupExternalInterrupts(void)
   pspMachineExtInterruptSetPriorityOrder(D_PSP_EXT_INT_STANDARD_PRIORITY);
 
     /* Set interrupts threshold to minimal level (== all interrupts should be served) */
-  pspMachineExtInterruptsSetThreshold(M_PSP_MACHINE_EXT_INT_THRESHOLD_UNMASK_ALL_VALUE);
+  pspMachineExtInterruptsSetThreshold(M_PSP_MACHINE_EXT_INT_GET_THRESHOLD_TO_UNMASK_ALL);
 
   /* Set the nesting priority threshold to minimal level (== all interrupts should be served) */
-  pspMachineExtInterruptsSetNestingPriorityThreshold(M_PSP_MACHINE_EXT_INT_THRESHOLD_UNMASK_ALL_VALUE);
+  pspMachineExtInterruptsSetNestingPriorityThreshold(M_PSP_MACHINE_EXT_INT_GET_THRESHOLD_TO_UNMASK_ALL);
 
   /* Set Gateway Interrupt type (Level) */
   pspMachineExtInterruptSetType(D_DEMO_IRQ, D_PSP_EXT_INT_LEVEL_TRIG_TYPE);
@@ -141,7 +141,7 @@ void demoSetupExternalInterrupts(void)
   pspMachineExtInterruptSetPolarity(D_DEMO_IRQ, D_PSP_EXT_INT_ACTIVE_HIGH);
 
   /* Set the priority level to highest */
-  pspMachineExtInterruptSetPriority(D_DEMO_IRQ, M_PSP_MACHINE_EXT_INT_PRIORITY_SET_TO_HIGHEST_VALUE);
+  pspMachineExtInterruptSetPriority(D_DEMO_IRQ, M_PSP_MACHINE_EXT_INT_GET_PRIORITY_HIGHEST_VALUE);
 
   /* Enable IRQ3 interrupt in the PIC */
   pspMachineExtInterruptEnableNumber(D_DEMO_IRQ);

@@ -85,25 +85,25 @@ but in reversed mode, "higher priority" is a lower number.
 == Macros
 |========================================================================
 | *Name* |*Comment*
-| M_PSP_MACHINE_EXT_INT_PRIORITY_SET_TO_HIGHEST_VALUE  | Set the highest
+| M_PSP_MACHINE_EXT_INT_GET_PRIORITY_HIGHEST_VALUE  | Get the highest
 priority level in meiplS (External Interrupt Priority Level Register). In case
 of standard-priority-order, the priority is 15, in case of reversed priority
 order - 0
 
-|M_PSP_MACHINE_EXT_INT_PRIORITY_SET_TO_MASKED_VALUE | When set this priority
-level in meiplS (External Interrupt Priority Level Register), the corresponding
+|M_PSP_MACHINE_EXT_INT_GET_PRIORITY_TO_MASK | When this priority level is set
+in meiplS (External Interrupt Priority Level Register), the corresponding
 interrupt will not be served. In the case of standard-priority-order, the
 priority is 0, in case of reversed priority order - 15
 
-| M_PSP_MACHINE_EXT_INT_THRESHOLD_MASK_ALL_VALUE | When setting this threshold
+| M_PSP_MACHINE_EXT_INT_GET_THRESHOLD_MASK_ALL | When setting this threshold
 level in meipt (External Interrupt Priority Threshold Register), all interrupts
 will be masked (not served). In the case of standard priority order - 15, in
 case of reversed priority order - 0.
 
-| M_PSP_MACHINE_EXT_INT_THRESHOLD_UNMASK_ALL_VALUE | When setting this threshold
-level in meipt (External Interrupt Priority Threshold Register), no interrupt
-will be masked (all served). In case of standard priority order - 0, in case of
-reversed priority order - 15
+| M_PSP_MACHINE_EXT_INT_GET_THRESHOLD_TO_UNMASK_ALL | When setting this
+threshold level in meipt (External Interrupt Priority Threshold Register), no
+interrupt will be masked (all served). In case of standard priority order - 0,
+in case of reversed priority order - 15
 |========================================================================
 
 

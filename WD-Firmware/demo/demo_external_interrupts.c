@@ -115,10 +115,10 @@ void demoDefaultInitialization(fptrPspInterruptHandler_t pTestIsr)
   pspMachineExtInterruptSetPriorityOrder(D_PSP_EXT_INT_STANDARD_PRIORITY);
 
     /* Set interrupts threshold to minimal (== all interrupts should be served) */
-  pspMachineExtInterruptsSetThreshold(M_PSP_MACHINE_EXT_INT_THRESHOLD_UNMASK_ALL_VALUE);
+  pspMachineExtInterruptsSetThreshold(M_PSP_MACHINE_EXT_INT_GET_THRESHOLD_TO_UNMASK_ALL);
 
   /* Set the nesting priority threshold to minimal (== all interrupts should be served) */
-  pspMachineExtInterruptsSetNestingPriorityThreshold(M_PSP_MACHINE_EXT_INT_THRESHOLD_UNMASK_ALL_VALUE);
+  pspMachineExtInterruptsSetNestingPriorityThreshold(M_PSP_MACHINE_EXT_INT_GET_THRESHOLD_TO_UNMASK_ALL);
 
   /* Initialize all Interrupt-sources & Register ISR for all */
   for (uiSourceId = D_BSP_FIRST_IRQ_NUM; uiSourceId <= D_BSP_LAST_IRQ_NUM; uiSourceId++)
@@ -133,7 +133,7 @@ void demoDefaultInitialization(fptrPspInterruptHandler_t pTestIsr)
     pspMachineExtInterruptClearPendingInt(uiSourceId);
 
     /* Priority-level is checked after each test so store it here as "expected results"*/
-    g_uiDemoPriorityLevelPerSourceId[uiSourceId] = M_PSP_MACHINE_EXT_INT_PRIORITY_SET_TO_HIGHEST_VALUE;
+    g_uiDemoPriorityLevelPerSourceId[uiSourceId] = M_PSP_MACHINE_EXT_INT_GET_PRIORITY_HIGHEST_VALUE;
     /* Set the priority level to highest to all interrupt sources */
     pspMachineExtInterruptSetPriority(uiSourceId, g_uiDemoPriorityLevelPerSourceId[uiSourceId]);
 
@@ -416,7 +416,7 @@ void demoExtIntsTest4PriorityReversedOrder(void)
 
   /* As priority-order has been set to 'reversed', need to set again the nesting priority threshold to minimum (== all should be served)
    * - now it should be '15' */
-  pspMachineExtInterruptsSetNestingPriorityThreshold(M_PSP_MACHINE_EXT_INT_THRESHOLD_UNMASK_ALL_VALUE);
+  pspMachineExtInterruptsSetNestingPriorityThreshold(M_PSP_MACHINE_EXT_INT_GET_THRESHOLD_TO_UNMASK_ALL);
 
   /* Set IRQ3 priority to 5 */
   g_uiDemoPriorityLevelPerSourceId[D_BSP_IRQ_3] = D_PSP_EXT_INT_PRIORITY_5;
