@@ -13,7 +13,7 @@ to initialize mutexes for internal use by calling *pspMutexInitPspMutexes*.
 
 == Definitions
 |========================================================================
-| *Definition* |*Value* | *Comment
+| *Definition* |*Value* | *Comment*
 | D_PSP_MUTEX_OCCUIPED    | 1 | 'occupied' means- the mutex is used by the
 application (can 'lock' and 'free' it)
 | D_PSP_MUTEX_UNOCCUIPED  | 0 | 'unoccupied' means- the mutex is not used by the

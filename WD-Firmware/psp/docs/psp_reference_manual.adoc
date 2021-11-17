@@ -143,7 +143,7 @@ Throughout the reference, we keep section (feature) structure such that every
 subsection corresponds to a specific core.
 
 Code within source and header files follows WD-Firmware
-https://bitbucket.wdc.com/projects/CTORISCVFWINFRA/repos/riscv-fw-infrastructure/browse/coding_convention.adoc[conding convention].
+xref:{include_dir}/../../coding_convention.adoc[coding convention].
 
 
 == Common
