@@ -80,6 +80,21 @@
     csrw          mepc, t0
 .endm
 
+/* This macro changes sp from application stack to ISR stack, defined by
+ * the argument pIsrStack.
+ */
+.macro M_RTOSAL_CHANGE_SP_FROM_APP_TO_ISR_STACK pIsrStack
+    M_PSP_LOAD    sp, \pIsrStack
+.endm
+
+/* Macro for setting SP to use stack of current application */
+/* [NR] - To do: add stack check */
+.macro M_RTOSAL_CHANGE_SP_FROM_ISR_TO_APP_STACK  pAppCB, spLocationInAppCB
+    /* Load sp register with the address of current Application Control Block */
+    M_PSP_LOAD    sp, \pAppCB
+  /* Update sp regsiter to point to Task's stack*/
+    M_PSP_LOAD    sp, \spLocationInAppCB(sp)
+.endm
 /* This macro is activated at the end of ISR handling. It does the following:
  * (1) checks whether a context-switch is required.
  * (2) If no - jump to 'branch_label'

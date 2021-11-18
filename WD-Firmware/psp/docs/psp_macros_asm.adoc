@@ -44,10 +44,9 @@ same stack for both applicatons and ISRs.
 | M_PSP_CALL_INT_HANDLER fptIntHandler | Macro for calling interrupt handler.
 | M_PSP_PUSH_REGFILE | Macro for saving application context.
 | M_PSP_POP_REGFILE | Macro for restoring application context.
-| M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK | Macro for setting SP to use stack
-dedicated to ISRs. It loads the sp register with the address of the current
-Task-CB.
-| M_PSP_CHANGE_SP_FROM_ISR_TO_APP_STACK | Macro for setting SP to use a stack of
+| M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK pIsrStack | Macro for setting SP to use
+stack dedicated for ISRs. It saves sp of the current application.
+| M_PSP_RESTORE_APP_SP | Macro for restoring SP to use a stack of
 the current application.
 | M_PSP_MACHINE_DISABLE_INTERRUPTS | Macro for disabling machine interrupts
 after reading the current status. Available in MACHINE mode only.

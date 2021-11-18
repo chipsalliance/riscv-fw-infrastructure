@@ -73,7 +73,6 @@
     lh \operand1, \operand2
 .endm
 
-.global xISRStackTop
 
 .equ D_PSP_MIE, 8
 
@@ -171,26 +170,18 @@
 
 .endm
 
-
 /* Macro for setting SP to use stack dedicated to ISRs */
 /* [NR] - To do: add stack check */
-.macro M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK
-/* Load sp register with the addres of current Task-CB */
-#ifdef D_SWERV_EH2
-    /* [Nati] TO DO - for now support only single hart */
-    M_PSP_LOAD    sp, xISRStackTopHart0
-#else
-    M_PSP_LOAD    sp, xISRStackTop
-#endif
+.macro M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK pIsrStack
+    mv t0, sp
+    M_PSP_LOAD    sp, \pIsrStack
+    M_PSP_ADDI    sp, sp, -REGBYTES * 4
+    M_PSP_STORE   t0, 0 * REGBYTES(sp)
 .endm
 
-/* Macro for setting SP to use stack of current application */
-/* [NR] - To do: add stack check */
-.macro M_PSP_CHANGE_SP_FROM_ISR_TO_APP_STACK  pAppCB, spLocationInAppCB
-    /* Load sp register with the address of current Application Control Block */
-    M_PSP_LOAD    sp, \pAppCB
-  /* Update sp regsiter to point to Task's stack*/
-    M_PSP_LOAD    sp, \spLocationInAppCB(sp)
+/* Macro for restoring application stack pointer. */
+.macro M_PSP_RESTORE_APP_SP
+    M_PSP_LOAD    sp, 0 * REGBYTES(sp)
 .endm
 
 /* Macro for disable machine interrupts after reading the current status . Available in MACHINE mode only */
