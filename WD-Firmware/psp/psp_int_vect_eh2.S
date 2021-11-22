@@ -24,7 +24,6 @@
 
 #include "psp_macros.inc"
 #include "psp_macros_eh1.inc"
-#include "psp_macros_eh2.inc"
 
 #ifdef D_LLVM_NO_WARN_RESERVED_REGS
 /* disable warning for reserved registers use - we are using comrv
@@ -94,7 +93,7 @@ psp_exceptions_int_hart0:
     /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
 .endif /* D_PSP_VECT_TABLE */
     M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart0               /* After RegFile is pushed onto task's-stack, we change sp to point to ISR-Stack */
-    M_PSP_CALL_INT_HANDLER_HART0 g_fptrIntExceptionIntHandler /* call the exception handler */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntExceptionIntHandler + 0) /* call the exception handler */
     M_PSP_RESTORE_APP_SP
     /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
     M_PSP_POP_REGFILE                                   /* Restore the registers of current task from the stack */
@@ -106,7 +105,7 @@ psp_m_soft_int_hart0:
     /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
 .endif /* D_PSP_VECT_TABLE */
     M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart0               /* After RegFile is pushed onto application's-Stack, we change sp to point to ISR-Stack */
-    M_PSP_CALL_INT_HANDLER_HART0 g_fptrIntMSoftIntHandler     /* Call the interrupt handler */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntMSoftIntHandler + 0) /* call the exception handler */
     M_PSP_RESTORE_APP_SP
     /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
     M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
@@ -118,7 +117,7 @@ psp_m_timer_int_hart0:
     /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
 .endif /* D_PSP_VECT_TABLE */
     M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart0                  /* After RegFile is pushed onto application's-Stack, we change sp to point to ISR-Stack */
-    M_PSP_CALL_INT_HANDLER_HART0 g_fptrIntMTimerIntHandler    /* Call the interrupt handler */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntMTimerIntHandler + 0) /* call the exception handler */
     M_PSP_RESTORE_APP_SP
     /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
     M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
@@ -200,7 +199,7 @@ psp_exceptions_int_hart1:
     /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
 .endif /* D_PSP_VECT_TABLE */
     M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart1               /* After RegFile is pushed onto task's-stack, we change sp to point to ISR-Stack */
-    M_PSP_CALL_INT_HANDLER_HART1 g_fptrIntExceptionIntHandler /* call the exception handler */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntExceptionIntHandler + 4) /* call the exception handler */
     M_PSP_RESTORE_APP_SP
     /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
     M_PSP_POP_REGFILE                                   /* Restore the registers of current task from the stack */
@@ -212,7 +211,7 @@ psp_m_soft_int_hart1:
     /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
 .endif /* D_PSP_VECT_TABLE */
     M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart1               /* After RegFile is pushed onto application's-Stack, we change sp to point to ISR-Stack */
-    M_PSP_CALL_INT_HANDLER_HART1 g_fptrIntMSoftIntHandler     /* Call the interrupt handler */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntMSoftIntHandler + 4) /* call the exception handler */
     M_PSP_RESTORE_APP_SP
     /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
     M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
@@ -224,7 +223,7 @@ psp_m_timer_int_hart1:
     /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
 .endif /* D_PSP_VECT_TABLE */
     M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart1                  /* After RegFile is pushed onto application's-Stack, we change sp to point to ISR-Stack */
-    M_PSP_CALL_INT_HANDLER_HART1 g_fptrIntMTimerIntHandler    /* Call the interrupt handler */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntMTimerIntHandler + 4) /* call the exception handler */
     M_PSP_RESTORE_APP_SP
     /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
     M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
