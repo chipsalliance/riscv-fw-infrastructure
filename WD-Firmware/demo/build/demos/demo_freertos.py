@@ -28,7 +28,8 @@ class demo(object):
         'D_USE_RTOSAL',
         'D_TICK_TIME_MS=4',
         'D_ISR_STACK_SIZE=400',
-        'D_USE_FREERTOS'
+        'D_USE_FREERTOS=1',
+        'D_ENABLE_FREERTOS_SMP=0'
     ]
    
     self.listSconscripts = [

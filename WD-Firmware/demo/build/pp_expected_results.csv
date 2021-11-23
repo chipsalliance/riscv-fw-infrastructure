@@ -1,3 +1,5 @@
 demo name,eh2-openocd,eh2-whisper,el2-openocd,el2-whisper,eh1-openocd,eh1-whisper,hifive1-openocd
 multi_harts,failed,passed,n/a,n/a,n/a,n/a,n/a,gcc
 multi_harts,failed,passed,n/a,n/a,n/a,n/a,n/a,llvm
+freertos_smp,failed,failed,n/a,n/a,n/a,n/a,n/a,gcc
+freertos_smp,failed,failed,n/a,n/a,n/a,n/a,n/a,llvm

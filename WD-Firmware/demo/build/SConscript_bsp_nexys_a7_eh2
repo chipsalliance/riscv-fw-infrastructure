@@ -59,7 +59,8 @@ Env['PUBLIC_DEF'] += ['D_SWERV_EH1',                                            
                       'D_TIMER_DURATION_SETUP_ADDRESS=0x80001030',                    # Register for duration setup of a timer on SweRVolf FPGA
                       'D_TIMER_ACTIVATION_ADDRESS=0x80001034',                        # Register for activation of a timer on SweRVolf FPGA  
                       'D_NMI_VEC_ADDRESSS=0x8000100C',                                # nmi_vec address on SweRVolf FPGA
-                      'D_SW_INT_ADDRESS=0x80003100']                                  # sw interrupt
+                      'D_SW_INT_ADDRESS=0x80003100',                                  # sw interrupt
+                      'D_NUM_OF_HARTS=2']                                             # number of harts
 listCompilationDefines  = [ ] + Env['PUBLIC_DEF']
 
 # include paths

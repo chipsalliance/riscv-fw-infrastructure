@@ -148,7 +148,18 @@ typedef struct rtosalTask
 #endif /* #ifdef D_USE_FREERTOS */
    s08_t cTaskCB[M_TASK_CB_SIZE_IN_BYTES];
 } rtosalTask_t;
-
+#if 0 /* TODO: OS: this is related to the current status of FreeRTOS SMP, the
+ TaskHandle_t is only provided in task.h and it is not on FreeRTOS.h our other
+ file that we can expose on AL */
+#ifdef D_USE_FREERTOS
+   typedef TaskHandle_t rtosalTaskHandle_t;
+#elif D_USE_THREADX
+   #error *** TODO: need to define the TBD ***
+   typedef TBD         rtosalTaskHandle_t;
+#else
+   #error "Add appropriate RTOS definitions"
+#endif /* D_USE_FREERTOS */
+#endif
 /* task handler definition */
 typedef void (*rtosalTaskHandler_t)(entryPointParam_t);
 

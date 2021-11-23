@@ -57,6 +57,8 @@ D_PSP_TEXT_SECTION void pspMachineInterruptsDefaultHandler(void);
 #if (0 == D_ISR_STACK_SIZE)
   #error "D_ISR_STACK_SIZE is not defined"
 #else
+
+
   /* ISR Stack for HART (HW thread) 0 */
   static /*D_PSP_DATA_SECTION*/ D_PSP_ALIGNED(16) pspStack_t udISRStackHart0[ D_ISR_STACK_SIZE ] ;
   const pspStack_t xISRStackTopHart0 = ( pspStack_t ) &( udISRStackHart0[ ( D_ISR_STACK_SIZE ) - 1 ] );
@@ -64,6 +66,11 @@ D_PSP_TEXT_SECTION void pspMachineInterruptsDefaultHandler(void);
   /* ISR Stack for HART (HW thread) 1 */
   static /*D_PSP_DATA_SECTION*/ D_PSP_ALIGNED(16) pspStack_t udISRStackHart1[ D_ISR_STACK_SIZE ] ;
   const pspStack_t xISRStackTopHart1 = ( pspStack_t ) &( udISRStackHart1[ ( D_ISR_STACK_SIZE ) - 1 ] );
+
+
+  const pspStack_t* xISRStackMultiHart[] = { &( udISRStackHart0[ ( D_ISR_STACK_SIZE ) - 1 ]),
+                                             &( udISRStackHart1[ ( D_ISR_STACK_SIZE ) - 1 ]) };
+
 #endif
 
 /* Exception handlers */

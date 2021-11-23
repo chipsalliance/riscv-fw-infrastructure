@@ -37,6 +37,7 @@ typedef signed long long   s64_t;
 typedef unsigned char      u08_t;
 typedef unsigned short     u16_t;
 typedef unsigned int       u32_t;
+typedef unsigned long int  ul32_t;
 typedef unsigned long long u64_t;
 
 /* for general use */

@@ -379,21 +379,48 @@ RTOSAL_SECTION u32_t rtosalTaskWaitAbort(rtosalTask_t* pRtosalTaskCb)
 */
 RTOSAL_SECTION void rtosalStart(rtosalApplicationInit_t fptrInit)
 {
+#if D_ENABLE_FREERTOS_SMP == 1
+  u32_t coreId = portGET_CORE_ID();
+#endif /* D_ENABLE_FREERTOS_SMP */
+
   /* Register interrupt vector */
   pspMachineInterruptsSetVecTableAddress(&rtosal_vect_table);
 
-#ifdef D_USE_FREERTOS
-  /* Initialize the timer-tick handler function pointer to NULL */
-  fptrTimerTickHandler = NULL;
+#if D_USE_FREERTOS == 1
+ #if D_ENABLE_FREERTOS_SMP == 1
+  /* core 0 is responsible for the timer ticks */
+  if (coreId == 0)
+  {
+ #endif /* D_ENABLE_FREERTOS_SMP */
+    /* Initialize the timer-tick handler function pointer to NULL */
+    fptrTimerTickHandler = NULL;
+
+    /* register timer interrupt handler */
+    pspMachineInterruptsRegisterIsr(rtosalTimerIntHandler, E_MACHINE_TIMER_CAUSE);
+ #if D_ENABLE_FREERTOS_SMP == 1
+  }
+ #endif /* D_ENABLE_FREERTOS_SMP */
 
   /* register E_CALL exception handler */
   pspMachineInterruptsRegisterExcpHandler(rtosalHandleEcall, E_EXC_ENVIRONMENT_CALL_FROM_MMODE);
 
-  /* register timer interrupt handler */
-  pspMachineInterruptsRegisterIsr(rtosalTimerIntHandler, E_MACHINE_TIMER_CAUSE);
-
+  /* call the function the user provided to create all RTOS services (task, mutix, etc...) */
   fptrInit(NULL);
-  vTaskStartScheduler();
+
+ #if D_ENABLE_FREERTOS_SMP == 1
+  /* the first core must only call vTaskStartScheduler */
+  if (coreId == 0)
+  {
+ #endif /* D_ENABLE_FREERTOS_SMP */
+    vTaskStartScheduler();
+ #if D_ENABLE_FREERTOS_SMP == 1
+  }
+  else
+  {
+    /* any other core calls xPortStartScheduler */
+    xPortStartScheduler();
+  }
+ #endif /* D_ENABLE_FREERTOS_SMP */
 #elif D_USE_THREADX
    #error "Add THREADX appropriate definitions"
 #else

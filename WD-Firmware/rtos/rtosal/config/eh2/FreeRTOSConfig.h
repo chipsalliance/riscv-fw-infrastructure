@@ -123,7 +123,6 @@
 #define configUSE_RECURSIVE_MUTEXES              0
 #define configUSE_APPLICATION_TASK_TAG           0
 #define configUSE_COUNTING_SEMAPHORES           1
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 #define configNUM_THREAD_LOCAL_STORAGE_POINTERS 5
 
 /* Memory allocation related definitions. */
@@ -186,5 +185,14 @@ to exclude the API function. */
 /* Define to trap errors during development. */
 #define configASSERT( x ) if( ( x ) == 0 ) {taskDISABLE_INTERRUPTS(); for( ;; );}
 
+#if D_ENABLE_FREERTOS_SMP == 1
+  #define configUSE_CORE_AFFINITY                1
+  #define configNUM_CORES                      D_NUM_OF_HARTS
+  #define configRUN_MULTIPLE_PRIORITIES           1
+  #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
+  #define portCRITICAL_NESTING_IN_TCB             1
+#else
+  #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
+#endif /* D_ENABLE_FREERTOS_SMP */
 
 #endif /* FREERTOS_CONFIG_H */

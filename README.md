@@ -10,18 +10,25 @@ This repository is WD RISC-V Firmware package, holds:
     -  ComRV
     -  Demos for SweRV cores
  - From Web (Download)
-    - GCC 11 Toolchain for RISC-V 
+    - GCC 10.2.0 Toolchain for RISC-V 
     - LLVM/Clang 12.0.0 Toolchain for RISC-V ***[along with Custom GCC Binutils COMRV]*** 
     - Eclipse MCU 
+
+#### NOTE: This branch includes support of FreeRTOS-SMP - [version v10.4.3 from Amazon repo](https://github.com/FreeRTOS/FreeRTOS-SMP-Demos).
+To run it:
+- Build freertos_smp with ./config.sh check [Building For Source](#building-for-source) in this readme.
+- Flush the EH2 image. Only Nexys A7 support - Flush the EH2 image
+- Run launcher _**nexys_a7_eh2_swervolf_debug_multihart_smp**_. 
+This will run GDB smp for two harts on the device 
 
 # Getting the sources 
  This repository uses submodules. You need the --recursive option to fetch the submodules automatically 
 
-    $  git clone --recursive https://github.com/chipsalliance/riscv-fw-infrastructure.git
+    $  git clone --recursive https://github.com/westerndigitalcorporation/riscv-fw-infrastructure.git
 
  Alternatively:
 
-      $ git clone https://github.com/chipsalliance/riscv-fw-infrastructure.git
+      $ git clone https://github.com/westerndigitalcorporation/riscv-fw-infrastructure.git
       $ cd riscv-fw-infrastructure
       $ git submodule update --init --recursive
     
@@ -37,7 +44,7 @@ This repository is WD RISC-V Firmware package, holds:
       - GNU  ( [GNU release folders](https://wdc.box.com/s/lfam8pwhghwshkmjf1yc542ghzfbyn7y) ) 
       - LLVM ( [LLVM release folders](https://wdc.box.com/s/v562eei6d01bhzqcc4si76z1vq0w4ibu) ) 
 
-&nbsp;	 
+&nbsp;	 .
 - #### Using GCC Toolchain 
 	From the repo root folder, unzip riscv-gnu-toolchain-debian.tar.gz to the ***WD-Firmware/demo/build/toolchain*** directory 
 
@@ -55,7 +62,7 @@ This repository is WD RISC-V Firmware package, holds:
 &nbsp;
 
 # Code Convention  
-   See [the coding convention](./coding_convention.asciidoc) 
+   See [./code convention.htm] 
 
 # WD Firmware      
 The constitutes an SDK FW. It contains Firmware applications and Processor Support Package (PSP) for various cores, alongside demos that support all features. 
@@ -142,7 +149,7 @@ WD-Firmware
   
       $ python ./bootstrap.py
 
-### Building for source 
+### Building For Source  
 - #### Preparations  
    - Launch Eclipse MCU - [Eclipse-MCU-root]/eclipse/eclipse 
    - Import WD firmware code: 
@@ -171,7 +178,7 @@ We provide several platforms to work with, please follow the instructions for th
 
 - #### Setting up Hifive1 - FTDI over USB (taken from SiFive Freedom Studio Manual v1p6). 
 	- Connect to your HiFive1 debug interface and type "lsusb" to see if FT2232C is connected: 
-
+Build - compile and link
            $ lsusb 
            Bus ... Device ... : ID 0403:6010 Future Technology Devices International, Ltd FT2232C Dual USB-UART/FIFO IC 
            ... 
@@ -273,7 +280,3 @@ This repo is always under work; the following are notes and status for items tha
    - Support ComRV data overlay 
    - EL2 includes dccm  
    - Added getchar() demo
-   
-- #### July-2021 
-   - Adding ASCIIDOC for PSP: [psp_reference_manual.adoc](https://github.com/chipsalliance/riscv-fw-infrastructure/tree/master/WD-Firmware/psp/docs/psp_reference_manual.adoc)  
-   - Move to gcc 11

@@ -39,6 +39,10 @@
         addi \operand1, \operand2, \operand3
     .endm
 
+    .macro M_PSP_ADD operand1,operand2,operand3
+        add \operand1, \operand2, \operand3
+    .endm
+
 .elseif __riscv_xlen == 64
     .error "You must verify it is work correctly for 64 bit"
 
@@ -55,6 +59,11 @@
     .macro M_PSP_ADDI operand1,operand2,operand3
         addiw \operand1, \operand2, \operand3
     .endm
+
+    .macro M_PSP_ADD operand1,operand2,operand3
+        addw \operand1, \operand2, \operand3
+    .endm
+
 .endif
 
 .macro M_PSP_STORE_BYTE operand1,operand2

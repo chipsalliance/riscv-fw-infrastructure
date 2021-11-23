@@ -29,6 +29,7 @@
 #include "rtosal_util.h"
 #include "rtosal_macros.h"
 #include "rtosal_task_api.h"
+#include "rtosal_defines.h"
 #ifdef D_USE_FREERTOS
    #include "FreeRTOS.h"
    #include "task.h"
@@ -42,6 +43,11 @@
 */
 #define D_IDLE_TASK_SIZE      450
 #define D_TIMER_TASK_SIZE     450
+#if D_ENABLE_FREERTOS_SMP == 1
+  #define D_RTOSAL_HART_0       0
+#else
+  #define D_RTOSAL_HART_0
+#endif /* D_ENABLE_FREERTOS_SMP */
 
 /**
 * macros
@@ -66,17 +72,24 @@ extern rtosalTimerTickHandler_t fptrTimerTickHandler ;
 * global variables
 */
 u32_t g_rtosalContextSwitch = 0;
-u32_t g_rtosalIsInterruptContext = D_RTOSAL_NON_INT_CONTEXT;
-u32_t g_uInterruptsPreserveMask  = 0; /* Used for restoring interrupts status */
-u32_t g_uInterruptsDisableCounter  = 0;
+
+#if D_ENABLE_FREERTOS_SMP == 1
+ u32_t g_uInterruptsPreserveMask[configNUM_CORES];
+ u32_t g_uInterruptsDisableCounter[configNUM_CORES];
+ u32_t g_rtosalIsInterruptContext[configNUM_CORES] = { D_RTOSAL_NON_INT_CONTEXT };
+#else
+ u32_t g_uInterruptsPreserveMask   = 0; /* Used for restoring interrupts status */
+ u32_t g_uInterruptsDisableCounter = 0;
+ u32_t g_rtosalIsInterruptContext  = D_RTOSAL_NON_INT_CONTEXT;
+#endif /* D_ENABLE_FREERTOS_SMP */
 
 #ifdef D_USE_FREERTOS
 /* Idle-task and Timer-task are created by FreeRtos and not by this application */
-rtosalTask_t stIdleTask;
-rtosalStackType_t uIdleTaskStackBuffer[D_IDLE_TASK_SIZE];
-rtosalTask_t stTimerTask;
-rtosalStackType_t uTimerTaskStackBuffer[D_TIMER_TASK_SIZE];
-#endif
+  rtosalTask_t      stTimerTask;
+  rtosalStackType_t uTimerTaskStackBuffer[D_TIMER_TASK_SIZE];
+  rtosalTask_t      stIdleTask;
+  rtosalStackType_t uIdleTaskStackBuffer[D_IDLE_TASK_SIZE];
+#endif /* D_USE_FREERTOS */
 
 /**
 *
@@ -112,7 +125,12 @@ RTOSAL_SECTION void rtosalContextSwitchIndicationClear(void)
 */
 RTOSAL_SECTION u32_t rtosalIsInterruptContext(void)
 {
-   return (g_rtosalIsInterruptContext > 0);
+#if D_ENABLE_FREERTOS_SMP == 1
+  u32_t uiCoreID = M_PSP_MACHINE_GET_HART_ID();
+  return (g_rtosalIsInterruptContext[uiCoreID] > 0);
+#else
+  return (g_rtosalIsInterruptContext > 0);
+#endif /* D_ENABLE_FREERTOS_SMP */
 }
 
 /**
@@ -127,7 +145,8 @@ RTOSAL_SECTION void rtosalTick(void)
 #ifdef D_USE_FREERTOS
    if (xTaskIncrementTick() == D_PSP_TRUE)
    {
-           vTaskSwitchContext();
+     /* rtos tick is always handled by hart 0 */
+     vTaskSwitchContext(D_RTOSAL_HART_0);
    }
 #elif D_USE_THREADX
    #error "Add THREADX appropriate definitions"
@@ -145,10 +164,12 @@ RTOSAL_SECTION void rtosalTick(void)
  * u32_t *pulIdleTaskStackSize - Task's stack size (pointer, as it is output parameter)
  *
  */
-void vApplicationGetIdleTaskMemory(rtosalStaticTask_t **ppxIdleTaskTCBBuffer, rtosalStack_t **ppxIdleTaskStackBuffer, u32_t *pulIdleTaskStackSize)
+
+void vApplicationGetIdleTaskMemory(rtosalStaticTask_t **ppxIdleTaskTCBBuffer, rtosalStack_t **ppxIdleTaskStackBuffer, ul32_t *pulIdleTaskStackSize)
 {
   *ppxIdleTaskTCBBuffer = (rtosalStaticTask_t*)&stIdleTask;
   *ppxIdleTaskStackBuffer = (rtosalStack_t*)&uIdleTaskStackBuffer[0];
+
   *pulIdleTaskStackSize = D_IDLE_TASK_SIZE;
 }
 
@@ -192,6 +213,9 @@ void vApplicationMallocFailedHook( void )
  * vApplicationStackOverflowHook - Called from FreeRTOS upon stack-overflow
  *
  * void* xTask - not in use
+ * OS: related to the TODO in rtosal_task_api, currently we are not using
+ *     TaskHandle_t info/data-base so its is only unused pointer in our
+ *     implementation.
  * signed char *pcTaskName - not in use
  *
  */

@@ -29,72 +29,161 @@
 * macros
 */
 
-.if D_USE_FREERTOS
-   .global pxCurrentTCB
+.if D_USE_FREERTOS == 1
+  .if D_ENABLE_FREERTOS_SMP == 1
+    .global pxCurrentTCBs
+  .else
+    .global pxCurrentTCB
+  .endif
 .else
    .error "RTOS is not defined!"
-.endif // D_USE_FREERTOS
+.endif /* D_USE_FREERTOS */
 
+.equ D_HART_ID_MASK, 0xF
 
-/* Macro that sets indication of interrupt context */
-.macro M_RTOSAL_SET_INT_CONTEXT
-    /* save address of g_rtosalIsInterruptContext -> t0 */
-    la            a0, g_rtosalIsInterruptContext
-    /* load the value g_rtosalIsInterruptContext -> t1 */
-    M_PSP_LOAD    a1, 0x0(a0)
-    /* increment t1 by 1 */
-    M_PSP_ADDI    a1, a1, 1
-    /* store new value to g_rtosalIsInterruptContext */
-    M_PSP_STORE   a1, 0x0(a0)
-.endm
+.if D_ENABLE_FREERTOS_SMP == 1
 
-/* Macro that clears indication of interrupt context */
-.macro M_RTOSAL_CLEAR_INT_CONTEXT
-    /* save address of g_rtosalIsInterruptContext -> t0 */
-    la            a0, g_rtosalIsInterruptContext
-    /* load the value g_rtosalIsInterruptContext -> t1 */
-    M_PSP_LOAD    a1, 0x0(a0)
-    /* decrement t1 by 1 */
-    M_PSP_ADDI    a1, a1, -1
-    /* store new value to g_rtosalIsInterruptContext */
-    M_PSP_STORE   a1, 0x0(a0)
-.endm
+  .macro M_RTOSAL_SET_INT_CONTEXT offset
+      /* save address of g_rtosalIsInterruptContext -> a0 */
+      la            a0, g_rtosalIsInterruptContext
+      /* add the hart id offset in g_rtosalIsInterruptContext */
+      M_PSP_ADD     a0, a0, \offset
+      /* load the value g_rtosalIsInterruptContext -> a1 */
+      M_PSP_LOAD    a1, 0x0(a0)
+      /* increment t1 by 1 */
+      M_PSP_ADDI    a1, a1, 1
+      /* store new value to g_rtosalIsInterruptContext */
+      M_PSP_STORE   a1, 0x0(a0)
+  .endm
 
-/* this macro save mstatus and mepc CSRs on stack then store sp in the Application control block */
-.macro M_RTOSAL_SAVE_CONTEXT  pAppCB, spLocationInAppCB
-    /* Store current stackpointer in task control block (TCB) */
-    M_PSP_LOAD    t0, \pAppCB
-    M_PSP_STORE   sp, \spLocationInAppCB(t0)
-    /* Store mepc */
-    csrr          t0, mepc
-    M_PSP_STORE   t0, D_RTOSAL_MEPC_LOC_IN_STK(sp)
-.endm
+  /* Macro that clears indication of interrupt context */
+  .macro M_RTOSAL_CLEAR_INT_CONTEXT offset
+      /* save address of g_rtosalIsInterruptContext -> a0 */
+      la            a0, g_rtosalIsInterruptContext
+      /* add the hart id offset in g_rtosalIsInterruptContext */
+      M_PSP_ADD     a0, a0, \offset
+      /* load the value g_rtosalIsInterruptContext -> a1 */
+      M_PSP_LOAD    a1, 0x0(a0)
+      /* decrement t1 by 1 */
+      M_PSP_ADDI    a1, a1, -1
+      /* store new value to g_rtosalIsInterruptContext */
+      M_PSP_STORE   a1, 0x0(a0)
+  .endm
 
- /* this macro restore sp from the Application control block then restore mstatus and mepc CSRs from stack */
-.macro M_RTOSAL_RESTORE_CONTEXT  pAppCB, spLocationInAppCB
-    /* Load stack pointer from the current TCB */
-    M_PSP_LOAD    sp, \pAppCB
-    M_PSP_LOAD    sp, \spLocationInAppCB(sp)
-    /* Load task program counter */
-    M_PSP_LOAD    t0, D_RTOSAL_MEPC_LOC_IN_STK * REGBYTES(sp)
-    csrw          mepc, t0
-.endm
+  /* this macro save mepc CSR on stack then store sp in the Application control block */
+  .macro M_RTOSAL_SAVE_CONTEXT  pAppCB, spLocationInAppCB, offset
+      /* get current TCB */
+      la            t0, \pAppCB
+      M_PSP_ADD     t0, t0, \offset
+      /* Store current stackpointer in task control block (TCB) */
+      M_PSP_LOAD    t0, 0(t0)
+      M_PSP_STORE   sp, \spLocationInAppCB(t0)
+      /* Store mepc */
+      csrr          t0, mepc
+      M_PSP_STORE   t0, D_RTOSAL_MEPC_LOC_IN_STK(sp)
+  .endm
 
-/* This macro changes sp from application stack to ISR stack, defined by
- * the argument pIsrStack.
- */
-.macro M_RTOSAL_CHANGE_SP_FROM_APP_TO_ISR_STACK pIsrStack
-    M_PSP_LOAD    sp, \pIsrStack
-.endm
+   /* this macro restore sp from the Application control block then restore mepc CSR from stack */
+  .macro M_RTOSAL_RESTORE_CONTEXT  pAppCB, spLocationInAppCB, offset
+      /* get current TCB */
+      la            t0, \pAppCB
+      M_PSP_ADD     t0, t0, \offset
+      /* Load stack pointer from the current TCB */
+      M_PSP_LOAD    sp, 0(t0)
+      M_PSP_LOAD    sp, \spLocationInAppCB(sp)
+      /* Load task program counter */
+      M_PSP_LOAD    t0, D_RTOSAL_MEPC_LOC_IN_STK * REGBYTES(sp)
+      csrw          mepc, t0
+  .endm
 
-/* Macro for setting SP to use stack of current application */
-/* [NR] - To do: add stack check */
-.macro M_RTOSAL_CHANGE_SP_FROM_ISR_TO_APP_STACK  pAppCB, spLocationInAppCB
-    /* Load sp register with the address of current Application Control Block */
-    M_PSP_LOAD    sp, \pAppCB
-  /* Update sp regsiter to point to Task's stack*/
-    M_PSP_LOAD    sp, \spLocationInAppCB(sp)
-.endm
+  .macro M_RTOSAL_READ_HART_ID offset_from_hart_id
+     /* get the hart ID */
+     csrr  \offset_from_hart_id, 0xF14
+     andi  \offset_from_hart_id, \offset_from_hart_id, D_HART_ID_MASK
+     /* offset from hart ID */
+     sll   \offset_from_hart_id, \offset_from_hart_id, 2
+  .endm
+
+  .macro M_RTOSAL_CHANGE_SP_FROM_APP_TO_ISR_STACK pIsrStack, offset
+     la            sp, \pIsrStack
+     M_PSP_ADD     sp, sp, \offset
+     M_PSP_LOAD    sp, 0(sp)
+  .endm
+  
+  /* Macro for setting SP to use stack of current application */
+  /* [NR] - To do: add stack check */
+  .macro M_RTOSAL_CHANGE_SP_FROM_ISR_TO_APP_STACK  pAppCB, spLocationInAppCB, offset
+      /* get current TCB */
+      la            t0, \pAppCB
+      M_PSP_ADD     t0, t0, \offset
+      /* Store current stackpointer in task control block (TCB) */
+      M_PSP_LOAD    sp, 0(t0)
+      M_PSP_LOAD    sp, \spLocationInAppCB(sp)
+  .endm
+
+.else
+
+  /* Macro that clears indication of interrupt context */
+  .macro M_RTOSAL_CLEAR_INT_CONTEXT offset
+      /* save address of g_rtosalIsInterruptContext -> t0 */
+      la            a0, g_rtosalIsInterruptContext
+      /* load the value g_rtosalIsInterruptContext -> t1 */
+      M_PSP_LOAD    a1, 0x0(a0)
+      /* decrement t1 by 1 */
+      M_PSP_ADDI    a1, a1, -1
+      /* store new value to g_rtosalIsInterruptContext */
+      M_PSP_STORE   a1, 0x0(a0)
+  .endm
+
+  /* This macro stores sp in the Application control block then save mepc in the stack */
+  .macro M_RTOSAL_SAVE_CONTEXT  pAppCB, spLocationInAppCB, offset
+      /* Store current stackpointer in task control block (TCB) */
+      M_PSP_LOAD    t0, \pAppCB
+      M_PSP_STORE   sp, \spLocationInAppCB(t0)
+      /* Store mepc */
+      csrr          t0, mepc
+      M_PSP_STORE   t0, D_RTOSAL_MEPC_LOC_IN_STK(sp)
+  .endm
+
+   /* this macro restore sp from the Application control block then restore mepc CSR from stack */
+  .macro M_RTOSAL_RESTORE_CONTEXT  pAppCB, spLocationInAppCB, offset
+      /* Load stack pointer from the current TCB */
+      M_PSP_LOAD    sp, \pAppCB
+      M_PSP_LOAD    sp, \spLocationInAppCB(sp)
+      /* Load task program counter */
+      M_PSP_LOAD    t0, D_RTOSAL_MEPC_LOC_IN_STK * REGBYTES(sp)
+      csrw          mepc, t0
+  .endm
+
+  /* Macro that sets indication of interrupt context */
+  .macro M_RTOSAL_SET_INT_CONTEXT offset
+      /* save address of g_rtosalIsInterruptContext -> t0 */
+      la            a0, g_rtosalIsInterruptContext
+      /* load the value g_rtosalIsInterruptContext -> t1 */
+      M_PSP_LOAD    a1, 0x0(a0)
+      /* increment t1 by 1 */
+      M_PSP_ADDI    a1, a1, 1
+      /* store new value to g_rtosalIsInterruptContext */
+      M_PSP_STORE   a1, 0x0(a0)
+  .endm
+
+  .macro M_RTOSAL_READ_HART_ID offset_from_hart_id
+  .endm
+  
+  .macro M_RTOSAL_CHANGE_SP_FROM_APP_TO_ISR_STACK pIsrStack, offset
+     M_PSP_LOAD    sp, \pIsrStack
+  .endm
+
+  /* Macro for setting SP to use stack of current application */
+  /* [NR] - To do: add stack check */
+  .macro M_RTOSAL_CHANGE_SP_FROM_ISR_TO_APP_STACK  pAppCB, spLocationInAppCB, offset
+      /* Load sp register with the address of current Application Control Block */
+      M_PSP_LOAD    sp, \pAppCB
+      /* Update sp regsiter to point to Task's stack*/
+      M_PSP_LOAD    sp, \spLocationInAppCB(sp)
+  .endm
+
+.endif /* D_ENABLE_FREERTOS_SMP */
 /* This macro is activated at the end of ISR handling. It does the following:
  * (1) checks whether a context-switch is required.
  * (2) If no - jump to 'branch_label'
@@ -117,8 +206,13 @@
 .endm
 
 .macro M_RTOSAL_SWITCH_CONTEXT
-.if D_USE_FREERTOS
-   jal            vTaskSwitchContext
-.endif
+  .if D_USE_FREERTOS == 1
+    .if D_ENABLE_FREERTOS_SMP == 1
+       csrr  a0,mhartid
+       andi  a0, a0, D_HART_ID_MASK
+    .endif /* D_ENABLE_FREERTOS_SMP */
+    jal  vTaskSwitchContext
+  .endif //D_USE_FREERTOS
 .endm
+
 

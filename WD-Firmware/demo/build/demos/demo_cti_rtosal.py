@@ -29,8 +29,6 @@ class demo(object):
     self.strOverlayStorageSize = "33792"
 
     self.public_defs = [
-        'D_USE_FREERTOS',
-        'D_USE_RTOSAL',
         'D_TICK_TIME_MS=10',
         'D_ISR_STACK_SIZE=400',
         'D_COMRV_ENABLE_RTOS_SUPPORT',
@@ -46,6 +44,9 @@ class demo(object):
         'D_COMRV_ENABLE_CONTROL_SUPPORT',
         'D_COMRV_ENABLE_CRC_SUPPORT',
         'D_COMRV_ENABLE_OVL_DATA_SUPPORT',
+        'D_USE_RTOSAL',
+        'D_USE_FREERTOS=1',
+        'D_ENABLE_FREERTOS_SMP=0'
     ]
 
     self.listSconscripts = [
