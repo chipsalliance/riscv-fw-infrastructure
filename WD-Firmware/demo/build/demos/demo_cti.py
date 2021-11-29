@@ -49,8 +49,8 @@ class demo(object):
     ]
 
     self.listDemoSpecificCFlags = [
-      # -fcomrv is used to enable llvm support for overlay functions/data
-      '-fcomrv',
+      # -moverlay is used to enable llvm support for overlay functions/data
+      '-moverlay',
     ]
 
     self.listDemoSpecificLinkerFlags = [
