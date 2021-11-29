@@ -46,7 +46,8 @@ Env['PUBLIC_DEF'] += ['D_SWERV_EH1',                                            
                       'D_SWERV_EL2',                                                  # SweRV-EL2 definition is common to SweRV EH2 also
                       'D_SWERV_EH2',                                                  # SweRV-EH2
                       'D_SWERV_FAST_INT',                                             # Fast-interrupt mode is supported in SweRV EH2
-                      'D_NUMBER_OF_HARTS=2',                                          # 2 HW threads in EH2 core 
+                      'D_NUMBER_OF_HARTS=2',                                          # 2 HW threads in EH2 core
+                      'D_DCCM_SECTION_IS_DEFINED',                                    # DCCM section is defined                        
                       'D_MTIME_ADDRESS=0x80001020',                                   # MTIME address
                       'D_MTIMECMP_ADDRESS=0x80001028',                                # MTIMECMP address
                       'D_CLOCK_RATE=50000000',                                        # Clock rate = 50Mhz   

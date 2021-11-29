@@ -35,14 +35,17 @@
 */
 
 /* You can operate atomic commands only on variables in the DCCM. Do not define the atomic operation intrinsics if DCCM does not exist in the system */
-#ifdef D_DCCM_SECTION_START_ADDRESS
-  /* SweRV EH2 takes the most conservative approach to atomic and implements .aq znd .rl semantics with all atomic instructions. So we could afford using __ATOMIC_RELAXED */ 
-  #define PSP_ATOMIC_SWAP(pAddress, value)  __atomic_exchange_n(pAddress, value, __ATOMIC_RELAXED); 
-  #define PSP_ATOMIC_ADD(pAddress, value)   __atomic_add_fetch(pAddress, value, __ATOMIC_RELAXED);
-  #define PSP_ATOMIC_AND(pAddress, value)   __atomic_and_fetch(pAddress, value, __ATOMIC_RELAXED);
-  #define PSP_ATOMIC_XOR(pAddress, value)   __atomic_xor_fetch(pAddress, value, __ATOMIC_RELAXED);
-  #define PSP_ATOMIC_OR(pAddress, value)    __atomic_or_fetch(pAddress, value, __ATOMIC_RELAXED);
+#ifndef D_DCCM_SECTION_IS_DEFINED
+  #error "No DCCM section is defined."
 #endif
+
+/* SweRV EH2 takes the most conservative approach to atomic and implements .aq znd .rl semantics with all atomic instructions. So we could afford using __ATOMIC_RELAXED */
+#define PSP_ATOMIC_SWAP(pAddress, value)  __atomic_exchange_n(pAddress, value, __ATOMIC_RELAXED);
+#define PSP_ATOMIC_ADD(pAddress, value)   __atomic_add_fetch(pAddress, value, __ATOMIC_RELAXED);
+#define PSP_ATOMIC_AND(pAddress, value)   __atomic_and_fetch(pAddress, value, __ATOMIC_RELAXED);
+#define PSP_ATOMIC_XOR(pAddress, value)   __atomic_xor_fetch(pAddress, value, __ATOMIC_RELAXED);
+#define PSP_ATOMIC_OR(pAddress, value)    __atomic_or_fetch(pAddress, value, __ATOMIC_RELAXED);
+
 
 /**
 * types

@@ -23,7 +23,9 @@
 #ifndef  __PSP_ATOMICS_EH2_H__
 #define  __PSP_ATOMICS_EH2_H__
 
-
+#ifndef D_DCCM_SECTION_IS_DEFINED
+  #error "No DCCM section is defined."
+#endif
 /**
 * include files
 */

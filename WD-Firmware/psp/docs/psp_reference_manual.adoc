@@ -117,7 +117,7 @@ core:
 | D_SWERV_EH1 D_SWERV_EL2 | SweRV EL2 |
 | D_SWERV_EH1 D_SWERV_EL2 D_SWERV_EH2 | SweRV EH2 |
 | D_BIT_MANIPULATION | SweRV EL2, SweRV_EH2 |
-| D_DCCM_SECTION_START_ADDRESS | SweRV_EH2 | The flag is required to support
+| D_DCCM_SECTION_IS_DEFINED | SweRV_EH2 | The flag is required to support
 compiler build-in atomic operations.
 | D_NUMBER_OF_HARTS | all SweRV cores | the defaul value is 1
 |========================================================================
