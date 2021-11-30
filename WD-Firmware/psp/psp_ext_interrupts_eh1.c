@@ -178,6 +178,9 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptDisableNumber(u32_t uiIntNum)
   /* Clear Int-Enable bit in meie register, corresponds to given source (interrupt-number) */
   M_PSP_WRITE_REGISTER_32((D_PSP_PIC_MEIE_ADDR + M_PSP_MULT_BY_4(uiIntNum)) , 0);
 
+  /* PIC memory-mapped register write should be followed by fence */
+  M_PSP_INST_FENCE();
+
   /* Restore interrupts */
   pspMachineInterruptsRestore(uiInterruptsState);
 }
@@ -200,6 +203,9 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptEnableNumber(u32_t uiIntNum)
 
   /* Set Int-Enable bit in meie register, corresponds to given source (interrupt-number) */
   M_PSP_WRITE_REGISTER_32((D_PSP_PIC_MEIE_ADDR + M_PSP_MULT_BY_4(uiIntNum)), D_PSP_MEIE_INT_EN_MASK);
+
+  /* PIC memory-mapped register write should be followed by fence */
+  M_PSP_INST_FENCE();
 
   /* Restore interrupts */
   pspMachineInterruptsRestore(uiInterruptsState);
@@ -224,6 +230,9 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptSetPriority(u32_t uiIntNum, u32_t 
 
   /* Set priority in meipl register, corresponds to given source (interrupt-number) */
   M_PSP_WRITE_REGISTER_32((D_PSP_MEIPL_ADDR + M_PSP_MULT_BY_4(uiIntNum)), uiPriority);
+
+  /* PIC memory-mapped register write should be followed by fence */
+  M_PSP_INST_FENCE();
 
   /* Restore interrupts */
   pspMachineInterruptsRestore(uiInterruptsState);
@@ -321,6 +330,9 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptSetType(u32_t uiIntNum, u32_t uiIn
   /* Set interrupt type */
   M_PSP_SET_REGISTER_32(D_PSP_PIC_MEIGWCTRL_ADDR + M_PSP_MULT_BY_4(uiIntNum), uiIntType << D_PSP_MEIGWCTRL_TYPE_BIT_OFFSET);
 
+  /* PIC memory-mapped register write should be followed by fence */
+  M_PSP_INST_FENCE();  
+
   /* Restore interrupts */
   pspMachineInterruptsRestore(uiInterruptsState);
 }
@@ -346,6 +358,9 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptSetPolarity(u32_t uiIntNum, u32_t 
   /* Set interrupt type */
   M_PSP_SET_REGISTER_32(D_PSP_PIC_MEIGWCTRL_ADDR + M_PSP_MULT_BY_4(uiIntNum), uiPolarity << D_PSP_MEIGWCTRL_POLARITY_BIT_OFFSET);
 
+  /* PIC memory-mapped register write should be followed by fence */
+  M_PSP_INST_FENCE();  
+
   /* Restore interrupts */
   pspMachineInterruptsRestore(uiInterruptsState);
 }
@@ -364,6 +379,9 @@ D_PSP_TEXT_SECTION void  pspMachineExtInterruptClearPendingInt(u32_t uiIntNum)
 
   /* Clear the gwateway */
   M_PSP_WRITE_REGISTER_32(D_PSP_PIC_MEIGWCLR_ADDR + M_PSP_MULT_BY_4(uiIntNum), 0);
+
+  /* PIC memory-mapped register write should be followed by fence */
+  M_PSP_INST_FENCE();   
 
   /* Restore interrupts */
   pspMachineInterruptsRestore(uiInterruptsState);
@@ -387,6 +405,9 @@ D_PSP_TEXT_SECTION void pspMachineExtInterruptSetPriorityOrder(u32_t uiPriorityO
 
   /* Set Priority Order */
   M_PSP_WRITE_REGISTER_32(D_PSP_PIC_MPICCFG_ADDR, uiPriorityOrder);
+
+  /* PIC memory-mapped register write should be followed by fence */
+  M_PSP_INST_FENCE();
 
   /* Restore interrupts */
   pspMachineInterruptsRestore(uiInterruptsState);
