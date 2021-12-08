@@ -82,6 +82,42 @@ psp_vect_table:
     .align 2
     j psp_m_external_int       /* Machine external interrupt       */
     .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int         /* Reserved for future standard use */
+    .align 2
+    j psp_m_internal_timer1_int       /* internal timer 0 interrupt       */
+    .align 2
+    j psp_m_internal_timer0_int       /* internal timer 1 interrupt       */
+    .align 2
 
 psp_exceptions_int:
 .ifdef D_PSP_VECT_TABLE
@@ -131,6 +167,29 @@ psp_m_external_int:
     M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
     mret
 
+psp_m_internal_timer0_int:
+.ifdef D_PSP_VECT_TABLE
+    M_PSP_PUSH_REGFILE                                   /* Push registers of current task onto stack */
+    /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
+.endif /* D_PSP_VECT_TABLE */
+    M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTop               /* After RegFile is pushed onto task's-stack, we change sp to point to ISR-Stack */
+    M_PSP_CALL_INT_HANDLER g_fptrIntMTimer0IntHandler    /* Call the interrupt handler */
+    // Nati - replace with appropriate macro     M_PSP_CHANGE_SP_FROM_ISR_TO_APP_STACK               /* Just before pop RegFile of the interrupted task - change sp to point to current Task-Stack */
+    M_PSP_RESTORE_APP_SP
+    M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
+    mret
+
+psp_m_internal_timer1_int:
+.ifdef D_PSP_VECT_TABLE
+    M_PSP_PUSH_REGFILE                                   /* Push registers of current task onto stack */
+    /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
+.endif /* D_PSP_VECT_TABLE */
+    M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTop               /* After RegFile is pushed onto task's-stack, we change sp to point to ISR-Stack */
+    M_PSP_CALL_INT_HANDLER g_fptrIntMTimer1IntHandler    /* Call the interrupt handler */
+    // Nati - replace with appropriate macro     M_PSP_CHANGE_SP_FROM_ISR_TO_APP_STACK               /* Just before pop RegFile of the interrupted task - change sp to point to current Task-Stack */
+    M_PSP_RESTORE_APP_SP
+    M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
+    mret
 
 .weak psp_reserved_int
 psp_reserved_int:

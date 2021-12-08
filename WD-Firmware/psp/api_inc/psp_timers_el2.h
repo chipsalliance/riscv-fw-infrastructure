@@ -31,6 +31,7 @@
 /**
 * definitions
 */
+
 /* Machine timer and internal timers 1 & 2 are defined in psp_timers_eh1.h */
 /* 
    #define D_PSP_INTERNAL_TIMER0 1
@@ -63,15 +64,54 @@
 * APIs
 */
 
+
 /**
-* @brief Cascade Timer0 and Timer1 to act as a single timer
-*        In this mode, Timer1 counts up when Timer0 reachs its bound value. Timer1 interrupt raises when Timer1 reachs its bound.
-*        **Note** In 'cascade' mode HALT-EN, and PAUSE-EN indications must be the set identically for both timers
-*                 so part this function also set disable all of them here.
+* @brief setup Cascade timer (64 bit internal timer)
 *
-* @param - udPeriodCycles - defines the timer's period in cycles
+* @param - ullPeriodCycles - defines the timer's period in cycles
 *
 */
-void pspMachineInternalTimerSetup64bitTimer(u64_t udPeriodCycles);
+void pspMachineInternalTimer64BitTimerSetup(u64_t ullPeriodCycles);
+
+/**
+* @brief Enable incrementing internal 64'bit timer counter (Run)
+*/
+void pspMachineInternalTimer64BitTimerRun(void);
+
+/**
+* @brief Disable incrementing internal 64'bit timer counter (Pause)
+*/
+void pspMachineInternalTimer64BitTimerPause(void);
+
+/**
+* @brief Get Core 64'bit Internal Timer counter value
+*/
+u64_t pspMachineInternalTimer64BitTimerCounterGet(void);
+
+/**
+* @brief Get Core 64'bit Internal Timer compare counter value
+*/
+u64_t pspMachineInternalTimer64BitTimerCompareCounterGet(void);
+
+/**
+* @brief Enable Core Internal 64'bit timer counting when core in sleep mode
+*/
+void pspMachineInternalTimer64BitTimerEnableCountInSleepMode(void);
+
+/**
+* @brief Disable Core Internal 64'bit timer counting when core in sleep mode
+*/
+void pspMachineInternalTimer64BitTimerDisableCountInSleepMode(void);
+
+/**
+* @brief Enable Core Internal 64'bit timer counting when core in Stall mode
+*/
+void pspMachineInternalTimer64BitTimerEnableCountInStallMode(void);
+
+/**
+* @brief Disable Core Internal 64'bit timer counting when core in Stall mode
+*/
+void pspMachineInternalTimer64BitTimerDisableCountInStallMode(void);
+
 
 #endif /* __PSP_TIMERS_EL2_H__ */

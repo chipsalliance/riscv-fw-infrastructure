@@ -85,6 +85,42 @@ psp_vect_table_hart0:
     j psp_reserved_int_hart0         /* Reserved for future standard use */
     .align 2
     j psp_m_external_int_hart0       /* Machine external interrupt       */
+     .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_m_internal_timer1_int_hart0        /* internal timer 0 interrupt       */
+    .align 2
+    j psp_m_internal_timer0_int_hart0        /* internal timer 1 interrupt       */
     .align 2
 
 psp_exceptions_int_hart0:
@@ -130,6 +166,30 @@ psp_m_external_int_hart0:
 .endif /* D_PSP_VECT_TABLE */
     M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart0                  /* After RegFile is pushed onto task's-stack, we change sp to point to ISR-Stack */
     M_PSP_CALL_EXT_INT_HANDLER
+    M_PSP_RESTORE_APP_SP
+    /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
+    M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
+    mret
+
+    psp_m_internal_timer0_int_hart0:
+.ifdef D_PSP_VECT_TABLE
+    M_PSP_PUSH_REGFILE                                   /* Push registers of current task onto stack */
+    /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
+.endif /* D_PSP_VECT_TABLE */
+    M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart0                  /* After RegFile is pushed onto application's-Stack, we change sp to point to ISR-Stack */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntMTimer0IntHandler + 0) /* call the exception handler */
+    M_PSP_RESTORE_APP_SP
+    /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
+    M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
+    mret
+
+psp_m_internal_timer1_int_hart0:
+.ifdef D_PSP_VECT_TABLE
+    M_PSP_PUSH_REGFILE                                   /* Push registers of current task onto stack */
+    /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
+.endif /* D_PSP_VECT_TABLE */
+    M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart0                  /* After RegFile is pushed onto application's-Stack, we change sp to point to ISR-Stack */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntMTimer1IntHandler + 0) /* call the exception handler */
     M_PSP_RESTORE_APP_SP
     /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
     M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
@@ -192,6 +252,42 @@ psp_vect_table_hart1:
     .align 2
     j psp_m_external_int_hart1       /* Machine external interrupt       */
     .align 2
+     j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart0         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_reserved_int_hart1         /* Reserved for future standard use */
+    .align 2
+    j psp_m_internal_timer1_int_hart1        /* internal timer 0 interrupt       */
+    .align 2
+    j psp_m_internal_timer0_int_hart1        /* internal timer 1 interrupt       */
+    .align 2
 
 psp_exceptions_int_hart1:
 .ifdef D_PSP_VECT_TABLE
@@ -241,6 +337,29 @@ psp_m_external_int_hart1:
     M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
     mret
 
+    psp_m_internal_timer0_int_hart1:
+.ifdef D_PSP_VECT_TABLE
+    M_PSP_PUSH_REGFILE                                   /* Push registers of current task onto stack */
+    /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
+.endif /* D_PSP_VECT_TABLE */
+    M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart1                  /* After RegFile is pushed onto application's-Stack, we change sp to point to ISR-Stack */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntMTimer0IntHandler + 4) /* call the exception handler */
+    M_PSP_RESTORE_APP_SP
+    /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
+    M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
+    mret
+
+psp_m_internal_timer1_int_hart1:
+.ifdef D_PSP_VECT_TABLE
+    M_PSP_PUSH_REGFILE                                   /* Push registers of current task onto stack */
+    /* NatiR - TO DO - add indication of enter to Interrupt context (call it M_PSP_SET_INT_CONTEXT) */
+.endif /* D_PSP_VECT_TABLE */
+    M_PSP_CHANGE_SP_FROM_APP_TO_ISR_STACK xISRStackTopHart1                  /* After RegFile is pushed onto application's-Stack, we change sp to point to ISR-Stack */
+    M_PSP_CALL_INT_HANDLER (g_fptrIntMTimer1IntHandler + 4) /* call the exception handler */
+    M_PSP_RESTORE_APP_SP
+    /* NatiR - TO DO - add indication of exit from Interrupt context (call it M_PSP_CLEAR_INT_CONTEXT) */
+    M_PSP_POP_REGFILE                                    /* Restore the registers of current task from the stack */
+    mret
 
 .weak psp_reserved_int_hart1
 psp_reserved_int_hart1:

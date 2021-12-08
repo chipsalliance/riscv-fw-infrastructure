@@ -35,16 +35,68 @@ typedef enum ePspInterruptCauseEH1
 === Enable/Disable bits of Timer0, Timer1 and Correctable-Error-Counter interrupts
 |========================================================================
 | *Definition* |*Value*
-| D_PSP_INTERRUPTS_MACHINE_TIMER0           | E_MACHINE_INTERNAL_TIMER0_CAUSE
-(Value=29)
-| D_PSP_INTERRUPTS_MACHINE_TIMER1           | E_MACHINE_INTERNAL_TIMER1_CAUSE
-(Value=28)
-| D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER | E_MACHINE_CORRECTABLE_ERROR_CAUSE
-(Value=30)
+| D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER0
+  | E_MACHINE_INTERNAL_TIMER0_CAUSE (Value=29)
+| D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER1
+  | E_MACHINE_INTERNAL_TIMER1_CAUSE (Value=28)
+| D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
+  | E_MACHINE_CORRECTABLE_ERROR_CAUSE (Value=30)
 |========================================================================
 
 
 == APIs
+
+=== pspMachineInterruptsDisableIntNumber
+Disable specified interrupt for any privilege level.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsDisableIntNumber(u32_t uiInterruptNumber);
+----
+.parameters
+* *uiInterruptNumber* - Interrupt number to disable. When you call this
+function, you can use either one of the following defined values:
+  - D_PSP_INTERRUPTS_MACHINE_SW
+  - D_PSP_INTERRUPTS_MACHINE_TIMER
+  - D_PSP_INTERRUPTS_MACHINE_EXT
+  - D_PSP_INTERRUPTS_SUPERVISOR_SW
+  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
+  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
+  - D_PSP_INTERRUPTS_USER_SW
+  - D_PSP_INTERRUPTS_USER_TIMER
+  - D_PSP_INTERRUPTS_USER_EXT
+  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER0
+  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER1
+  - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
+
+.return
+* *None*
+
+=== pspMachineInterruptsEnableIntNumber
+Enable specified interrupt for any privilege level.
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInterruptsEnableIntNumber(u32_t uiInterruptNumber);
+----
+.parameters
+* *uiInterruptNumber* - Interrupt number to enable. When you call this
+function, you can use either one of the following defined values:
+  - D_PSP_INTERRUPTS_MACHINE_SW
+  - D_PSP_INTERRUPTS_MACHINE_TIMER
+  - D_PSP_INTERRUPTS_MACHINE_EXT
+  - D_PSP_INTERRUPTS_SUPERVISOR_SW
+  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
+  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
+  - D_PSP_INTERRUPTS_USER_SW
+  - D_PSP_INTERRUPTS_USER_TIMER
+  - D_PSP_INTERRUPTS_USER_EXT
+  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER0
+  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER1
+  - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
+
+.return
+* *None*
+
+
 === pspInterruptsGetExceptionHandler
 The function returns the address of the handler of a given exception cause.
 [source, c, subs="verbatim,quotes"]

@@ -28,7 +28,7 @@ except ImportError as e:
     import serial
 
 # TODO get is as a python input
-INT_DEMO_TO_IN_SECONDS = 7 * 60
+INT_DEMO_TO_IN_SECONDS = 13 * 60
 INT_PLATFORM_EXE_DELAY_IN_SECS = 2
 INT_TOOLCHAIN_INDEX = 0
 INT_PLATFORM_NAME_INDEX = 1

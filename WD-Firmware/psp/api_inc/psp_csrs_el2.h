@@ -90,6 +90,11 @@
 /**************************************/
 #define D_PSP_MCOUNTINHIBIT_NUM 0x320
 
+/*************************************/
+/* Cascade TIMERs CSRs            */
+/*************************************/
+#define  D_PSP_MITCTL_EN_CASCADE         0x0000008 /* bit #3 */
+
 
 /**
 * macros

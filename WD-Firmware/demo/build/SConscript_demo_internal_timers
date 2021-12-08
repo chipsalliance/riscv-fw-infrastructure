@@ -26,20 +26,18 @@ utils.fnCreateFolder(strOutDir)
 listCFiles=[
    (os.path.join('demo' , 'main.c'), os.path.join(strOutDir, 'main.o')),
    (os.path.join('demo' , 'demo_platform_al.c'), os.path.join(strOutDir, 'demo_platform_al.o')),
-   (os.path.join('demo' , 'demo_trap.c'), os.path.join(strOutDir, 'demo_trap.o')),
+   (os.path.join('demo' , 'demo_internal_timers.c'), os.path.join(strOutDir, 'demo_internal_timers.o')),
 ]
-
 # Assembly language source and out files in list of tupples
 # (sourcefile.S, outputfile.o)
-listAssemblyFiles=[
-   (os.path.join('psp', 'psp_int_vect.S'), os.path.join(strOutDir, 'psp_int_vect.o')),
-]
+listAssemblyFiles=[]
 
 # compiler directivs
 listCCompilerDirectivs = [] + Env['C_FLAGS']
 listAsimCompilerDirectivs = [] + Env['A_FLAGS']
 
 # compilation defines (-D_)
+Env['PUBLIC_DEF'] += []
 listCompilationDefines = [] + Env['PUBLIC_DEF']
 
 # public includes
@@ -52,16 +50,18 @@ if not Env["Scan"]:
   for tplFile in listCFiles:
     listObjects.append(Env.Object(source=os.path.join(Env['ROOT_DIR'], tplFile[0]), target=tplFile[1], CPPPATH=listIncPaths, CCFLAGS=listCCompilerDirectivs, CPPDEFINES=listCompilationDefines))
 
+
+ 
+
   # asm file objects
   for tplFile in listAssemblyFiles:
     listObjects.append(Env.Object(source=os.path.join(Env['ROOT_DIR'], tplFile[0]), target=tplFile[1], CPPPATH=listIncPaths, CCFLAGS=listAsimCompilerDirectivs, CPPDEFINES=listCompilationDefines))
 
   # for libraries
-  objDemoTrapBaermetal = Env.Library (target=os.path.join(Env['OUT_DIR_PATH'], 'libs', Env['DEMO_NAME']+'_demo.a'), source=listObjects)
+  objDemoInternalTimerLib = Env.Library (target=os.path.join(Env['OUT_DIR_PATH'], 'libs', Env['DEMO_NAME']+'_demo.a'), source=listObjects)
 
   #print Env.Dump()
 
   # return the demo lib
-  Return('objDemoTrapBaermetal')
+  Return('objDemoInternalTimerLib')
 
- 

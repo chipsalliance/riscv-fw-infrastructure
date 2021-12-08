@@ -54,9 +54,9 @@ typedef void (*fptrPspInterruptHandler_t)(void);
 #define D_PSP_FIRST_EH1_INT_CAUSE = E_MACHINE_INTERNAL_TIMER1_CAUSE;
 
 /* Enable/Disable bits of Timer0, Timer1 and Correctable-Error-Counter interrupts */
-#define D_PSP_INTERRUPTS_MACHINE_TIMER0              E_MACHINE_INTERNAL_TIMER0_CAUSE
-#define D_PSP_INTERRUPTS_MACHINE_TIMER1              E_MACHINE_INTERNAL_TIMER1_CAUSE
-#define D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER    E_MACHINE_CORRECTABLE_ERROR_CAUSE
+#define D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER0              E_MACHINE_INTERNAL_TIMER0_CAUSE
+#define D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER1              E_MACHINE_INTERNAL_TIMER1_CAUSE
+#define D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER             E_MACHINE_CORRECTABLE_ERROR_CAUSE
 
 /**
 * local prototypes
@@ -77,6 +77,54 @@ typedef void (*fptrPspInterruptHandler_t)(void);
 /**
 * APIs
 */
+
+/**
+ * @brief - Disable specified interrupt when called in MACHINE-LEVEL
+ *                                                     *************
+ * IMPORTANT NOTE: When you call this function, you can use either one of the following defined values:
+  *************** - D_PSP_INTERRUPTS_MACHINE_SW
+                  - D_PSP_INTERRUPTS_MACHINE_TIMER
+                  - D_PSP_INTERRUPTS_MACHINE_EXT
+                  - D_PSP_INTERRUPTS_SUPERVISOR_SW
+                  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
+                  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
+                  - D_PSP_INTERRUPTS_USER_SW
+                  - D_PSP_INTERRUPTS_USER_TIMER
+                  - D_PSP_INTERRUPTS_USER_EXT
+                  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER0
+                  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER1
+                  - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
+*
+* @input parameter - Interrupt number to disable
+*
+* @return - none
+*/
+void pspMachineInterruptsDisableIntNumber(u32_t uiInterruptNumber);
+
+/**
+*  @brief - Enable specified interrupt when called in MACHINE-LEVEL
+*                                                    *************
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values:
+  *************** - D_PSP_INTERRUPTS_MACHINE_SW
+                  - D_PSP_INTERRUPTS_MACHINE_TIMER
+                  - D_PSP_INTERRUPTS_MACHINE_EXT
+                  - D_PSP_INTERRUPTS_SUPERVISOR_SW
+                  - D_PSP_INTERRUPTS_SUPERVISOR_TIMER
+                  - D_PSP_INTERRUPTS_SUPERVISOR_EXT
+                  - D_PSP_INTERRUPTS_USER_SW
+                  - D_PSP_INTERRUPTS_USER_TIMER
+                  - D_PSP_INTERRUPTS_USER_EXT
+                  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER0
+                  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER1
+                  - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
+*
+* @input parameter - Interrupt number to enable
+*
+* @return - none
+*/
+void pspMachineInterruptsEnableIntNumber(u32_t uiInterruptNumber);
+
+
 
 /**
 * @brief - The function returns the address the handler of a given exception

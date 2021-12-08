@@ -7,18 +7,18 @@
 :include_dir: .
 
 = Processor Support Package Reference Manual: Western Digital (R)
-Version 1.0
-2021-09-02
+Version 1.2
+2021-12-07
 
 SPDX-License-Identifier: Apache-2.0
 Copyright 2019-2021 Western Digital Corporation or its affiliates.
- 
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
- 
+
 http://www.apache.org/licenses/LICENSE-2.0
- 
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,8 +36,10 @@ limitations under the License.
 [cols="3,3a,10a,5a",options="header"]
 |=============================================
 |*_Revision_* |*_Date_* |*_Contents_* |*_Author(s)_*
-|1 |Sep 2, 2021 |Initial draft |Pasha Tikhonov +
-Ibrahim Qashqoush
+|1.1 |Sep 2, 2021 |Initial draft |Pasha Tikhonov +
+  Ibrahim Qashqoush
+|1.2 |December 7, 2021 | adding internal timers
+  |Ibrahim Qashqoush
 |=============================================
 
 {nbsp} +
@@ -62,7 +64,7 @@ Ibrahim Qashqoush
 |https://raw.githubusercontent.com/chipsalliance/Cores-SweRV/master/docs/RISC-V_SweRV_EH1_PRM.pdf[SweRV EH1 PRM] | Revision 1.8 |
 | 2 | https://raw.githubusercontent.com/chipsalliance/Cores-SweRV-EL2/master/docs/RISC-V_SweRV_EL2_PRM.pdf[SweRV EL2 PRM] | Revision 1.2 |
 | 3 | https://raw.githubusercontent.com/chipsalliance/Cores-SweRV-EH2/master/docs/RISC-V_SweRV_EH2_PRM.pdf[SweRV EH2 PRM] | Revision 1.2 |
-| 4 | https://github.com/riscv/riscv-isa-manual/releases/download/Ratified-IMAFDQC/riscv-spec-20191213.pdf[The RISC-V Instruction Set Manual. Volume I: Unprivileged ISA] | 20190608-Base-Ratified | Specification ratified 
+| 4 | https://github.com/riscv/riscv-isa-manual/releases/download/Ratified-IMAFDQC/riscv-spec-20191213.pdf[The RISC-V Instruction Set Manual. Volume I: Unprivileged ISA] | 20190608-Base-Ratified | Specification ratified
 | 5 | https://github.com/riscv/riscv-isa-manual/releases/download/Ratified-IMFDQC-and-Priv-v1.11/riscv-privileged-20190608.pdf[The RISC-V Instruction Set Manual. Volume II: Privileged Architecture] | 20190608-Priv-MSU-Ratified | Specification ratified
 | 6 | https://gcc.gnu.org/onlinedocs/gcc.pdf[GCC book] |  |
 | 7 | https://llvm.org/docs/LangRef.html[LLVM Programmer's Manual] | |
@@ -77,7 +79,7 @@ Built-in Functions for Memory Model Aware Atomic Operations.
 == **Abbreviations**
 |========================================
 | **Abbreviation** | **Description**
-| PSP | Processor Support Package 
+| PSP | Processor Support Package
 | FW | Firmware
 | HW | Hardware
 | CSR | Control and Status Register
@@ -198,7 +200,7 @@ include::{include_dir}/psp_macros_eh2.adoc[leveloffset=+3]
 
 
 === psp_macros_asm
-<<psp_macros_asm_ref, psp_macros_asm>> subsection is relevant for all platforms. 
+<<psp_macros_asm_ref, psp_macros_asm>> subsection is relevant for all platforms.
 <<psp_macros_asm_eh1_ref, EH1>> subsection adds SweRV specific macros.
 
 include::{include_dir}/psp_macros_asm.adoc[leveloffset=+3]
@@ -297,7 +299,7 @@ include::{include_dir}/psp_nmi_eh2.adoc[leveloffset=+3]
 === psp_int_vect
 API defined in <<psp_int_vect_ref, psp_int_vect>> is relevant for all single
 core IPs (i.e. EH1, EL2). It is extanded in
-<<psp_int_vect_eh2_ref, psp_int_vect_eh2>> to support dual-hard cores (EH2). 
+<<psp_int_vect_eh2_ref, psp_int_vect_eh2>> to support dual-hard cores (EH2).
 
 Assign the vector-table address to _mtvec_ CSR (Machine trap-handler base
 address) once the program is ready to deal with an assertion of
@@ -308,7 +310,7 @@ include::{include_dir}/psp_int_vect_eh2.adoc[leveloffset=+3]
 
 
 === psp_timers
-Each of the cores EH1/EL2/EH2 has two internal timers and one machine timer. 
+Each of the cores EH1/EL2/EH2 has two internal timers and one machine timer.
 Few differences:
 
 * An internal timer is a hardware timer inside a core, while the machine timer
@@ -332,7 +334,7 @@ include::{include_dir}/psp_timers_el2.adoc[leveloffset=+3]
 
 
 === psp_atomics
-This section describes atomic operations as defined in the standard RISC-V 
+This section describes atomic operations as defined in the standard RISC-V
 Atomic (A) extension.
 
 It is only supported on EH2.

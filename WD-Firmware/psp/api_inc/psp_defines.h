@@ -82,6 +82,8 @@
 #define D_PSP_SHIFT_31   31
 #define D_PSP_SHIFT_32   32
 
+#define D_PSP_32BIT_MASK                    0xFFFFFFFF
+#define D_PSP_LEAST_SIGNIFICANT_32_BIT_MASK 0x00000000FFFFFFFF
 #ifdef NULL
     #undef NULL
 #endif

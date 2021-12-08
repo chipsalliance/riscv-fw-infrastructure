@@ -31,7 +31,7 @@
 * definitions
 */
 #define PSP_VERSION_MAJOR  1
-#define PSP_VERSION_MINOR  1
+#define PSP_VERSION_MINOR  2
 
 /**
 * macros

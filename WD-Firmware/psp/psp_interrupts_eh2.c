@@ -389,8 +389,8 @@ D_PSP_TEXT_SECTION void pspMachineInterruptsEnable(void)
                   - D_PSP_INTERRUPTS_USER_SW
                   - D_PSP_INTERRUPTS_USER_TIMER
                   - D_PSP_INTERRUPTS_USER_EXT
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER0
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER1
+                  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER0
+                  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER1
                   - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
 *
 * @input parameter - Interrupt number to disable
@@ -417,8 +417,8 @@ D_PSP_TEXT_SECTION void pspMachineInterruptsDisableIntNumber(u32_t uiInterruptNu
                   - D_PSP_INTERRUPTS_USER_SW
                   - D_PSP_INTERRUPTS_USER_TIMER
                   - D_PSP_INTERRUPTS_USER_EXT
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER0
-                  - D_PSP_INTERRUPTS_MACHINE_TIMER1
+                  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER0
+                  - D_PSP_INTERRUPTS_MACHINE_INTERNAL_TIMER1
                   - D_PSP_INTERRUPTS_MACHINE_CORR_ERR_COUNTER
 *
 * @input parameter - Interrupt number to enable

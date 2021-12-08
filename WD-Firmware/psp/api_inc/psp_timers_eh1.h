@@ -34,6 +34,7 @@
 #define D_PSP_INTERNAL_TIMER0 1
 #define D_PSP_INTERNAL_TIMER1 2
 
+
 /**
 * types
 */
@@ -59,28 +60,56 @@
 */
 
 
- 
-
 
 /**
-* @brief Setup and activate Internal core's Timer
+* @brief Setup  Internal core's Timer
 *
-* @param - uiTimer           - indicates which timer to setup and run
+* @param - uiTimer           - indicates which timer to setup
 *
-* @param - udPeriodCycles  - defines the timer's period in cycles 
+* @param - uiPeriodCycles  - defines the timer's period in cycles
+*
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values for uiTimer:
+*                   - D_PSP_INTERNAL_TIMER0
+*                   - D_PSP_INTERNAL_TIMER1
 *
 */
-void pspMachineInternalTimerCounterSetupAndRun(u32_t uiTimer, u64_t udPeriodCycles);
+void pspMachineInternalTimerCounterSetup(u32_t uiTimer, u32_t uiPeriodCycles);
+
+/**
+* @brief Enable incrementing timer counter(Run)
+*
+* @param - uiTimer  - indicates which timer to Run
+*
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values for uiTimer:
+*                   - D_PSP_INTERNAL_TIMER0
+*                   - D_PSP_INTERNAL_TIMER1
+*/
+void pspMachineInternalTimerRun(u32_t uiTimer);
+
+/**
+* @brief Disable incrementing timer counter
+*
+* @param - uiTimer  - indicates which timer to disable
+*
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values for uiTimer:
+*                   - D_PSP_INTERNAL_TIMER0
+*                   - D_PSP_INTERNAL_TIMER1
+*/
+void pspMachineInternalTimerPause(u32_t uiTimer);
 
 /**
 * @brief Get Core Internal Timer counter value
 *
 * @param - uitimer - indicates from which timer to get the counter value
 *
-* @return u64_t      - Timer counter value
+* @return u32_t      - Timer counter value
+*
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values for uiTimer:
+*                   - D_PSP_INTERNAL_TIMER0
+*                   - D_PSP_INTERNAL_TIMER1
 *
 */
-u64_t pspMachineInternalTimerCounterGet(u32_t uiTimer);
+u32_t pspMachineInternalTimerCounterGet(u32_t uiTimer);
 
 
 /**
@@ -88,15 +117,22 @@ u64_t pspMachineInternalTimerCounterGet(u32_t uiTimer);
 *
 * @param - uitimer - indicates from which timer to get the compare-counter value
 *
-* @return u64_t      – Time compare counter value
+* @return u32_t      – Time compare counter value
 *
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values for uiTimer:
+*                   - D_PSP_INTERNAL_TIMER0
+*                   - D_PSP_INTERNAL_TIMER1
 */
-u64_t pspMachineInternalTimerCompareCounterGet(u32_t uiTimer);
+u32_t pspMachineInternalTimerCompareCounterGet(u32_t uiTimer);
 
 /**
 * @brief Enable Core Internal timer counting when core in sleep mode
 *
-* @param - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to Enable
+*
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values for uiTimer:
+*                   - D_PSP_INTERNAL_TIMER0
+*                   - D_PSP_INTERNAL_TIMER1
 *
 */
 void pspMachineInternalTimerEnableCountInSleepMode(u32_t uiTimer);
@@ -104,7 +140,11 @@ void pspMachineInternalTimerEnableCountInSleepMode(u32_t uiTimer);
 /**
 * @brief Disable Core Internal timer counting when core in sleep mode
 *
-* @param - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to Disable
+*
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values for uiTimer:
+*                   - D_PSP_INTERNAL_TIMER0
+*                   - D_PSP_INTERNAL_TIMER1
 *
 */
 void pspMachineInternalTimerDisableCountInSleepMode(u32_t uiTimer);
@@ -112,7 +152,11 @@ void pspMachineInternalTimerDisableCountInSleepMode(u32_t uiTimer);
 /**
 * @brief Enable Core Internal timer counting when core in in stall
 *
-* @param - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to Enable
+*
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values for uiTimer:
+*                   - D_PSP_INTERNAL_TIMER0
+*                   - D_PSP_INTERNAL_TIMER1
 *
 */
 void pspMachineInternalTimerEnableCountInStallMode(u32_t uiTimer);
@@ -120,9 +164,17 @@ void pspMachineInternalTimerEnableCountInStallMode(u32_t uiTimer);
 /**
 * @brief Disable Core Internal timer counting when core in in stall
 *
-* @param - uiTimer  - indicates which timer to setup
+* @param - uiTimer  - indicates which timer to Disable
+*
+*
+* IMPORTANT NOTE: When you call this function, you can use either one of the following defined values for uiTimer:
+*                   - D_PSP_INTERNAL_TIMER0
+*                   - D_PSP_INTERNAL_TIMER1
 *
 */
 void pspMachineInternalTimerDisableCountInStallMode(u32_t uiTimer);
+
+
+
 
 #endif /* __PSP_TIMERS_EH1_H__ */

@@ -22,20 +22,164 @@ SweRV EL2 has an additional 64-bit timer.
 |D_PSP_INTERNAL_64BIT_TIMER |3
 |====
 
-
 ==  APIs
-=== pspMachineInternalTimerSetup64bitTimer
-Cascade Timer0 and Timer1 to act as a single timer. In this mode, Timer1 counts
-up when Timer0 reaches its bound value. Timer1 interrupt raises when Timer1
-reaches its bound. **Note:** In the 'cascade' mode, HALT-EN and PAUSE-EN
-indications must be set identically for both timers, so part of this function
-also set disable all of them here.
+=== pspMachineInternalTimer64BitTimerSetup
+This API is used to setup  64'bit Cascade timer.
+
+in Cascade timer mode we cascade Timer0 and Timer1 to act as a single timer.
+where MITBND1 increased by one each time Timer0 reaches it's bound(MITBND0).
+ and Timer1 interrupt raises when Timer1 reaches its bound.
+
+given 64'bit period in cycles :
+
+if the least significant 32'bit is equal to zero  we setup the timers as follow
+
+ Timer0:
+ MITCNT0=0 i.e Timer0 start to count from zero
+ MITBND0=FFFFFFFF
+ Timer1:
+ MITBND1=Most significant 32'bit
+ MITCNT1=0
+ The Total period is :
+ ((FFFFFFFF cycles to reach MITBND0)+cycle to reset MITCNT0 to zero)*MITBND1 == ullPeriodCycles
+
+
+if the least significant 32'bit is not equal to zero  we setup the timers as follow :
+
+ MITCNT0=(FFFFFFFF - least significant 32'bit) +1
+ MITBND0=FFFFFFFF
+ MITBND1=Most significant 32'bit +1
+ MITCNT1=0
+ so the first time we increase MITBND1 by one after :
+ ((MITBND0-MITCNT0 cycles)+cycle to reset)==least significant 32'bit cycles
+ then we start to increase MITBND1 by one each (MITBND0+1)cycles
+ The Total period is :
+(MITBND0+1)cycles *(MITBND1-1) +least significant 32'bit cycles == ullPeriodCycles
+
+* Note :CASCADE 64'bit timer supports period in the range:
+FROM 0x100000000 TO  0xFFFFFFFEFFFFFFFF (only).
+
 [source, c, subs="verbatim,quotes"]
 ----
-void pspMachineInternalTimerSetup64bitTimer(u64_t udPeriodCycles)
+void pspMachineInternalTimer64BitTimerSetup(u64_t ullPeriodCycles)
 ----
 .parameters
-* *udPeriodCycles* - Defines the timer period in cycles.
+* *ullPeriodCycles* - Defines the timer period in cycles.
 
 .return
+* *None*
+
+=== pspMachineInternalTimer64BitTimerRun
+Enable incrementing internal 64'bit timer counter (Run).
+[%hardbreaks]
+
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimer64BitTimerRun(void);
+----
+
+.parameters
+* *None*
+
+.return
+* *None*
+
+=== pspMachineInternalTimer64BitTimerPause
+Disable incrementing internal 64'bit timer counter (Pause).
+[%hardbreaks]
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimer64BitTimerPause(void);
+----
+
+.parameters
+* *None*
+
+.return
+* *None*
+
+=== pspMachineInternalTimer64BitTimerCounterGet
+Get Core 64'bit Internal Timer counter value.
+[%hardbreaks]
+
+[source, c, subs="verbatim,quotes"]
+----
+u64_t pspMachineInternalTimer64BitTimerCounterGet(void);
+----
+.parameters
+* *None*
+
+.return
+* *u64_t* - Timer counter value.
+
+
+=== pspMachineInternalTimer64BitTimerCompareCounterGet
+Get Core 64'bit Internal Timer compare counter value.
+[%hardbreaks]
+
+[source, c, subs="verbatim,quotes"]
+----
+u64_t pspMachineInternalTimer64BitTimerCompareCounterGet(void);
+----
+.parameters
+* *None*
+
+.return
+* *u64_t* – Time compare counter value.
+
+
+=== pspMachineInternalTimer64BitTimerEnableCountInSleepMode
+Enable Core Internal 64'bit timer counting when core in sleep mode.
+[%hardbreaks]
+
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimer64BitTimerEnableCountInSleepMode(void);
+----
+.parameters
+* *None*
+
+.return
+* *None*
+
+
+=== pspMachineInternalTimer64BitTimerDisableCountInSleepMode
+Disable Core Internal 64'bit timer counting when core in sleep mode.
+[%hardbreaks]
+
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimer64BitTimerDisableCountInSleepMode(void);
+----
+.parameters
+* *None*
+
+.return
+* *None*
+
+=== pspMachineInternalTimer64BitTimerEnableCountInStallMode
+Enable Core Internal 64'bit timer counting when core in Stall mode.
+[%hardbreaks]
+
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimer64BitTimerEnableCountInStallMode(void);
+----
+.parameters
+* *None*.
+
+.return
+* *None*
+
+
+=== pspMachineInternalTimer64BitTimerDisableCountInStallMode
+Disable Core Internal 64'bit timer counting when core in Stall mode.
+[%hardbreaks]
+
+[source, c, subs="verbatim,quotes"]
+----
+void pspMachineInternalTimer64BitTimerDisableCountInStallMode(void);
+----
+.parameters
+
 * *None*
