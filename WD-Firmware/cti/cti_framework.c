@@ -28,6 +28,8 @@
 #include "psp_api.h"
 #include "cti.h"
 #include "comrv_api.h"
+#include "demo_utils.h"
+#include "demo_platform_al.h"
 
 /**
 * definitions
@@ -113,7 +115,8 @@ static void ctiMainOvlMuxTask(u32_t uiParam)
       eTestError = g_pLookupTableCtiTestOvl[eTestId](g_pCtiFrameWorkCB);
       if (eTestError != E_TEST_ERROR_NO_ERROR)
       {
-         M_PSP_EBREAK();
+        M_DEMO_ERR_PRINT();
+        M_PSP_EBREAK();
       }
       g_pCtiFrameWorkCB->uiTestCurrent++;
    }

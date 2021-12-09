@@ -169,6 +169,7 @@ void demoVerifyExpectedTestResults(u32_t uiTestNumber, u32_t uiExpectedResultFir
         /* Output a failure message */
         demoOutputMsg("External Interrupts, Test #%d Failed:\n", uiTestNumber);
         /* Break here to let debug */
+        M_DEMO_ERR_PRINT();
         M_PSP_EBREAK();
     }
 }

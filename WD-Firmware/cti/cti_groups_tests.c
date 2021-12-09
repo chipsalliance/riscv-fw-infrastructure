@@ -33,6 +33,8 @@
 #include "comrv_api.h"
 #include "cti.h"
 #include "psp_api.h"
+#include "demo_utils.h"
+#include "demo_platform_al.h"
 #ifdef D_COMRV_RTOS_SUPPORT
    #include "rtosal_event_api.h"
 #endif /* D_COMRV_RTOS_SUPPORT */
@@ -1511,7 +1513,8 @@ void _OVERLAY_ ctiTestFuncOverlay113Vect(u32_t uiVar1, u32_t uiVar2, u32_t uiVar
    /* verify we got all correct args */
    if (uiVar1 + uiVar2 + uiVar3 != D_CTI_SUM_OF_ARGS)
    {
-      M_PSP_EBREAK();
+      M_DEMO_ERR_PRINT();
+      M_PSP_EBREAK();     
    }
    M_CTI_100_NOPS;
 }

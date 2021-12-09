@@ -186,7 +186,7 @@ void demoBitManipulation(void)
   M_PSP_BITMANIP_FFS(D_DEMO_FFS_INPUT_NUM, uiResult);
   if (D_DEMO_FFS_EXPECTED_RESULT != uiResult)
   {
-      M_DEMO_ERR_PRINT();
+    M_DEMO_ERR_PRINT();
     M_PSP_EBREAK();
   }
 
